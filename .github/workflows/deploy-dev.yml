@@ -16,7 +16,6 @@ jobs:
         with:
           expo-version: 4.x
           expo-cache: true
-          # Important: Should configure token in this way -> token: ${{ secrets.EXPO_TOKEN }}
-          token: hcKHBP0Fi2UDrS9l7YKgo8PjhYK4FTDYRe6aD3W0
+          token: ${{ secrets.EXPO_TOKEN }}
       - run: yarn install
       - run: expo publish
