@@ -1,9 +1,25 @@
-name: Expo Publish
+name: Deployment - Develop 
+
 on:
   push:
     branches:
       - "develop"
+  pull_request:
+    types: [opened, synchronize, reopened]
+
 jobs:
+  sonarcloud:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
   publish:
     name: Install and publish
     runs-on: ubuntu-latest
