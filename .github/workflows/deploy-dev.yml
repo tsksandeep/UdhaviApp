@@ -1,0 +1,22 @@
+name: Expo Publish
+on:
+  push:
+    branches:
+      - "develop"
+jobs:
+  publish:
+    name: Install and publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+      - uses: expo/expo-github-action@v6
+        with:
+          expo-version: 4.x
+          expo-cache: true
+          # Important: Should configure token in this way -> token: ${{ secrets.EXPO_TOKEN }}
+          token: hcKHBP0Fi2UDrS9l7YKgo8PjhYK4FTDYRe6aD3W0
+      - run: yarn install
+      - run: expo publish
