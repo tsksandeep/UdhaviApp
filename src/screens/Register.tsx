@@ -12,7 +12,7 @@ import TextInput from "../components/TextInput/TextInput";
 import BackButton from "../components/BackButton/BackButton";
 import GradientText from "../components/GradientText/GradientText";
 import { theme } from "../core/theme";
-import { phoneNumberValidator, nameValidator } from "../helpers/helpers";
+import { phoneNumberValidator, nameValidator } from "../helpers/validator";
 import { FirebaseApp, FirebaseAuth } from "../db/config";
 import { InvalidOtpError, UserNotExistsError } from "../errors/errors";
 
