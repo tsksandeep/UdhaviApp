@@ -16,10 +16,10 @@ Install the below tools/packages
 1. Clone the repo with `git clone [REPO_URL]` command
 2. Switch to the project's root directory in terminal
 3. Install the dependencies by running `yarn install`
-4. Once, 'yarn install' is completed, run `yarn start` to start the expo and react-native server
+4. Once, 'yarn install' is completed, run `NODE_ENV=development yarn start` to start the expo and react-native server
 5. If it shows a QR code on the terminal as a result of 'yarn start' command, then you are good to go!
 
-you can write your env specific config variables on `.env-*` file and import them from `react-native-config` package as mentioned [here](https://www.npmjs.com/package/react-native-config).
+you can write your env specific config variables on `.env-*` file and `app.config.ts` file and import them from `expo-constants` package as mentioned.
 
 Ignore the first step on 'Mobile setup' instructions given below if you already have 'Expo' app installed on your phone.
 
