@@ -1,4 +1,4 @@
-name: Develop Deploy 
+name: deploy-dev
 
 on:
   push:
@@ -9,6 +9,7 @@ on:
 
 jobs:
   sonarcloud:
+    name: sonarcloud-analysis
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -21,7 +22,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   publish:
-    name: Install and publish
+    name: install-and-publish
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
