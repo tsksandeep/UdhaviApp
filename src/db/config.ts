@@ -1,15 +1,17 @@
+import Config from "react-native-config";
+
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getDatabase } from "firebase/database";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAZcO7i_YGU34iktBMlZYRnwUTlJHCjKTo",
-  authDomain: "thagaval-dbd6f.firebaseapp.com",
-  databaseURL: "https://thagaval-dbd6f-default-rtdb.firebaseio.com",
-  projectId: "thagaval-dbd6f",
-  storageBucket: "thagaval-dbd6f.appspot.com",
-  messagingSenderId: "670329321676",
-  appId: "1:670329321676:web:a2e5423d7c2a1e7602ea69",
+  apiKey: Config.FIREBASE_API_KEY,
+  authDomain: Config.FIREBASE_AUTH_DOMAIN,
+  databaseURL: Config.FIREBASE_DB_URL,
+  projectId: Config.FIREBASE_PROJECT_ID,
+  storageBucket: Config.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: Config.FIREBASE_MESSAGING_SENDER_ID,
+  appId: Config.FIREBASE_APP_ID,
 };
 
 export const FirebaseApp = initializeApp(firebaseConfig);
