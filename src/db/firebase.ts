@@ -6,6 +6,7 @@ import {
 } from "../errors/errors";
 
 import { FirebaseDB } from "./config";
+import { generateHash } from "../helpers/hash";
 
 export interface UserData {
   userId: string;
@@ -21,18 +22,6 @@ export interface RequestData {
   deliveryTime: string;
   notes: string;
 }
-
-const getHash = (str: string) => {
-  return [].reduce.call(
-    str,
-    function (hash: any, i: any) {
-      var chr = i.charCodeAt(0);
-      hash = (hash << 5) - hash + chr;
-      return hash | 0;
-    },
-    0
-  );
-};
 
 const dbRef = ref(FirebaseDB);
 
@@ -70,7 +59,7 @@ export const readUserData = async (userId: string): Promise<any> => {
 export const writeRequestData = async (
   requestData: RequestData
 ): Promise<any> => {
-  const id = getHash(
+  const id = generateHash(
     requestData.name +
       requestData.phoneNumber +
       requestData.info +

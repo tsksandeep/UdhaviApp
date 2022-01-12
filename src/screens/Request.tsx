@@ -15,7 +15,7 @@ import GradientText from "../components/GradientText/GradientText";
 import Button from "../components/Button/Button";
 import { RequestData, writeRequestData } from "../db/firebase";
 import { RequestExistsError } from "../errors/errors";
-import { phoneNumberValidator } from "../helpers/helpers";
+import { phoneNumberValidator } from "../helpers/validator";
 
 const keyboardVerticalOffset = Platform.OS === 'ios' ? -50 : 0
 
