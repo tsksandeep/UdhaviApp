@@ -4,6 +4,7 @@ import { createSelector } from "reselect";
 import { connect } from "react-redux";
 import { AppInitialState } from "../../store/reducers/app";
 import bindDispatch from "../../utils/actions";
+import translate from "../../utils/language.util";
 
 const Home = ({ app, actions }: { app?: AppInitialState; actions?: any }) => {
   useEffect(() => {
@@ -12,7 +13,7 @@ const Home = ({ app, actions }: { app?: AppInitialState; actions?: any }) => {
 
   return (
     <View>
-      <Text>Home</Text>
+      <Text> {translate("HOME_title")}</Text>
     </View>
   );
 };
