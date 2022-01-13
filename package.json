@@ -8,7 +8,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "test": "jest --watch"
+    "test": "jest --watch",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@emotion/native": "11.0.0",
@@ -54,8 +55,16 @@
     "babel-jest": "^27.4.6",
     "enzyme": "^3.11.0",
     "enzyme-to-json": "^3.6.2",
+    "eslint": "^8.6.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.28.0",
+    "husky": "^7.0.4",
     "jest": "^27.4.7",
     "jest-serializer-enzyme": "^1.0.0",
+    "lint-staged": "^12.1.7",
+    "prettier": "^2.5.1",
     "react-addons-test-utils": "^15.6.2",
     "react-test-renderer": "^17.0.2",
     "redux-mock-store": "^1.5.4",
@@ -69,6 +78,17 @@
     "setupFilesAfterEnv": [
       "<rootDir>/src/setupTest.ts"
     ]
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   },
   "private": true
 }
