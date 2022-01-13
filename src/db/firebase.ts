@@ -1,4 +1,4 @@
-import { ref, set, get, child } from "firebase/database";
+import { collection, setDoc, getDoc, doc } from "firebase/firestore";
 import {
   RequestExistsError,
   UserExistsError,
@@ -23,15 +23,16 @@ export interface RequestData {
   notes: string;
 }
 
-const dbRef = ref(FirebaseDB);
+const usersRef = collection(FirebaseDB, "users");
+const requestsRef = collection(FirebaseDB, "requests");
 
 export const writeUserData = async (userData: UserData): Promise<any> => {
-  const snapshot = await get(child(dbRef, `users/${userData.userId}`));
-  if (snapshot.exists()) {
+  const docSnapshot = await getDoc(doc(usersRef, userData.userId));
+  if (docSnapshot.exists()) {
     return new UserExistsError(`user ${userData.userId} already exists`);
   }
 
-  await set(ref(FirebaseDB, `users/${userData.userId}`), {
+  await setDoc(doc(usersRef, userData.userId), {
     name: userData.name,
     phoneNumber: userData.phoneNumber,
   });
@@ -40,19 +41,16 @@ export const writeUserData = async (userData: UserData): Promise<any> => {
 };
 
 export const readUserData = async (userId: string): Promise<any> => {
-  const snapshot = await get(child(dbRef, `users/${userId}`));
-  if (
-    !snapshot.exists() ||
-    !snapshot?.val()?.name ||
-    !snapshot?.val()?.phoneNumber
-  ) {
+  const docSnapshot = await getDoc(doc(usersRef, userId));
+  const user = docSnapshot.data();
+  if (!docSnapshot.exists() || !user?.name || user?.phoneNumber) {
     return new UserNotExistsError(`user ${userId} does not exists`);
   }
 
   return {
     userId: userId,
-    name: snapshot.val().name,
-    phoneNumber: snapshot.val().phoneNumber,
+    name: user.name,
+    phoneNumber: user.phoneNumber,
   };
 };
 
@@ -68,12 +66,12 @@ export const writeRequestData = async (
       requestData.notes
   );
 
-  const snapshot = await get(child(dbRef, `requests/${id}`));
-  if (snapshot.exists()) {
+  const docSnapshot = await getDoc(doc(requestsRef, id.toString()));
+  if (docSnapshot.exists()) {
     return new RequestExistsError(`request ${id} already exists`);
   }
 
-  await set(ref(FirebaseDB, `requests/${id}`), {
+  await setDoc(doc(requestsRef, id.toString()), {
     name: requestData.name,
     phoneNumber: requestData.phoneNumber,
     info: requestData.info,
