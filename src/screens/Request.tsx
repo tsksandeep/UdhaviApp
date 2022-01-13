@@ -13,7 +13,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import TextInput from "../components/TextInput/TextInput";
 import GradientText from "../components/GradientText/GradientText";
 import Button from "../components/Button/Button";
-import { RequestData, writeRequestData } from "../db/firebase";
+import { RequestData, writeRequestData } from "../firebase/db";
 import { RequestExistsError } from "../errors/errors";
 import { phoneNumberValidator } from "../helpers/validator";
 

@@ -3,7 +3,7 @@ import { View, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
-import { FirebaseAuth } from "../../db/config";
+import { FirebaseAuth } from "../../firebase/config";
 import Button from "../Button/Button";
 import GradientText from "../GradientText/GradientText";
 import DashboardComponentStyle from "./Dashboard.style";

@@ -13,7 +13,7 @@ import BackButton from "../components/BackButton/BackButton";
 import GradientText from "../components/GradientText/GradientText";
 import { theme } from "../core/theme";
 import { phoneNumberValidator, nameValidator } from "../helpers/validator";
-import { FirebaseApp, FirebaseAuth } from "../db/config";
+import { FirebaseApp, FirebaseAuth } from "../firebase/config";
 import { InvalidOtpError, UserNotExistsError } from "../errors/errors";
 
 const getErrText = (registerErr: Error): string => {

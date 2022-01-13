@@ -13,8 +13,8 @@ import {
 import Logo from "../components/Logo/Logo";
 import BackButton from "../components/BackButton/BackButton";
 import GradientText from "../components/GradientText/GradientText";
-import { FirebaseAuth } from "../db/config";
-import { readUserData, writeUserData } from "../db/firebase";
+import { FirebaseAuth } from "../firebase/config";
+import { readUserData, writeUserData } from "../firebase/db";
 import {
   InvalidOtpError,
   UserExistsError,

@@ -6,9 +6,9 @@ import { createSelector } from "reselect";
 import { connect } from "react-redux";
 
 import Logo from "../components/Logo/Logo";
-import { FirebaseAuth } from "../db/config";
+import { FirebaseAuth } from "../firebase/config";
 import AuthComponent from "../components/Auth/Auth";
-import { readUserData, UserData } from "../db/firebase";
+import { readUserData, UserData } from "../firebase/db";
 import DashboardComponent from "../components/Dashboard/Dashboard";
 import { UserNotExistsError } from "../errors/errors";
 import bindDispatch from "../utils/actions";
