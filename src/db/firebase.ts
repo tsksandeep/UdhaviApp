@@ -43,7 +43,7 @@ export const writeUserData = async (userData: UserData): Promise<any> => {
 export const readUserData = async (userId: string): Promise<any> => {
   const docSnapshot = await getDoc(doc(usersRef, userId));
   const user = docSnapshot.data();
-  if (!docSnapshot.exists() || !user?.name || user?.phoneNumber) {
+  if (!docSnapshot.exists() || !user?.name || !user?.phoneNumber) {
     return new UserNotExistsError(`user ${userId} does not exists`);
   }
 
