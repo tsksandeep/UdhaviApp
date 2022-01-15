@@ -10,9 +10,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-
 import TextInput from '../components/TextInput/TextInput';
-import GradientText from '../components/GradientText/GradientText';
 import Button from '../components/Button/Button';
 import { RequestData, writeRequestData } from '../firebase/db';
 import { RequestExistsError } from '../errors/errors';
@@ -133,9 +131,7 @@ const Request = ({
       >
         <KeyboardAwareScrollView>
           <View>
-            <GradientText style={RequestStyle.header}>
-              Submit your request
-            </GradientText>
+            <Text style={RequestStyle.header}>Submit your request</Text>
             {isErr && (
               <Text style={RequestStyle.errText}>
                 *Please fill all the fields properly before submitting
@@ -239,6 +235,7 @@ const RequestStyle = {
     font-size: 32px;
     padding: 0 10px;
     margin-bottom: 0px;
+    color: #560cce;
   `,
   errText: css`
     width: 100%;

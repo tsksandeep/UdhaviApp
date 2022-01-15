@@ -1,4 +1,4 @@
-import { css } from "@emotion/native";
+import { css } from '@emotion/native';
 
 const DashboardComponentStyle = {
   container: css`
@@ -11,10 +11,11 @@ const DashboardComponentStyle = {
   header: css`
     width: 100%;
     text-align: center;
-    font-family: "Pacifico";
+    font-family: 'Pacifico';
     font-size: 40px;
     margin-bottom: 20px;
     padding: 0 10px;
+    color: #560cce;
   `,
   messageWrapper: css`
     width: 100%;

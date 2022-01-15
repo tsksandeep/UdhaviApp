@@ -1,4 +1,4 @@
-import { css } from "@emotion/native";
+import { css } from '@emotion/native';
 
 const AuthStyleComponent = {
   container: css`
@@ -12,10 +12,11 @@ const AuthStyleComponent = {
     width: 100%;
     min-width: 220px;
     text-align: center;
-    font-family: "Pacifico";
+    font-family: 'Pacifico';
     font-size: 40px;
     margin-bottom: 20px;
     padding: 0 10px;
+    color: #560cce;
   `,
 };
 

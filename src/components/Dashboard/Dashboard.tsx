@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { View, Text } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
+import React, { useEffect, useState } from 'react';
+import { View, Text } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 
-import { FirebaseAuth } from "../../firebase/config";
-import Button from "../Button/Button";
-import GradientText from "../GradientText/GradientText";
-import DashboardComponentStyle from "./Dashboard.style";
+import { FirebaseAuth } from '../../firebase/config';
+import Button from '../Button/Button';
+import DashboardComponentStyle from './Dashboard.style';
 
 const getCleanedMessageText = (msg: string): string => {
-  return msg.split(": ")[1];
+  return msg.split(': ')[1];
 };
 
 const DashboardComponent = (props: any) => {
@@ -40,14 +39,12 @@ const DashboardComponent = (props: any) => {
           </Text>
         </View>
       )}
-      <GradientText style={DashboardComponentStyle.header}>
-        Hello {user.name}
-      </GradientText>
+      <Text style={DashboardComponentStyle.header}>Hello {user.name}</Text>
       <Button
         style={DashboardComponentStyle.submitRequestButton}
         mode="outlined"
         onPress={() => {
-          navigation.navigate("Request");
+          navigation.navigate('Request');
         }}
       >
         Submit a request
@@ -58,9 +55,9 @@ const DashboardComponent = (props: any) => {
         onPress={async () => {
           await FirebaseAuth.signOut();
           setUser({
-            name: "",
-            phoneNumber: "",
-            userId: "",
+            name: '',
+            phoneNumber: '',
+            userId: '',
           });
         }}
       >

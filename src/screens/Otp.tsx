@@ -1,25 +1,24 @@
-import React from "react";
-import { Text, View, TouchableOpacity } from "react-native";
-import OTPInputView from "@twotalltotems/react-native-otp-input";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { css } from "@emotion/native";
+import React from 'react';
+import { Text, View, TouchableOpacity } from 'react-native';
+import OTPInputView from '@twotalltotems/react-native-otp-input';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { css } from '@emotion/native';
 import {
   PhoneAuthProvider,
   signInWithCredential,
   UserCredential,
-} from "firebase/auth";
+} from 'firebase/auth';
 
-import Logo from "../components/Logo/Logo";
-import BackButton from "../components/BackButton/BackButton";
-import GradientText from "../components/GradientText/GradientText";
-import { FirebaseAuth } from "../firebase/config";
-import { readUserData, writeUserData } from "../firebase/db";
+import Logo from '../components/Logo/Logo';
+import BackButton from '../components/BackButton/BackButton';
+import { FirebaseAuth } from '../firebase/config';
+import { readUserData, writeUserData } from '../firebase/db';
 import {
   InvalidOtpError,
   UserExistsError,
   UserNotExistsError,
-} from "../errors/errors";
+} from '../errors/errors';
 
 const Otp = (props: any) => {
   const page = props.route.params.page;
@@ -33,34 +32,34 @@ const Otp = (props: any) => {
       phoneNumber: props.route.params.phoneNumber,
     };
 
-    if (userData.name === "" || userData.phoneNumber === "") {
+    if (userData.name === '' || userData.phoneNumber === '') {
       return;
     }
 
     const resp = await writeUserData(userData);
     if (resp instanceof UserExistsError) {
-      navigation.navigate("Login", {
+      navigation.navigate('Login', {
         error: resp,
       });
       return;
     }
     navigation.reset({
       index: 0,
-      routes: [{ name: "Home" }],
+      routes: [{ name: 'Home' }],
     });
   };
 
   const loginCb = async (userCredential: UserCredential) => {
     const resp = await readUserData(userCredential.user.uid);
     if (resp instanceof UserNotExistsError) {
-      navigation.navigate("Register", {
+      navigation.navigate('Register', {
         error: resp,
       });
       return;
     }
     navigation.reset({
       index: 0,
-      routes: [{ name: "Home" }],
+      routes: [{ name: 'Home' }],
     });
   };
 
@@ -68,13 +67,13 @@ const Otp = (props: any) => {
     try {
       const userCredential = await signInWithCredential(
         FirebaseAuth,
-        PhoneAuthProvider.credential(verificationId, code)
+        PhoneAuthProvider.credential(verificationId, code),
       );
-      if (page === "Register") registerCb(userCredential);
-      if (page === "Login") loginCb(userCredential);
+      if (page === 'Register') registerCb(userCredential);
+      if (page === 'Login') loginCb(userCredential);
     } catch (err) {
       navigation.navigate(page, {
-        error: new InvalidOtpError("Invalid OTP"),
+        error: new InvalidOtpError('Invalid OTP'),
       });
     }
   };
@@ -83,9 +82,7 @@ const Otp = (props: any) => {
     <View style={OtpStyleComponent.container}>
       <BackButton />
       <Logo />
-      <GradientText style={OtpStyleComponent.header}>
-        Enter your OTP
-      </GradientText>
+      <Text style={OtpStyleComponent.header}>Enter your OTP</Text>
       <OTPInputView
         style={OtpStyleComponent.otpInputView}
         pinCount={6}
@@ -117,10 +114,11 @@ const OtpStyleComponent = {
   header: css`
     width: 100%;
     text-align: center;
-    font-family: "Pacifico";
+    font-family: 'Pacifico';
     font-size: 40px;
     margin-bottom: 20px;
     padding: 0 10px;
+    color: #560cce;
   `,
   otpInputView: css`
     width: 100%;
