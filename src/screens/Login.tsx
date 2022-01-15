@@ -78,7 +78,7 @@ const Login = (props: any) => {
       <FirebaseRecaptchaVerifierModal
         ref={recaptchaVerifier}
         firebaseConfig={FirebaseApp.options}
-        attemptInvisibleVerification={true}
+        attemptInvisibleVerification={false}
       />
       <BackButton />
       {loginErr && (
