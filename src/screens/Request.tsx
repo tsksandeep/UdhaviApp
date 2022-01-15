@@ -1,39 +1,51 @@
-import React, { useRef, useState } from "react";
-import { css } from "@emotion/native";
+import React, { useRef, useState, useEffect } from 'react';
+import { css } from '@emotion/native';
 import {
   Text,
   ScrollView,
   KeyboardAvoidingView,
   SafeAreaView,
   Platform,
-} from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
+  View,
+} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 
-import TextInput from "../components/TextInput/TextInput";
-import GradientText from "../components/GradientText/GradientText";
-import Button from "../components/Button/Button";
-import { RequestData, writeRequestData } from "../firebase/db";
-import { RequestExistsError } from "../errors/errors";
-import { phoneNumberValidator } from "../helpers/validator";
+import TextInput from '../components/TextInput/TextInput';
+import GradientText from '../components/GradientText/GradientText';
+import Button from '../components/Button/Button';
+import { RequestData, writeRequestData } from '../firebase/db';
+import { RequestExistsError } from '../errors/errors';
+import bindDispatch from '../utils/actions';
+import { phoneNumberValidator } from '../helpers/validator';
+import { createSelector } from 'reselect';
+import { connect } from 'react-redux';
+import { RequestInitialState } from '../store/reducers/request';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-const keyboardVerticalOffset = Platform.OS === 'ios' ? -50 : 0
+const keyboardVerticalOffset = Platform.OS === 'ios' ? -50 : 0;
 
-const Request = () => {
+const Request = ({
+  actions,
+  request,
+}: {
+  actions: any;
+  request: RequestInitialState;
+}) => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
-  const [name, setName] = useState({ value: "", error: "" });
-  const [phoneNumber, setPhoneNumber] = useState({ value: "+91 ", error: "" });
-  const [info, setInfo] = useState({ value: "", error: "" });
-  const [location, setLocation] = useState({ value: "", error: "" });
-  const [deliveryTime, setDeliveryTime] = useState({ value: "", error: "" });
-  const [notes, setNotes] = useState({ value: "", error: "" });
+  const [name, setName] = useState({ value: '', error: '' });
+  const [phoneNumber, setPhoneNumber] = useState({ value: '+91 ', error: '' });
+  const [info, setInfo] = useState({ value: '', error: '' });
+  const [location, setLocation] = useState({ value: '', error: '' });
+  const [deliveryTime, setDeliveryTime] = useState({ value: '', error: '' });
+  const [notes, setNotes] = useState({ value: '', error: '' });
   const [isErr, setIsErr] = useState(false);
   const scrollViewRef: React.LegacyRef<ScrollView> | null = useRef(null);
 
   const checkErrors = (): boolean => {
     if (!name.value) {
-      setName({ ...name, error: "Name should not be empty" });
+      setName({ ...name, error: 'Name should not be empty' });
     }
 
     const phoneNumberError = phoneNumberValidator(phoneNumber.value);
@@ -42,22 +54,22 @@ const Request = () => {
     }
 
     if (!info.value) {
-      setInfo({ ...info, error: "What is needed should not be empty" });
+      setInfo({ ...info, error: 'What is needed should not be empty' });
     }
 
     if (!location.value) {
-      setLocation({ ...location, error: "Location should not be empty" });
+      setLocation({ ...location, error: 'Location should not be empty' });
     }
 
     if (!deliveryTime.value) {
       setDeliveryTime({
         ...deliveryTime,
-        error: "Delivery time should not be empty",
+        error: 'Delivery time should not be empty',
       });
     }
 
     if (!notes.value) {
-      setNotes({ ...notes, error: "Notes should not be empty" });
+      setNotes({ ...notes, error: 'Notes should not be empty' });
     }
 
     if (
@@ -94,117 +106,120 @@ const Request = () => {
       deliveryTime: deliveryTime.value,
       notes: notes.value,
     };
-
+    actions.updateRequestForm(requestData);
     setIsErr(false);
     const resp = await writeRequestData(requestData);
     if (resp instanceof RequestExistsError) {
-      navigation.navigate("Home", {
+      navigation.navigate('Home', {
         message:
           Math.floor(Math.random() * 10000).toString() +
-          ": Request already placed",
+          ': Request already placed',
       });
       return;
     }
-    navigation.navigate("Home", {
+    navigation.navigate('Home', {
       message:
         Math.floor(Math.random() * 10000).toString() +
-        ": Successfully submitted the request",
+        ': Successfully submitted the request',
     });
   };
 
   return (
     <SafeAreaView style={RequestStyle.container}>
       <KeyboardAvoidingView
-        behavior="position"
+        behavior="height"
         keyboardVerticalOffset={keyboardVerticalOffset}
         style={{ flex: 1 }}
       >
-        <ScrollView
-          contentContainerStyle={{ paddingHorizontal: 20 }}
-          ref={scrollViewRef}
-        >
-          <GradientText style={RequestStyle.header}>
-            Submit your request
-          </GradientText>
-          {isErr && (
-            <Text style={RequestStyle.errText}>
-              *Please fill all the fields properly before submitting
-            </Text>
-          )}
-          <TextInput
-            label="Name"
-            returnKeyType="next"
-            value={name.value}
-            onChangeText={(text: string) => setName({ value: text, error: "" })}
-            error={!!name.error}
-            errorText={name.error}
-            autoCapitalize="none"
-          />
-          <TextInput
-            label="Phone"
-            returnKeyType="next"
-            value={phoneNumber.value}
-            onChangeText={(text: string) =>
-              setPhoneNumber({ value: text, error: "" })
-            }
-            error={!!phoneNumber.error}
-            errorText={phoneNumber.error}
-            autoCapitalize="none"
-          />
-          <TextInput
-            label="What is needed?"
-            returnKeyType="next"
-            value={info.value}
-            onChangeText={(text: string) => setInfo({ value: text, error: "" })}
-            error={!!info.error}
-            errorText={info.error}
-            autoCapitalize="none"
-            multiline={true}
-            numberOfLines={5}
-          />
-          <TextInput
-            label="Delivery Location"
-            returnKeyType="next"
-            value={location.value}
-            onChangeText={(text: string) =>
-              setLocation({ value: text, error: "" })
-            }
-            error={!!location.error}
-            errorText={location.error}
-            autoCapitalize="none"
-          />
-          <TextInput
-            label="Delivery Time"
-            returnKeyType="next"
-            value={deliveryTime.value}
-            onChangeText={(text: string) =>
-              setDeliveryTime({ value: text, error: "" })
-            }
-            error={!!deliveryTime.error}
-            errorText={deliveryTime.error}
-            autoCapitalize="none"
-          />
-          <TextInput
-            label="Notes"
-            returnKeyType="next"
-            value={notes.value}
-            onChangeText={(text: string) =>
-              setNotes({ value: text, error: "" })
-            }
-            error={!!notes.error}
-            errorText={notes.error}
-            autoCapitalize="none"
-            multiline={true}
-            numberOfLines={150}
-          />
-          <Button
-            style={RequestStyle.submitButton}
-            mode="outlined"
-            onPress={onSubmit}
-          >
-            Submit
-          </Button>
-        </ScrollView>
+        <KeyboardAwareScrollView>
+          <View>
+            <GradientText style={RequestStyle.header}>
+              Submit your request
+            </GradientText>
+            {isErr && (
+              <Text style={RequestStyle.errText}>
+                *Please fill all the fields properly before submitting
+              </Text>
+            )}
+            <TextInput
+              label="Name"
+              returnKeyType="next"
+              value={name.value}
+              onChangeText={(text: string) =>
+                setName({ value: text, error: '' })
+              }
+              error={!!name.error}
+              errorText={name.error}
+              autoCapitalize="none"
+            />
+            <TextInput
+              label="Phone"
+              returnKeyType="next"
+              value={phoneNumber.value}
+              onChangeText={(text: string) =>
+                setPhoneNumber({ value: text, error: '' })
+              }
+              error={!!phoneNumber.error}
+              errorText={phoneNumber.error}
+              autoCapitalize="none"
+            />
+            <TextInput
+              label="What is needed?"
+              returnKeyType="next"
+              value={info.value}
+              onChangeText={(text: string) =>
+                setInfo({ value: text, error: '' })
+              }
+              error={!!info.error}
+              errorText={info.error}
+              autoCapitalize="none"
+              multiline={true}
+              numberOfLines={5}
+            />
+            <TextInput
+              label="Delivery Location"
+              returnKeyType="next"
+              value={location.value}
+              onChangeText={(text: string) =>
+                setLocation({ value: text, error: '' })
+              }
+              error={!!location.error}
+              errorText={location.error}
+              autoCapitalize="none"
+            />
+            <TextInput
+              label="Delivery Time"
+              returnKeyType="next"
+              value={deliveryTime.value}
+              onChangeText={(text: string) =>
+                setDeliveryTime({ value: text, error: '' })
+              }
+              error={!!deliveryTime.error}
+              errorText={deliveryTime.error}
+              autoCapitalize="none"
+            />
+            <TextInput
+              label="Notes"
+              returnKeyType="next"
+              value={notes.value}
+              onChangeText={(text: string) =>
+                setNotes({ value: text, error: '' })
+              }
+              error={!!notes.error}
+              errorText={notes.error}
+              autoCapitalize="none"
+              multiline={true}
+              numberOfLines={150}
+            />
+            <Button
+              style={RequestStyle.submitButton}
+              mode="outlined"
+              onPress={onSubmit}
+            >
+              Submit
+            </Button>
+          </View>
+        </KeyboardAwareScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -220,7 +235,7 @@ const RequestStyle = {
     min-height: 80px;
     width: 100%;
     text-align: center;
-    font-family: "Pacifico";
+    font-family: 'Pacifico';
     font-size: 32px;
     padding: 0 10px;
     margin-bottom: 0px;
@@ -240,4 +255,9 @@ const RequestStyle = {
   `,
 };
 
-export default Request;
+const selector = createSelector(
+  (state: any) => state.request,
+  (request: RequestInitialState) => ({ request }),
+);
+
+export default connect(selector, bindDispatch)(Request);
