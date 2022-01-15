@@ -10,7 +10,6 @@ import Logo from "../components/Logo/Logo";
 import Button from "../components/Button/Button";
 import TextInput from "../components/TextInput/TextInput";
 import BackButton from "../components/BackButton/BackButton";
-import GradientText from "../components/GradientText/GradientText";
 import { theme } from "../core/theme";
 import { phoneNumberValidator } from "../helpers/validator";
 import { FirebaseApp, FirebaseAuth } from "../firebase/config";
@@ -85,7 +84,7 @@ const Login = (props: any) => {
         <Text style={LoginStyle.errorHeader}>{getErrText(loginErr)}</Text>
       )}
       <Logo />
-      <GradientText style={LoginStyle.header}>Welcome Back</GradientText>
+      <Text style={LoginStyle.header}>Welcome Back</Text>
       <TextInput
         label="Phone"
         returnKeyType="next"
@@ -125,6 +124,7 @@ const LoginStyle = {
     font-size: 40px;
     margin-bottom: 20px;
     padding: 0 10px;
+    color: #560CCE;
   `,
   errorHeader: css`
     width: 100%;

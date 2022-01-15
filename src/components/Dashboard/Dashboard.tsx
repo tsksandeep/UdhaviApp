@@ -5,7 +5,6 @@ import { StackNavigationProp } from "@react-navigation/stack";
 
 import { FirebaseAuth } from "../../firebase/config";
 import Button from "../Button/Button";
-import GradientText from "../GradientText/GradientText";
 import DashboardComponentStyle from "./Dashboard.style";
 
 const getCleanedMessageText = (msg: string): string => {
@@ -40,9 +39,9 @@ const DashboardComponent = (props: any) => {
           </Text>
         </View>
       )}
-      <GradientText style={DashboardComponentStyle.header}>
+      <Text style={DashboardComponentStyle.header}>
         Hello {user.name}
-      </GradientText>
+      </Text>
       <Button
         style={DashboardComponentStyle.submitRequestButton}
         mode="outlined"

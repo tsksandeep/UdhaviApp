@@ -11,7 +11,6 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 import TextInput from "../components/TextInput/TextInput";
-import GradientText from "../components/GradientText/GradientText";
 import Button from "../components/Button/Button";
 import { RequestData, writeRequestData } from "../firebase/db";
 import { RequestExistsError } from "../errors/errors";
@@ -123,9 +122,9 @@ const Request = () => {
           contentContainerStyle={{ paddingHorizontal: 20 }}
           ref={scrollViewRef}
         >
-          <GradientText style={RequestStyle.header}>
+          <Text style={RequestStyle.header}>
             Submit your request
-          </GradientText>
+          </Text>
           {isErr && (
             <Text style={RequestStyle.errText}>
               *Please fill all the fields properly before submitting
@@ -224,6 +223,7 @@ const RequestStyle = {
     font-size: 32px;
     padding: 0 10px;
     margin-bottom: 0px;
+    color: #560CCE;
   `,
   errText: css`
     width: 100%;

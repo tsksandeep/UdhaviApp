@@ -16,6 +16,7 @@ const AuthStyleComponent = {
     font-size: 40px;
     margin-bottom: 20px;
     padding: 0 10px;
+    color: #560CCE;
   `,
 };
 

@@ -12,7 +12,6 @@ import {
 
 import Logo from "../components/Logo/Logo";
 import BackButton from "../components/BackButton/BackButton";
-import GradientText from "../components/GradientText/GradientText";
 import { FirebaseAuth } from "../firebase/config";
 import { readUserData, writeUserData } from "../firebase/db";
 import {
@@ -83,9 +82,9 @@ const Otp = (props: any) => {
     <View style={OtpStyleComponent.container}>
       <BackButton />
       <Logo />
-      <GradientText style={OtpStyleComponent.header}>
+      <Text style={OtpStyleComponent.header}>
         Enter your OTP
-      </GradientText>
+      </Text>
       <OTPInputView
         style={OtpStyleComponent.otpInputView}
         pinCount={6}
@@ -121,6 +120,7 @@ const OtpStyleComponent = {
     font-size: 40px;
     margin-bottom: 20px;
     padding: 0 10px;
+    color: #560CCE;
   `,
   otpInputView: css`
     width: 100%;

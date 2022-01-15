@@ -10,7 +10,6 @@ import Logo from "../components/Logo/Logo";
 import Button from "../components/Button/Button";
 import TextInput from "../components/TextInput/TextInput";
 import BackButton from "../components/BackButton/BackButton";
-import GradientText from "../components/GradientText/GradientText";
 import { theme } from "../core/theme";
 import { phoneNumberValidator, nameValidator } from "../helpers/validator";
 import { FirebaseApp, FirebaseAuth } from "../firebase/config";
@@ -90,7 +89,7 @@ const Register = (props: any) => {
         <Text style={RegisterStyle.errorHeader}>{getErrText(registerErr)}</Text>
       )}
       <Logo />
-      <GradientText style={RegisterStyle.header}>Create Account</GradientText>
+      <Text style={RegisterStyle.header}>Create Account</Text>
       <TextInput
         label="Name"
         returnKeyType="next"
@@ -142,6 +141,7 @@ const RegisterStyle = {
     font-size: 40px;
     margin-bottom: 20px;
     padding: 0 10px;
+    color: #560CCE;
   `,
   errorHeader: css`
     width: 100%;
