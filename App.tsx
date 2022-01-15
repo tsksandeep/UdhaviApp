@@ -1,20 +1,20 @@
-import React from "react";
-import { LogBox } from "react-native";
-import { Provider } from "react-redux";
-import { Provider as ThemeWrapper } from "react-native-paper";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
+import React from 'react';
+import { LogBox } from 'react-native';
+import { Provider } from 'react-redux';
+import { Provider as ThemeWrapper } from 'react-native-paper';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
-import Home from "./src/screens/Home";
-import Otp from "./src/screens/Otp";
-import Login from "./src/screens/Login";
-import Register from "./src/screens/Register";
-import Request from "./src/screens/Request";
+import Home from './src/screens/Home';
+import Otp from './src/screens/Otp';
+import Login from './src/screens/Login';
+import Register from './src/screens/Register';
+import Request from './src/screens/Request';
 
-import configureStore from "./src/store";
-import { theme } from "./src/core/theme";
+import configureStore from './src/store';
+import { theme } from './src/core/theme';
 
-LogBox.ignoreLogs(["Warning: ..."]); // Ignore log notification by message
+LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
 
 declare global {
@@ -43,12 +43,24 @@ declare global {
 }
 
 const Stack = createStackNavigator<RootStackParamList>();
+const linking = {
+  prefixes: ['https://udhaviapp.com', 'udhaviapp://'],
+  config: {
+    screens: {
+      Home: '/home',
+      Otp: '/otp',
+      Login: '/login',
+      Register: '/register',
+      Request: '/request',
+    },
+  },
+};
 
 const App = () => {
   return (
     <Provider store={configureStore()}>
       <ThemeWrapper theme={theme}>
-        <NavigationContainer>
+        <NavigationContainer linking={linking}>
           <Stack.Navigator
             initialRouteName="Home"
             screenOptions={{
