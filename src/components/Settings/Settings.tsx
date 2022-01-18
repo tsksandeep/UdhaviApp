@@ -4,10 +4,11 @@ import { Divider, Icon, Menu } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
 import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
+import { cloneDeep } from 'lodash';
 
+import { settingsData, settingsDataType, settingsDataItem } from './data';
 import bindDispatch from '../../utils/actions';
 import { SettingsInitialState } from '../../store/reducers/settings';
-import { cloneDeep } from 'lodash';
 
 const Settings = ({
   actions,
@@ -45,6 +46,36 @@ const Settings = ({
     setSettingsInfoCallback('defaultViewMode', 'hideVolunteers', null, null);
   }
 
+  const MenuOptionItem = (props: settingsDataItem) => {
+    const { itemValue, elementValue, callbackValues } = props;
+    return (
+      <Menu.ItemOption
+        onPress={() =>
+          setSettingsInfoCallback(
+            callbackValues.fieldName1,
+            callbackValues.fieldValue1,
+            callbackValues.fieldName2,
+            callbackValues.fieldValue2,
+          )
+        }
+        value={elementValue}
+      >
+        {itemValue}
+      </Menu.ItemOption>
+    );
+  };
+
+  const MenuOptionGroup = (props: settingsDataType) => {
+    const { defaultValue, title, items } = props;
+    return (
+      <Menu.OptionGroup defaultValue={defaultValue} title={title} type="radio">
+        {items.map((item, index) => {
+          return <MenuOptionItem key={index} {...item} />;
+        })}
+      </Menu.OptionGroup>
+    );
+  };
+
   return (
     <Menu
       trigger={(triggerProps) => {
@@ -62,82 +93,17 @@ const Settings = ({
         );
       }}
     >
-      <Menu.OptionGroup
-        defaultValue={settings.settingsInfo.defaultViewMode}
-        title="View"
-        type="radio"
-      >
-        <Menu.ItemOption
-          onPress={() =>
-            setSettingsInfoCallback('hideMap', false, 'hideDetails', false)
-          }
-          value="showAll"
-        >
-          Show all
-        </Menu.ItemOption>
-        <Menu.ItemOption
-          onPress={() =>
-            setSettingsInfoCallback('hideMap', true, 'hideDetails', false)
-          }
-          value="hideMap"
-        >
-          Show details only
-        </Menu.ItemOption>
-        <Menu.ItemOption
-          onPress={() =>
-            setSettingsInfoCallback('hideMap', false, 'hideDetails', true)
-          }
-          value="hideDetails"
-        >
-          Show map only
-        </Menu.ItemOption>
-      </Menu.OptionGroup>
+      <MenuOptionGroup
+        key={0}
+        {...settingsData[0]}
+        defaultValue={localSettingsInfo.defaultViewMode}
+      />
       <Divider mt="3" w="100%" />
-      <Menu.OptionGroup
-        defaultValue={settings.settingsInfo.defaultType}
-        title="Type"
-        type="radio"
-      >
-        <Menu.ItemOption
-          onPress={() =>
-            setSettingsInfoCallback(
-              'hideRequests',
-              false,
-              'hideVolunteers',
-              false,
-            )
-          }
-          value="showAll"
-        >
-          Show all
-        </Menu.ItemOption>
-        <Menu.ItemOption
-          onPress={() =>
-            setSettingsInfoCallback(
-              'hideRequests',
-              true,
-              'hideVolunteers',
-              false,
-            )
-          }
-          value="hideRequests"
-        >
-          Show volunteers only
-        </Menu.ItemOption>
-        <Menu.ItemOption
-          onPress={() =>
-            setSettingsInfoCallback(
-              'hideRequests',
-              false,
-              'hideVolunteers',
-              true,
-            )
-          }
-          value="hideVolunteers"
-        >
-          Show requests only
-        </Menu.ItemOption>
-      </Menu.OptionGroup>
+      <MenuOptionGroup
+        key={1}
+        {...settingsData[1]}
+        defaultValue={localSettingsInfo.defaultType}
+      />
     </Menu>
   );
 };
