@@ -1,0 +1,3 @@
+const UPDATE_SETTINGS_INFO: string = 'settings/UPDATE_SETTINGS_INFO';
+
+export { UPDATE_SETTINGS_INFO };

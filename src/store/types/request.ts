@@ -1,3 +1,3 @@
-const UPDATE_REQUEST_FORM = 'request/UPDATE_REQUEST_FORM';
+const UPDATE_REQUEST_FORM: string = 'request/UPDATE_REQUEST_FORM';
 
 export { UPDATE_REQUEST_FORM };

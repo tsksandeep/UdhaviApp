@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import { css } from '@emotion/native';
 import {
   Text,
@@ -10,16 +10,17 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { createSelector } from 'reselect';
+import { connect } from 'react-redux';
+
 import TextInput from '../components/TextInput/TextInput';
 import Button from '../components/Button/Button';
 import { RequestData, writeRequestData } from '../firebase/db';
 import { RequestExistsError } from '../errors/errors';
 import bindDispatch from '../utils/actions';
 import { phoneNumberValidator } from '../helpers/validator';
-import { createSelector } from 'reselect';
-import { connect } from 'react-redux';
 import { RequestInitialState } from '../store/reducers/request';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const keyboardVerticalOffset = Platform.OS === 'ios' ? -50 : 0;
 
