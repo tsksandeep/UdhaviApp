@@ -1,0 +1,3 @@
+const UPDATE_REQUEST_FILTER: string = 'filter/UPDATE_REQUEST_FILTER';
+
+export { UPDATE_REQUEST_FILTER };
