@@ -34,15 +34,15 @@ const Settings = ({
     actions.updateSettingsInfo(localSettingsInfo);
   };
 
-  if (settings.settingsInfo.hideMap) {
+  if (localSettingsInfo.hideMap) {
     setSettingsInfoCallback('defaultViewMode', 'hideMap', null, null);
-  } else if (settings.settingsInfo.hideDetails) {
+  } else if (localSettingsInfo.hideDetails) {
     setSettingsInfoCallback('defaultViewMode', 'hideDetails', null, null);
   }
 
-  if (settings.settingsInfo.hideRequests) {
+  if (localSettingsInfo.hideRequests) {
     setSettingsInfoCallback('defaultViewMode', 'hideRequests', null, null);
-  } else if (settings.settingsInfo.hideVolunteers) {
+  } else if (localSettingsInfo.hideVolunteers) {
     setSettingsInfoCallback('defaultViewMode', 'hideVolunteers', null, null);
   }
 
