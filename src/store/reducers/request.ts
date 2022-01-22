@@ -30,7 +30,7 @@ export const initialState: RequestInitialState = {
 const reducer = (state = initialState, action: Action) => {
   const { payload, type } = action;
   switch (type) {
-    case Types.UPDATE_REQUEST_FORM:
+    case Types.CREATE_REQUEST_FORM:
       return { ...state, requestForm: payload };
     default:
       return state;
