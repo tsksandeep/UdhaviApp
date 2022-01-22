@@ -13,6 +13,7 @@ export interface RequestData {
   deliveryTime: string;
   notes: string;
   date: number;
+  assignedVolunteers: Array<VolunteerData>;
 }
 
 export interface VolunteerData {
@@ -23,4 +24,5 @@ export interface VolunteerData {
   type: string;
   status: string;
   lastActive: number;
+  assignedRequests: Array<RequestData>;
 }

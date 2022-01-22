@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 
 import TextInput from '../components/TextInput/TextInput';
 import Button from '../components/Button/Button';
-import { writeRequestData } from '../firebase/db';
+import { writeRequestData } from '../firebase/requests';
 import { RequestData } from '../firebase/model';
 import bindDispatch from '../utils/actions';
 import { phoneNumberValidator } from '../helpers/validator';
@@ -108,6 +108,7 @@ const Request = ({
       deliveryTime: deliveryTime.value,
       notes: notes.value,
       date: date,
+      assignedVolunteers: [],
     };
 
     setIsErr(false);
