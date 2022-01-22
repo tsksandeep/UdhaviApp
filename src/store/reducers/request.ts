@@ -5,15 +5,17 @@ export interface Action {
   type: string;
 }
 
+export interface RequestForm {
+  name: string;
+  phoneNumber: string;
+  info: string;
+  location: string;
+  deliveryTime: string;
+  notes: string;
+}
+
 export interface RequestInitialState {
-  requestForm: {
-    name: string;
-    phoneNumber: string;
-    info: string;
-    location: string;
-    deliveryTime: string;
-    notes: string;
-  };
+  requestForm: RequestForm;
 }
 
 export const initialState: RequestInitialState = {
