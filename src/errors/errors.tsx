@@ -18,10 +18,3 @@ export class InvalidOtpError extends Error {
     Object.setPrototypeOf(this, InvalidOtpError.prototype);
   }
 }
-
-export class RequestExistsError extends Error {
-  constructor(msg: string) {
-    super(msg);
-    Object.setPrototypeOf(this, RequestExistsError.prototype);
-  }
-}

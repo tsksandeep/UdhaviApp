@@ -1,30 +1,21 @@
-import { collection, setDoc, getDoc, doc } from "firebase/firestore";
 import {
-  RequestExistsError,
-  UserExistsError,
-  UserNotExistsError,
-} from "../errors/errors";
+  collection,
+  setDoc,
+  getDoc,
+  getDocs,
+  query,
+  doc,
+  where,
+  orderBy,
+} from 'firebase/firestore';
+import { UserExistsError, UserNotExistsError } from '../errors/errors';
 
-import { FirebaseDB } from "./config";
-import { generateHash } from "../helpers/hash";
+import { FirebaseDB } from './config';
+import { RequestData, UserData } from './model';
 
-export interface UserData {
-  userId: string;
-  name?: string;
-  phoneNumber?: string;
-}
-
-export interface RequestData {
-  name: string;
-  phoneNumber: string;
-  info: string;
-  location: string;
-  deliveryTime: string;
-  notes: string;
-}
-
-const usersRef = collection(FirebaseDB, "users");
-const requestsRef = collection(FirebaseDB, "requests");
+const usersRef = collection(FirebaseDB, 'users');
+const requestsRef = collection(FirebaseDB, 'requests');
+const volunteersRef = collection(FirebaseDB, 'volunteers');
 
 export const writeUserData = async (userData: UserData): Promise<any> => {
   const docSnapshot = await getDoc(doc(usersRef, userData.userId));
@@ -54,31 +45,45 @@ export const readUserData = async (userId: string): Promise<any> => {
   };
 };
 
-export const writeRequestData = async (
-  requestData: RequestData
-): Promise<any> => {
-  const id = generateHash(
-    requestData.name +
-      requestData.phoneNumber +
-      requestData.info +
-      requestData.location +
-      requestData.deliveryTime +
-      requestData.notes
-  );
-
-  const docSnapshot = await getDoc(doc(requestsRef, id.toString()));
-  if (docSnapshot.exists()) {
-    return new RequestExistsError(`request ${id} already exists`);
-  }
-
-  await setDoc(doc(requestsRef, id.toString()), {
+export const writeRequestData = async (requestData: RequestData) => {
+  await setDoc(doc(requestsRef, requestData.id), {
+    id: requestData.id,
     name: requestData.name,
     phoneNumber: requestData.phoneNumber,
     info: requestData.info,
     location: requestData.location,
     deliveryTime: requestData.deliveryTime,
     notes: requestData.notes,
+    date: requestData.date,
   });
+};
 
-  return null;
+export const getAllRequests = async (): Promise<any> => {
+  return (await getDocs(query(requestsRef, orderBy('date')))).docs;
+};
+
+export const getRequestsByPhoneNumber = async (
+  phoneNumber: string,
+): Promise<any> => {
+  return (
+    await getDocs(
+      query(
+        requestsRef,
+        where('phoneNumber', '==', phoneNumber),
+        orderBy('date'),
+      ),
+    )
+  ).docs;
+};
+
+export const getAllVolunteers = async (): Promise<any> => {
+  return (await getDocs(query(volunteersRef, orderBy('lastActive')))).docs;
+};
+
+export const getVolunteersByZone = async (zone: string): Promise<any> => {
+  return (
+    await getDocs(
+      query(volunteersRef, where('zone', '==', zone), orderBy('lastActive')),
+    )
+  ).docs;
 };

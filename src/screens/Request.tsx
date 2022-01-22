@@ -16,11 +16,12 @@ import { connect } from 'react-redux';
 
 import TextInput from '../components/TextInput/TextInput';
 import Button from '../components/Button/Button';
-import { RequestData, writeRequestData } from '../firebase/db';
-import { RequestExistsError } from '../errors/errors';
+import { writeRequestData } from '../firebase/db';
+import { RequestData } from '../firebase/model';
 import bindDispatch from '../utils/actions';
 import { phoneNumberValidator } from '../helpers/validator';
 import { RequestInitialState } from '../store/reducers/request';
+import { generateHash } from '../helpers/hash';
 
 const keyboardVerticalOffset = Platform.OS === 'ios' ? -50 : 0;
 
@@ -97,25 +98,22 @@ const Request = ({
       return;
     }
 
+    const date = new Date().getTime();
     const requestData: RequestData = {
+      id: generateHash(name.value + phoneNumber.value + date.toString()),
       name: name.value,
       phoneNumber: phoneNumber.value,
       info: info.value,
       location: location.value,
       deliveryTime: deliveryTime.value,
       notes: notes.value,
+      date: date,
     };
-    actions.updateRequestForm(requestData);
+
     setIsErr(false);
-    const resp = await writeRequestData(requestData);
-    if (resp instanceof RequestExistsError) {
-      navigation.navigate('Home', {
-        message:
-          Math.floor(Math.random() * 10000).toString() +
-          ': Request already placed',
-      });
-      return;
-    }
+    await writeRequestData(requestData);
+    actions.updateRequestForm(requestData);
+
     navigation.navigate('Home', {
       message:
         Math.floor(Math.random() * 10000).toString() +
