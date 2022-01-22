@@ -25,3 +25,24 @@ export class RequestExistsError extends Error {
     Object.setPrototypeOf(this, RequestExistsError.prototype);
   }
 }
+
+export class RequestNotExistsError extends Error {
+  constructor(msg: string) {
+    super(msg);
+    Object.setPrototypeOf(this, RequestNotExistsError.prototype);
+  }
+}
+
+export class VolunteerExistsError extends Error {
+  constructor(msg: string) {
+    super(msg);
+    Object.setPrototypeOf(this, VolunteerExistsError.prototype);
+  }
+}
+
+export class VolunteerNotExistsError extends Error {
+  constructor(msg: string) {
+    super(msg);
+    Object.setPrototypeOf(this, VolunteerNotExistsError.prototype);
+  }
+}
