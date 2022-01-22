@@ -108,7 +108,7 @@ const Request = ({
       deliveryTime: deliveryTime.value,
       notes: notes.value,
       date: date,
-      assignedVolunteers: [],
+      assignedVolunteerIds: [],
     };
 
     setIsErr(false);
