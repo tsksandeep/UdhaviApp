@@ -1,3 +1,3 @@
-const UPDATE_REQUEST_FORM: string = 'request/UPDATE_REQUEST_FORM';
+const CREATE_REQUEST_FORM: string = 'request/CREATE_REQUEST_FORM';
 
-export { UPDATE_REQUEST_FORM };
+export { CREATE_REQUEST_FORM };
