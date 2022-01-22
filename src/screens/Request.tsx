@@ -20,7 +20,7 @@ import { writeRequestData } from '../firebase/requests';
 import { RequestData } from '../firebase/model';
 import bindDispatch from '../utils/actions';
 import { phoneNumberValidator } from '../helpers/validator';
-import { RequestInitialState } from '../store/reducers/request';
+import { RequestInitialState } from '../store/reducers/requestForm';
 import { generateHash } from '../helpers/hash';
 
 const keyboardVerticalOffset = Platform.OS === 'ios' ? -50 : 0;

@@ -1,0 +1,3 @@
+const CREATE_REQUEST_FORM: string = 'form/CREATE_REQUEST_FORM';
+
+export { CREATE_REQUEST_FORM };

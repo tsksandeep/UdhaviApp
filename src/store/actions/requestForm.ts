@@ -1,5 +1,5 @@
-import * as Types from '../types/request';
-import { RequestForm } from '../reducers/request';
+import * as Types from '../types/requestForm';
+import { RequestForm } from '../reducers/requestForm';
 
 const updateRequestForm = (payload: RequestForm) => ({
   type: Types.CREATE_REQUEST_FORM,

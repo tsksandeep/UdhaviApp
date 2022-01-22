@@ -1,3 +1,0 @@
-const CREATE_REQUEST_FORM: string = 'request/CREATE_REQUEST_FORM';
-
-export { CREATE_REQUEST_FORM };

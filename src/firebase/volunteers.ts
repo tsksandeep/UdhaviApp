@@ -9,33 +9,65 @@ import {
 } from 'firebase/firestore';
 
 import { VolunteerNotExistsError } from '../errors/errors';
-import { VolunteerData } from './model';
+import { RequestsMap } from '../store/reducers/updateRequests';
+import { VolunteersMap } from '../store/reducers/updateVolunteers';
+import { RequestData, VolunteerData } from './model';
 import { volunteersRef } from './ref';
 import {
   addVolunteerToRequests,
   removeVolunteerFromRequests,
 } from './requests';
 
-export const assignRequestsToVolunteer = (
+export const assignRequestsToVolunteer = async (
+  actions: any,
+  requests: RequestsMap,
+  volunteers: VolunteersMap,
   volunteerId: string,
   requestIds: Array<string>,
 ) => {
-  const volunteer = addRequestsToVolunteer(volunteerId, requestIds);
-  const requests = addVolunteerToRequests(volunteerId, requestIds);
+  const newVolunteer = await addRequestsToVolunteer(volunteerId, requestIds);
+  if (newVolunteer !== null) {
+    volunteers[newVolunteer.id] = newVolunteer;
+  }
 
-  // actions.updateVolunteer(volunteer)
-  // actions.updateRequests(requests)
+  const newRequests = await addVolunteerToRequests(volunteerId, requestIds);
+  if (newRequests.length > 0) {
+    newRequests.forEach((newRequest: RequestData) => {
+      requests[newRequest.id] = newRequest;
+    });
+  }
+
+  actions.updateRequests(requests);
+  actions.updateVolunteers(volunteers);
 };
 
-export const releaseRequestsFromVolunteer = (
+export const releaseRequestsFromVolunteer = async (
+  actions: any,
+  requests: RequestsMap,
+  volunteers: VolunteersMap,
   volunteerId: string,
   requestIds: Array<string>,
 ) => {
-  const volunteer = removeRequestsFromVolunteer(volunteerId, requestIds);
-  const requests = removeVolunteerFromRequests(volunteerId, requestIds);
+  const newVolunteer = await removeRequestsFromVolunteer(
+    volunteerId,
+    requestIds,
+  );
+  if (newVolunteer !== null) {
+    volunteers[newVolunteer.id] = newVolunteer;
+  }
 
-  // actions.updateVolunteer(volunteer)
-  // actions.updateRequests(requests)
+  const newRequests = await removeVolunteerFromRequests(
+    volunteerId,
+    requestIds,
+  );
+  if (newRequests.length > 0) {
+    newRequests.forEach((newRequest: RequestData) => {
+      requests[newRequest.id] = newRequest;
+    });
+  }
+
+  actions.updateRequests(requests);
+  actions.updateVolunteers(volunteers);
 };
 
 export const writeVolunteerData = async (volunteerData: VolunteerData) => {

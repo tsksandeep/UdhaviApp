@@ -1,4 +1,4 @@
-import * as Types from '../types/request';
+import * as Types from '../types/requestForm';
 
 export interface Action {
   payload: any;
