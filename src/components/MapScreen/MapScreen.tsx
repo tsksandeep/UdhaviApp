@@ -10,19 +10,17 @@ import { customMapStyle } from './constants/map';
 
 const latDelta = 0.3;
 const lngDelta = 0.2;
-const selectedRequestId = null;
-const selectedVolunteerId = null;
 
 const markers = [
   {
-    title: 'hello',
+    title: 'Ram',
     coordinates: {
       latitude: 13.042913472281159,
       longitude: 80.1745111895118,
     },
   },
   {
-    title: 'hello',
+    title: 'Vijay',
     coordinates: {
       latitude: 14.042913472281159,
       longitude: 80.1745111895118,
@@ -41,7 +39,7 @@ const MapScreen = () => {
     longitude: 0,
   });
 
-  const getChennaiRegion = () => {
+  const getInitialRegion = () => {
     return {
       latitude: 13.042913472281159,
       longitude: 80.1745111895118,
@@ -59,30 +57,9 @@ const MapScreen = () => {
     setSelectedCoordinates(coordinates);
   };
 
-  return (
-    <View>
-      <MapView
-        provider={PROVIDER_GOOGLE}
-        style={{ width: '100%', height: '100%' }}
-        ref={mapViewRef}
-        zoomEnabled={true}
-        zoomControlEnabled={true}
-        moveOnMarkerPress={false}
-        customMapStyle={customMapStyle}
-        initialRegion={getChennaiRegion()}
-      >
-        {markers.map((item) => (
-          <Marker
-            draggable
-            coordinate={
-              selectedCoordinates.latitude
-                ? selectedCoordinates
-                : item.coordinates
-            }
-            title={item.title}
-            onDragEnd={handleDragEnd}
-          />
-        ))}
+  const volunteerMarker = () => {
+    return (
+      <View>
         {Object.values(mockData.Volunteers).map((item: any) => (
           <Marker
             coordinate={{
@@ -97,6 +74,13 @@ const MapScreen = () => {
             icon={require('../../assets/marker/volunteer_default.ios.png')}
           ></Marker>
         ))}
+      </View>
+    );
+  };
+
+  const requesterMarker = () => {
+    return (
+      <View>
         {Object.values(mockData.Requests).map((item: any) => (
           <Marker
             coordinate={{
@@ -111,6 +95,36 @@ const MapScreen = () => {
             icon={require('../../assets/marker/request_default.ios.png')}
           ></Marker>
         ))}
+      </View>
+    );
+  };
+
+  return (
+    <View>
+      <MapView
+        provider={PROVIDER_GOOGLE}
+        style={{ width: '100%', height: '100%' }}
+        ref={mapViewRef}
+        zoomEnabled={true}
+        zoomControlEnabled={true}
+        moveOnMarkerPress={false}
+        customMapStyle={customMapStyle}
+        initialRegion={getInitialRegion()}
+      >
+        {markers.map((item) => (
+          <Marker
+            draggable
+            coordinate={
+              selectedCoordinates.latitude
+                ? selectedCoordinates
+                : item.coordinates
+            }
+            title={item.title}
+            onDragEnd={handleDragEnd}
+          />
+        ))}
+        {volunteerMarker}
+        {requesterMarker}
       </MapView>
     </View>
   );
