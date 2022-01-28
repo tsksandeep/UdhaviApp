@@ -1,8 +1,9 @@
-import * as Types from '../types/volunteerSelection';
+import { PendingSelection } from '../reducers/pendingSelection';
+import * as Types from '../types/pendingSelection';
 
-const updateVolunteerSelection = (payload: string) => ({
-  type: Types.UPDATE_VOLUNTEER_SELECTION,
+const updatePendingSelection = (payload: PendingSelection) => ({
+  type: Types.UPDATE_PENDING_SELECTION,
   payload,
 });
 
-export { updateVolunteerSelection };
+export { updatePendingSelection };

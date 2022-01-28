@@ -20,21 +20,23 @@ export interface PendingSelectionInitialState {
   pendingSelection: PendingSelection;
 }
 
-export const initialState: PendingSelectionInitialState = {
-  pendingSelection: {
-    request: {
-      assigned: [],
-      available: [],
-    },
-    volunteer: {
-      assigned: [],
-      available: [],
-    },
-    all: {
-      assigned: [],
-      available: [],
-    },
+export const initialPendingSelection: PendingSelection = {
+  request: {
+    assigned: [],
+    available: [],
   },
+  volunteer: {
+    assigned: [],
+    available: [],
+  },
+  all: {
+    assigned: [],
+    available: [],
+  },
+};
+
+export const initialState: PendingSelectionInitialState = {
+  pendingSelection: initialPendingSelection,
 };
 
 const reducer = (state = initialState, action: Action) => {

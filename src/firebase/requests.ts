@@ -6,6 +6,7 @@ import {
   where,
   orderBy,
   getDoc,
+  updateDoc,
 } from 'firebase/firestore';
 
 import { RequestNotExistsError } from '../errors/errors';
@@ -41,7 +42,7 @@ export const assignVolunteersToRequest = async (
   actions.updateVolunteers(volunteers);
 };
 
-export const releaseRequestsFromVolunteer = async (
+export const releaseVolunteersFromRequest = async (
   actions: any,
   requests: RequestsMap,
   volunteers: VolunteersMap,
@@ -81,6 +82,13 @@ export const writeRequestData = async (requestData: RequestData) => {
   });
 };
 
+export const updateRequestData = async (
+  id: string,
+  data: { [key: string]: any },
+) => {
+  updateDoc(doc(requestsRef, id), data);
+};
+
 export const getAllRequests = async (): Promise<any> => {
   return (await getDocs(query(requestsRef, orderBy('date')))).docs;
 };
@@ -107,7 +115,7 @@ export const getRequestByID = async (id: string): Promise<any> => {
   }
 
   return {
-    userId: id,
+    id: id,
     name: request.name,
     phoneNumber: request.phoneNumber,
     info: request.info,
