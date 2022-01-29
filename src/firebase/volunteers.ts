@@ -6,6 +6,7 @@ import {
   where,
   orderBy,
   getDoc,
+  updateDoc,
 } from 'firebase/firestore';
 
 import { VolunteerNotExistsError } from '../errors/errors';
@@ -83,6 +84,13 @@ export const writeVolunteerData = async (volunteerData: VolunteerData) => {
   });
 };
 
+export const updateRequestData = async (
+  id: string,
+  data: { [key: string]: any },
+) => {
+  updateDoc(doc(volunteersRef, id), data);
+};
+
 export const getAllVolunteers = async (): Promise<any> => {
   return (await getDocs(query(volunteersRef, orderBy('lastActive')))).docs;
 };
@@ -103,7 +111,7 @@ export const getVolunteerByID = async (id: string): Promise<any> => {
   }
 
   return {
-    userId: id,
+    id: id,
     name: volunteer.name,
     phoneNumber: volunteer.phoneNumber,
     zone: volunteer.zone,
