@@ -1,8 +1,8 @@
-require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
+require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
 
 export default {
-  name: "UdhaviApp",
-  version: "1.0.0",
+  name: 'UdhaviApp',
+  version: '1.0.0',
   extra: {
     // Firebase configuration
     FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
@@ -13,5 +13,6 @@ export default {
     FIREBASE_MESSAGING_SENDER_ID: process.env.FIREBASE_MESSAGING_SENDER_ID,
     FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
     FIREBASE_MEASUREMENT_ID: process.env.FIREBASE_MEASUREMENT_ID,
+    GOOGLE_PLACES_API_KEY: process.env.GOOGLE_PLACES_API_KEY,
   },
 };

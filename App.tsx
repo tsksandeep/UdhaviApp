@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { Provider as ThemeWrapper } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-
+import { NativeBaseProvider } from 'native-base';
 import Home from './src/screens/Home';
 import Otp from './src/screens/Otp';
 import Login from './src/screens/Login';
@@ -59,22 +59,24 @@ const linking = {
 const App = () => {
   return (
     <Provider store={configureStore()}>
-      <ThemeWrapper theme={theme}>
-        <NavigationContainer linking={linking}>
-          <Stack.Navigator
-            initialRouteName="Home"
-            screenOptions={{
-              headerShown: false,
-            }}
-          >
-            <Stack.Screen name="Home" component={Home} />
-            <Stack.Screen name="Otp" component={Otp} />
-            <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="Register" component={Register} />
-            <Stack.Screen name="Request" component={Request} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </ThemeWrapper>
+      <NativeBaseProvider>
+        <ThemeWrapper theme={theme}>
+          <NavigationContainer linking={linking}>
+            <Stack.Navigator
+              initialRouteName="Home"
+              screenOptions={{
+                headerShown: false,
+              }}
+            >
+              <Stack.Screen name="Home" component={Home} />
+              <Stack.Screen name="Otp" component={Otp} />
+              <Stack.Screen name="Login" component={Login} />
+              <Stack.Screen name="Register" component={Register} />
+              <Stack.Screen name="Request" component={Request} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </ThemeWrapper>
+      </NativeBaseProvider>
     </Provider>
   );
 };

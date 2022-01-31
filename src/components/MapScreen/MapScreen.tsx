@@ -1,32 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text } from 'react-native';
+import { View, Dimensions, StyleSheet } from 'react-native';
 import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
 import { AppInitialState } from '../../store/reducers/app';
 import bindDispatch from '../../utils/actions';
 import translate from '../../utils/language.util';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { customMapStyle } from './constants/map';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { customMapStyle, searchBarStyles } from './constants/map';
+import { HStack } from 'native-base';
+import PlacesAutoComplete from '../PlacesAutoComplete/PlacesAutoComplete';
 
 const latDelta = 0.3;
 const lngDelta = 0.2;
-
-const markers = [
-  {
-    title: 'Ram',
-    coordinates: {
-      latitude: 13.042913472281159,
-      longitude: 80.1745111895118,
-    },
-  },
-  {
-    title: 'Vijay',
-    coordinates: {
-      latitude: 14.042913472281159,
-      longitude: 80.1745111895118,
-    },
-  },
-];
 
 const mockData = require('../../mock-server/mockData.json');
 
@@ -37,6 +23,11 @@ const MapScreen = () => {
   const [selectedCoordinates, setSelectedCoordinates] = useState({
     latitude: 0,
     longitude: 0,
+  });
+  const [isMapReady, setIsMapReady] = useState(false);
+  const [requesterMarkerCoordinates, setRequesterMarkerCoordinates] = useState({
+    lat: 0,
+    lng: 0,
   });
 
   const getInitialRegion = () => {
@@ -99,33 +90,48 @@ const MapScreen = () => {
     );
   };
 
+  const onMapLayout = () => {
+    setIsMapReady(true);
+  };
+
+  const onSelectCoordinates = (data: any) => {
+    setRequesterMarkerCoordinates(data);
+  };
+
   return (
     <View>
       <MapView
         provider={PROVIDER_GOOGLE}
-        style={{ width: '100%', height: '100%' }}
+        style={{
+          flex: 1,
+          minHeight: Dimensions.get('window').height,
+          minWidth: Dimensions.get('window').width,
+        }}
         ref={mapViewRef}
         zoomEnabled={true}
         zoomControlEnabled={true}
         moveOnMarkerPress={false}
         customMapStyle={customMapStyle}
         initialRegion={getInitialRegion()}
+        onMapReady={onMapLayout}
       >
-        {markers.map((item) => (
+        {isMapReady && requesterMarkerCoordinates.lat > 0 && (
           <Marker
             draggable
-            coordinate={
-              selectedCoordinates.latitude
-                ? selectedCoordinates
-                : item.coordinates
-            }
-            title={item.title}
+            coordinate={{
+              latitude: requesterMarkerCoordinates.lat,
+              longitude: requesterMarkerCoordinates.lng,
+            }}
             onDragEnd={handleDragEnd}
           />
-        ))}
-        {volunteerMarker}
-        {requesterMarker}
+        )}
+        {volunteerMarker()}
+        {requesterMarker()}
       </MapView>
+      <PlacesAutoComplete
+        onSelectCoordinates={onSelectCoordinates}
+        ref={mapViewRef}
+      />
     </View>
   );
 };

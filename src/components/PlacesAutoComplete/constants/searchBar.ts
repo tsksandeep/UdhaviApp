@@ -1,31 +1,3 @@
-const customMapStyle = [
-  {
-    featureType: 'administrative',
-    elementType: 'geometry',
-    stylers: [
-      {
-        visibility: 'off',
-      },
-    ],
-  },
-  {
-    featureType: 'poi',
-    stylers: [
-      {
-        visibility: 'off',
-      },
-    ],
-  },
-  {
-    featureType: 'transit',
-    stylers: [
-      {
-        visibility: 'off',
-      },
-    ],
-  },
-];
-
 const searchBarStyles = {
   container: {
     flex: 1,
@@ -71,4 +43,4 @@ const searchBarStyles = {
   powered: {},
 };
 
-export { customMapStyle, searchBarStyles };
+export { searchBarStyles };
