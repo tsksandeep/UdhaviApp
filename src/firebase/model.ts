@@ -13,7 +13,8 @@ export interface RequestData {
   deliveryTime: string;
   notes: string;
   date: number;
-  ETA: string;
+  eta: string;
+  status: string;
   assignedVolunteerIds?: Array<string>;
 }
 

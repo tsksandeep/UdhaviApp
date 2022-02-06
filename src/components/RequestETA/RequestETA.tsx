@@ -23,7 +23,7 @@ const RequestETA = (
       <Pressable onPress={() => setShowModal(true)}>
         <Badge colorScheme="default" variant={'outline'} alignSelf="center">
           {'ETA'}
-          {request.ETA}
+          {request.eta}
         </Badge>
       </Pressable>
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
@@ -48,7 +48,7 @@ const RequestETA = (
               </Button>
               <Button
                 onPress={() => {
-                  request.ETA = etaText;
+                  request.eta = etaText;
                   requests[request.id] = request;
                   actions.updateRequests(requests);
                   setShowModal(false);
