@@ -9,11 +9,16 @@ export interface RequestData {
   name: string;
   phoneNumber: string;
   info: string;
-  location: string;
+  location: Location;
   deliveryTime: string;
   notes: string;
   date: number;
   assignedVolunteerIds?: Array<string>;
+}
+
+interface Location {
+  longitude: number;
+  latitude: number;
 }
 
 export interface VolunteerData {

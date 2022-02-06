@@ -1,12 +1,17 @@
 import React from 'react';
-import { searchBarStyles } from './constants/searchBar';
+import { searchBarStyles, searchBarErrorStyles } from './constants/searchBar';
 import { HStack } from 'native-base';
-import { Dimensions, StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet, Text } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Constants from 'expo-constants';
+import { ReactNativeStyle } from '@emotion/native';
 
 type Props = {
   onSelectCoordinates: any;
+  styles?: ReactNativeStyle;
+  error?: boolean;
+  errorText?: string;
+  onChangeText?: any;
 };
 
 const screenWidth = Dimensions.get('window').width;
@@ -38,11 +43,18 @@ const PlacesAutoComplete = React.forwardRef((props: Props, ref: any) => {
   }
 
   return (
-    <HStack space={1} style={styles.search}>
+    <HStack space={1} style={props.styles || styles.search}>
       <GooglePlacesAutocomplete
         suppressDefaultStyles={true}
-        styles={searchBarStyles}
+        styles={
+          props.error ? searchBarErrorStyles : searchBarStyles(!!props.styles)
+        }
         placeholder="Search with address/pincode/anything"
+        textInputProps={
+          props.error && {
+            placeholderTextColor: '#FF0000',
+          }
+        }
         onPress={(data, details = null) => {
           setLocationByAutoCompleteResult(data);
         }}
@@ -52,6 +64,7 @@ const PlacesAutoComplete = React.forwardRef((props: Props, ref: any) => {
           components: 'country:in',
         }}
       />
+      {props.error && <Text style={{ color: 'red' }}>{props.errorText}</Text>}
     </HStack>
   );
 });
@@ -64,6 +77,9 @@ const styles = StyleSheet.create({
     left: 2,
     width: screenWidth - 3,
     backgroundColor: 'white',
+  },
+  RegisterFormField: {
+    height: '56px',
   },
 });
 
