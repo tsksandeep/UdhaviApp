@@ -15,41 +15,93 @@ import {
 import { RequestsMap } from '../reducers/updateRequests';
 import { VolunteersMap } from '../reducers/updateVolunteers';
 
-export function isAssignedToValid(obj: any) {
+export const clearPendingSelection = (actions: any) => {
+  actions.updatePendingSelection({
+    request: {
+      assigned: [],
+      available: [],
+    },
+    volunteer: {
+      assigned: [],
+      available: [],
+    },
+    all: {
+      assigned: [],
+      available: [],
+    },
+  });
+  actions.updateRequestSelection('');
+  actions.updateVolunteerSelection('');
+  actions.updateAssignmentOrReleaseSummary(false);
+};
+
+export const setPendingSelection = (
+  pendingSelection: any,
+  category: string,
+  subCategory: string,
+  requestId: string,
+  requestValueToSet: boolean,
+) => {
+  if (pendingSelection?.[category]?.[subCategory]?.[requestId]) {
+    if (!requestValueToSet) {
+      delete pendingSelection[category][subCategory][requestId];
+      return;
+    }
+    pendingSelection[category][subCategory][requestId] = {
+      tag: requestValueToSet,
+    };
+  }
+};
+
+export const getPendingSelection = (
+  pendingSelection: any,
+  category: string,
+  subCategory: string,
+  requestId: string,
+): boolean => {
+  var tagValue = false;
+  var requestValue = pendingSelection?.[category]?.[subCategory]?.[requestId];
+  if (requestValue) {
+    tagValue = requestValue ? requestValue.tag : false;
+  }
+  return tagValue;
+};
+
+export const isAssignedToValid = (obj: any) => {
   return obj.AssignedTo && Object.keys(obj.AssignedTo).length > 0;
-}
+};
 
-export function getAllVolunteersRemovePendingSelections(
+export const getAllVolunteersRemovePendingSelections = (
   pendingSelection: PendingSelection,
-) {
+) => {
   return Object.keys(pendingSelection.volunteer.assigned);
-}
+};
 
-export function getAllVolunteersAssignPendingSelections(
+export const getAllVolunteersAssignPendingSelections = (
   pendingSelection: PendingSelection,
-) {
+) => {
   return Object.keys(pendingSelection.volunteer.available);
-}
+};
 
-export function getAllRequestsRemovePendingSelections(
+export const getAllRequestsRemovePendingSelections = (
   pendingSelection: PendingSelection,
-) {
+) => {
   return Object.keys(pendingSelection.request.assigned);
-}
+};
 
-export function getAllRequestsAssignPendingSelections(
+export const getAllRequestsAssignPendingSelections = (
   pendingSelection: PendingSelection,
-) {
+) => {
   return Object.keys(pendingSelection.request.available);
-}
+};
 
-export async function assignSelectedVolunteersToRequest(
+export const assignSelectedVolunteersToRequest = async (
   actions: any,
   requests: RequestsMap,
   volunteers: VolunteersMap,
   pendingSelection: PendingSelection,
   requestId: string,
-) {
+) => {
   let volunteerIds = getAllVolunteersAssignPendingSelections(pendingSelection);
   assignVolunteersToRequest(
     actions,
@@ -59,15 +111,15 @@ export async function assignSelectedVolunteersToRequest(
     volunteerIds,
   );
   actions.updatePendingSelection(initialPendingSelection);
-}
+};
 
-export async function releaseSelectedVolunteersFromRequest(
+export const releaseSelectedVolunteersFromRequest = async (
   actions: any,
   requests: RequestsMap,
   volunteers: VolunteersMap,
   pendingSelection: PendingSelection,
   requestId: string,
-) {
+) => {
   let volunteerIds = getAllVolunteersRemovePendingSelections(pendingSelection);
   releaseVolunteersFromRequest(
     actions,
@@ -77,14 +129,14 @@ export async function releaseSelectedVolunteersFromRequest(
     volunteerIds,
   );
   actions.updatePendingSelection(initialPendingSelection);
-}
+};
 
-export async function releaseAllVolunteersFromRequest(
+export const releaseAllVolunteersFromRequest = async (
   actions: any,
   requests: RequestsMap,
   volunteers: VolunteersMap,
   requestId: string,
-) {
+) => {
   var request = await getRequestByID(requestId);
   if (isAssignedToValid(request)) {
     let volunteerIds = Object.keys(request.AssignedTo);
@@ -97,15 +149,15 @@ export async function releaseAllVolunteersFromRequest(
     );
   }
   actions.updatePendingSelection(initialPendingSelection);
-}
+};
 
-export function assignSelectedRequestsToVolunteer(
+export const assignSelectedRequestsToVolunteer = (
   actions: any,
   requests: RequestsMap,
   volunteers: VolunteersMap,
   pendingSelection: PendingSelection,
   volunteerId: string,
-) {
+) => {
   let requestIds = getAllRequestsAssignPendingSelections(pendingSelection);
   assignRequestsToVolunteer(
     actions,
@@ -115,15 +167,15 @@ export function assignSelectedRequestsToVolunteer(
     requestIds,
   );
   actions.updatePendingSelection(initialPendingSelection);
-}
+};
 
-export function releaseSelectedRequestsFromVolunteer(
+export const releaseSelectedRequestsFromVolunteer = (
   actions: any,
   requests: RequestsMap,
   volunteers: VolunteersMap,
   pendingSelection: PendingSelection,
   volunteerId: string,
-) {
+) => {
   let requestIds = getAllRequestsRemovePendingSelections(pendingSelection);
   releaseRequestsFromVolunteer(
     actions,
@@ -133,14 +185,14 @@ export function releaseSelectedRequestsFromVolunteer(
     requestIds,
   );
   actions.updatePendingSelection(initialPendingSelection);
-}
+};
 
-export async function releaseAllRequestsFromVolunteer(
+export const releaseAllRequestsFromVolunteer = async (
   actions: any,
   requests: RequestsMap,
   volunteers: VolunteersMap,
   volunteerId: string,
-) {
+) => {
   var volunteer = await getVolunteerByID(volunteerId);
   if (isAssignedToValid(volunteer)) {
     let requestIds = Object.keys(volunteer.AssignedTo);
@@ -153,4 +205,4 @@ export async function releaseAllRequestsFromVolunteer(
     );
   }
   actions.updatePendingSelection(initialPendingSelection);
-}
+};

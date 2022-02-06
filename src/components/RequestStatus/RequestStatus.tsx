@@ -50,12 +50,14 @@ const MenuItemWithAction = (props: {
   );
 };
 
-const RequestStatus = (
-  actions: any,
-  request: RequestData,
-  requests: RequestsMap,
-  volunteers: VolunteersMap,
-) => {
+const RequestStatus = (props: {
+  actions: any;
+  request: RequestData;
+  requests: RequestsMap;
+  volunteers: VolunteersMap;
+}) => {
+  const { actions, request, requests, volunteers } = props;
+
   const onSelectedCallback = async (newState: string) => {
     if (newState == 'Completed') {
       await releaseAllVolunteersFromRequest(

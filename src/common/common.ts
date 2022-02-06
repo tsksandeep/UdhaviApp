@@ -1,5 +1,19 @@
+import { Alert, Linking, Platform } from 'react-native';
 import { RequestsMap } from '../store/reducers/updateRequests';
 import { VolunteersMap } from '../store/reducers/updateVolunteers';
+
+export const callNumber = async (phone: string) => {
+  var phoneNumber =
+    Platform.OS !== 'android' ? `telprompt:${phone}` : `tel:${phone}`;
+
+  var supported = await Linking.canOpenURL(phoneNumber);
+  if (!supported) {
+    Alert.alert('Phone number is not available');
+    return;
+  }
+
+  return Linking.openURL(phoneNumber);
+};
 
 export const getHeaderCountInfo = async (
   entityMap: RequestsMap | VolunteersMap,

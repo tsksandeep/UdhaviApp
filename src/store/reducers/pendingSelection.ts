@@ -6,8 +6,8 @@ export interface Action {
 }
 
 interface AssignedAndAvailable {
-  assigned: Array<string>;
-  available: Array<string>;
+  assigned: {};
+  available: {};
 }
 
 export interface PendingSelection {
