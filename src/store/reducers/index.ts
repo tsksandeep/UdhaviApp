@@ -9,6 +9,7 @@ import updateVolunteers from './updateVolunteers';
 import pendingSelection from './pendingSelection';
 import requestSelection from './requestSelection';
 import volunteerSelection from './volunteerSelection';
+import assignmentOrReleaseSummary from './assignmentOrReleaseSummary';
 
 const rootReducer = combineReducers({
   app,
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   pendingSelection,
   requestSelection,
   volunteerSelection,
+  assignmentOrReleaseSummary,
 });
 
 export default rootReducer;

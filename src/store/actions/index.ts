@@ -8,3 +8,4 @@ export * from './updateVolunteers';
 export * from './pendingSelection';
 export * from './requestSelection';
 export * from './volunteerSelection';
+export * from './assignmentOrReleaseSummary';
