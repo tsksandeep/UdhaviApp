@@ -1,13 +1,6 @@
 import React, { useState } from 'react';
 import { css } from '@emotion/native';
-import {
-  Text,
-  KeyboardAvoidingView,
-  SafeAreaView,
-  Platform,
-  View,
-  StyleSheet,
-} from 'react-native';
+import { Text, SafeAreaView, View, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -23,8 +16,6 @@ import { RequestInitialState } from '../store/reducers/requestForm';
 import { generateHash } from '../helpers/hash';
 import { useForm, Controller } from 'react-hook-form';
 import PlacesAutoComplete from '../components/PlacesAutoComplete/PlacesAutoComplete';
-
-const keyboardVerticalOffset = Platform.OS === 'ios' ? -50 : 0;
 
 const Request = ({
   actions,
@@ -76,7 +67,10 @@ const Request = ({
 
   return (
     <SafeAreaView style={RequestStyle.container}>
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView
+        extraScrollHeight={75}
+        keyboardShouldPersistTaps={'always'}
+      >
         <View>
           <Text style={RequestStyle.header}>Submit your request</Text>
           <Controller
@@ -213,7 +207,6 @@ const Request = ({
               },
             }}
           />
-
           <Button
             style={RequestStyle.submitButton}
             mode="outlined"

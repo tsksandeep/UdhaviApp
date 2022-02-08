@@ -16,12 +16,23 @@ const searchBarStyles = (isRegisterForm?: boolean) => {
       flex: 1,
       borderColor: 'gray',
     },
-    listView: {},
+    listView: {
+      width: 300,
+      borderTopWidth: 1,
+      borderColor: 'gray',
+      marginLeft: 10,
+      marginTop: 20,
+    },
+    predefinedPlacesDescription: {
+      color: '#1faadb',
+    },
     row: {
-      backgroundColor: '#FFFFFF',
       padding: 13,
       minHeight: 44,
       flexDirection: 'row',
+      borderLeftWidth: 1,
+      borderRightWidth: 1,
+      borderColor: 'gray',
     },
     loader: {
       flexDirection: 'row',
