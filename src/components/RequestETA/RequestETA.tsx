@@ -10,11 +10,12 @@ import {
 import { RequestsMap } from '../../store/reducers/updateRequests';
 import { RequestData } from '../../firebase/model';
 
-const RequestETA = (
-  actions: any,
-  request: RequestData,
-  requests: RequestsMap,
-) => {
+const RequestETA = (props: {
+  actions: any;
+  request: RequestData;
+  requests: RequestsMap;
+}) => {
+  const { actions, request, requests } = props;
   const [showModal, setShowModal] = useState(false);
   const [etaText, setEtaText] = useState('');
 

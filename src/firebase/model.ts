@@ -15,6 +15,9 @@ export interface RequestData {
   date: number;
   eta: string;
   status: string;
+  message: string;
+  category: string;
+  assignedTo: string;
   assignedVolunteerIds?: Array<string>;
 }
 

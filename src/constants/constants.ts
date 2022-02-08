@@ -7,6 +7,15 @@ export const RequestStates = [
   'Cancelled',
 ];
 
+export const RequestCategoryImageMap: any = {
+  Milk: require('../assets/request_category/Milk.png'),
+  Medical: require('../assets/request_category/Medical.png'),
+  Food: require('../assets/request_category/Food.png'),
+  Transport: require('../assets/request_category/Transport.png'),
+  Misc: require('../assets/request_category/Misc.png'),
+  Accident: require('../assets/request_category/Accident.png'),
+};
+
 export const RequestStatesMap = {
   New: 'New',
   UnderReview: 'Under Review',
