@@ -33,6 +33,7 @@ export interface VolunteerData {
   zone: string;
   type: string;
   status: string;
+  assignedTo: string;
   lastActive: number;
   assignedRequestIds?: Array<string>;
 }
