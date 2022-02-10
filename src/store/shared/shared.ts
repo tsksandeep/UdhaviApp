@@ -1,3 +1,9 @@
+import { isEmptyObject } from '../../common/common';
+import {
+  RequestsAssignedFilterOption,
+  VolunteersAssignedFilterOption,
+} from '../../constants/constants';
+import { RequestData, VolunteerData } from '../../firebase/model';
 import {
   assignVolunteersToRequest,
   getRequestByID,
@@ -33,6 +39,62 @@ export const clearPendingSelection = (actions: any) => {
   actions.updateRequestSelection('');
   actions.updateVolunteerSelection('');
   actions.updateAssignmentOrReleaseSummary(false);
+};
+
+export const setRequestFilter = (actions: any, choice: string) => {
+  if (!choice || choice == 'all') {
+    actions.updateRequestFilterInfo(null);
+    return;
+  }
+  actions.updateRequestFilterInfo(choice);
+};
+
+export const isRequestMatchingFilter = (
+  request: RequestData,
+  requestFilter: string,
+) => {
+  if (!requestFilter) {
+    return true;
+  }
+
+  if (request.status == requestFilter) {
+    return true;
+  }
+
+  if (requestFilter == VolunteersAssignedFilterOption) {
+    if (!isEmptyObject(request.assignedVolunteerIds as any[])) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+export const setVolunteerFilter = (actions: any, choice: string) => {
+  if (!choice || choice == 'all') {
+    actions.updateVolunteerFilterInfo(null);
+    return;
+  }
+  actions.updateVolunteerFilterInfo(choice);
+};
+
+export const isVolunteerMatchingFilter = (
+  volunteer: VolunteerData,
+  volunteerFilter: string,
+) => {
+  if (!volunteerFilter) {
+    return true;
+  }
+
+  if (volunteer.status == volunteerFilter) {
+    return true;
+  }
+
+  if (volunteerFilter == RequestsAssignedFilterOption) {
+    if (!isEmptyObject(volunteer.assignedRequestIds as any[])) {
+      return true;
+    }
+  }
 };
 
 export const setPendingSelection = (
