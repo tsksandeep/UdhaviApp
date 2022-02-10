@@ -13,6 +13,8 @@ import Request from './src/screens/Request';
 
 import configureStore from './src/store';
 import { theme } from './src/core/theme';
+import MapScreen from './src/components/MapScreen/MapScreen';
+import GetLocation from './src/screens/GetLocation';
 
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
@@ -39,6 +41,10 @@ declare global {
       error?: Error;
     };
     Request: undefined;
+    Map: {
+      message?: string;
+    };
+    GetLocation: {};
   };
 }
 
@@ -52,6 +58,8 @@ const linking = {
       Login: '/login',
       Register: '/register',
       Request: '/request',
+      Map: '/Map',
+      getLocation: '/getLocation',
     },
   },
 };
@@ -73,6 +81,8 @@ const App = () => {
               <Stack.Screen name="Login" component={Login} />
               <Stack.Screen name="Register" component={Register} />
               <Stack.Screen name="Request" component={Request} />
+              <Stack.Screen name="Map" component={MapScreen} />
+              <Stack.Screen name="GetLocation" component={GetLocation} />
             </Stack.Navigator>
           </NavigationContainer>
         </ThemeWrapper>

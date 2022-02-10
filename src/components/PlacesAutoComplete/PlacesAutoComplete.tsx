@@ -8,17 +8,25 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
+import { connect } from 'react-redux';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Constants from 'expo-constants';
 import { ReactNativeStyle } from '@emotion/native';
 import * as Location from 'expo-location';
+import { createSelector } from 'reselect';
+import { AppInitialState } from '../../store/reducers/app';
+import bindDispatch from '../../utils/actions';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 type Props = {
-  onSelectCoordinates: any;
+  onSelectCoordinates?: any;
   styles?: ReactNativeStyle;
   error?: boolean;
   errorText?: string;
   onChangeText?: any;
+  app: AppInitialState;
+  actions: any;
 };
 
 const screenWidth = Dimensions.get('window').width;
@@ -28,6 +36,7 @@ const lngDelta = 0.2;
 
 const PlacesAutoComplete = React.forwardRef((props: Props, ref: any) => {
   const inputRef = useRef(null);
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const [location, setLocation] = useState();
   const [errorMsg, setErrorMsg] = useState('');
@@ -50,6 +59,15 @@ const PlacesAutoComplete = React.forwardRef((props: Props, ref: any) => {
       latitudeDelta: latDelta,
       longitudeDelta: lngDelta,
     };
+
+    const requestForm = { ...props.app.requestForm };
+
+    requestForm.location.latitude = loc.lat;
+    requestForm.location.longitude = loc.lng;
+
+    props.actions.createRequestForm(requestForm);
+    props.actions.updateShowCurrentLocationFlag(true);
+    navigation.navigate('Map', {});
     if (ref) {
       ref.current.animateToRegion(newRegion, 500);
     }
@@ -63,26 +81,17 @@ const PlacesAutoComplete = React.forwardRef((props: Props, ref: any) => {
       }
 
       Location.setGoogleApiKey(GOOGLE_PLACES_API_KEY);
-
-      console.log(status);
-
       let { coords } = await Location.getCurrentPositionAsync();
 
       setLocation(coords);
+      const requestForm = { ...props.app.requestForm };
 
-      console.log(coords);
+      requestForm.location.latitude = coords.latitude;
+      requestForm.location.longitude = coords.longitude;
 
-      if (coords) {
-        let { longitude, latitude } = coords;
-
-        let regionName = await Location.reverseGeocodeAsync({
-          longitude,
-          latitude,
-        });
-        setAddress(regionName[0]);
-        console.log(regionName, 'nothing');
-      }
-      inputRef?.current.setAddressText('someText');
+      props.actions.createRequestForm(requestForm);
+      props.actions.updateShowCurrentLocationFlag(true);
+      navigation.navigate('Map', {});
     })();
   };
 
@@ -108,12 +117,6 @@ const PlacesAutoComplete = React.forwardRef((props: Props, ref: any) => {
           key: GOOGLE_PLACES_API_KEY,
           language: 'en',
           components: 'country:in',
-        }}
-        currentLocationLabel="Current location"
-        currentLocation={true}
-        nearbyPlacesAPI="GooglePlacesSearch"
-        GooglePlacesSearchQuery={{
-          rankby: 'distance',
         }}
       />
       <TouchableOpacity style={styles.image} onPress={() => getLocation()}>
@@ -143,4 +146,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PlacesAutoComplete;
+const selector = createSelector(
+  (state: any) => state.app,
+  (app: AppInitialState) => ({ app }),
+);
+
+export default connect(selector, bindDispatch)(PlacesAutoComplete);

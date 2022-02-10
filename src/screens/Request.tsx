@@ -8,14 +8,11 @@ import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
 import TextInput from '../components/TextInput/TextInput';
 import Button from '../components/Button/Button';
-import { writeRequestData } from '../firebase/requests';
-import { RequestData } from '../firebase/model';
 import bindDispatch from '../utils/actions';
 import { phoneNumberValidator } from '../helpers/validator';
 import { RequestInitialState } from '../store/reducers/requestForm';
-import { generateHash } from '../helpers/hash';
 import { useForm, Controller } from 'react-hook-form';
-import PlacesAutoComplete from '../components/PlacesAutoComplete/PlacesAutoComplete';
+import { RequestForm } from '../store/reducers/app';
 
 const Request = ({
   actions,
@@ -38,27 +35,16 @@ const Request = ({
   } = useForm();
 
   const onSubmit = async (data: any) => {
-    const date = new Date().getTime();
-    const requestData: RequestData = {
-      id: generateHash(data.name + data.phoneNumber + date.toString()),
+    const requestData: RequestForm = {
       name: data.name,
       phoneNumber: data.phoneNumber,
       info: data.info,
       location: selectedCoordinates,
       deliveryTime: data.deliveryTime,
       notes: data.notes,
-      date: date,
-      assignedVolunteerIds: [],
     };
-
-    await writeRequestData(requestData);
-    actions.updateRequestForm(requestData);
-
-    navigation.navigate('Home', {
-      message:
-        Math.floor(Math.random() * 10000).toString() +
-        ': Successfully submitted the request',
-    });
+    actions.createRequestForm(requestData);
+    navigation.navigate('GetLocation', {});
   };
 
   const onSelectCoordinates = (data: any) => {
@@ -67,10 +53,7 @@ const Request = ({
 
   return (
     <SafeAreaView style={RequestStyle.container}>
-      <KeyboardAwareScrollView
-        extraScrollHeight={75}
-        keyboardShouldPersistTaps={'always'}
-      >
+      <KeyboardAwareScrollView>
         <View>
           <Text style={RequestStyle.header}>Submit your request</Text>
           <Controller
@@ -138,26 +121,6 @@ const Request = ({
               required: {
                 value: true,
                 message: 'Info is required!',
-              },
-            }}
-          />
-
-          <Controller
-            control={control}
-            name="location"
-            render={({ field: { onChange, value } }) => (
-              <PlacesAutoComplete
-                onSelectCoordinates={onSelectCoordinates}
-                styles={styles.locationInput}
-                error={!!errors?.info?.message}
-                onChangeText={(text: string) => onChange(text)}
-                errorText={errors?.location?.message}
-              />
-            )}
-            rules={{
-              required: {
-                value: true,
-                message: 'Location is required!',
               },
             }}
           />
