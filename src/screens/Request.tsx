@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { css } from '@emotion/native';
-import { Text, SafeAreaView, View, StyleSheet } from 'react-native';
+import { Text, SafeAreaView, View, StyleSheet, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -13,6 +13,8 @@ import { phoneNumberValidator } from '../helpers/validator';
 import { RequestInitialState } from '../store/reducers/requestForm';
 import { useForm, Controller } from 'react-hook-form';
 import { RequestForm } from '../store/reducers/app';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import moment from 'moment';
 
 const Request = ({
   actions,
@@ -25,6 +27,8 @@ const Request = ({
     latitude: 0,
     longitude: 0,
   });
+  const [date, setDate] = useState(new Date());
+  const [showTimePicker, setShowTimePicker] = useState(false);
 
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
@@ -40,11 +44,17 @@ const Request = ({
       phoneNumber: data.phoneNumber,
       info: data.info,
       location: selectedCoordinates,
-      deliveryTime: data.deliveryTime,
+      deliveryTime: date,
       notes: data.notes,
     };
     actions.createRequestForm(requestData);
     navigation.navigate('GetLocation', {});
+  };
+
+  const onDateChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setDate(currentDate);
+    setShowTimePicker(false);
   };
 
   const onSelectCoordinates = (data: any) => {
@@ -125,27 +135,28 @@ const Request = ({
             }}
           />
 
-          <Controller
-            control={control}
-            name="deliveryTime"
-            render={({ field: { onChange, value } }) => (
+          <Pressable onPress={() => setShowTimePicker(true)}>
+            <View pointerEvents="none">
               <TextInput
                 label="Delivery Time"
                 returnKeyType="next"
-                value={value}
-                onChangeText={(text: string) => onChange(text)}
                 autoCapitalize="none"
-                error={!!errors?.deliveryTime?.message}
-                errorText={errors?.deliveryTime?.message}
+                value={moment(date).format('HH:mm')}
+                editable={false}
+                pointerEvents="none"
               />
-            )}
-            rules={{
-              required: {
-                value: true,
-                message: 'Delivery Time is required!',
-              },
-            }}
-          />
+            </View>
+          </Pressable>
+
+          {showTimePicker && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              mode={'time'}
+              value={date}
+              display="default"
+              onChange={onDateChange}
+            />
+          )}
 
           <Controller
             control={control}
@@ -173,6 +184,7 @@ const Request = ({
           <Button
             style={RequestStyle.submitButton}
             mode="outlined"
+            disabled={!date}
             onPress={handleSubmit(onSubmit)}
           >
             Submit

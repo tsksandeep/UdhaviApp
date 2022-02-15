@@ -47,7 +47,7 @@ const PlacesAutoComplete = React.forwardRef((props: Props, ref: any) => {
     const reqUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeCode}&key=${GOOGLE_PLACES_API_KEY}`;
     const response = await fetch(reqUrl);
     const json = await response.json();
-    props.onSelectCoordinates(json.result.geometry.location);
+    // props.onSelectCoordinates(json.result.geometry.location);
     return json.result.geometry.location;
   }
 

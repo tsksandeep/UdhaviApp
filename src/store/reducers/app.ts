@@ -15,7 +15,7 @@ export interface RequestForm {
   phoneNumber: string;
   info: string;
   location: Location;
-  deliveryTime: string;
+  deliveryTime: Date;
   notes: string;
 }
 

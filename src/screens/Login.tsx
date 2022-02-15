@@ -5,7 +5,6 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { css } from '@emotion/native';
 import { PhoneAuthProvider } from 'firebase/auth';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
-
 import Logo from '../components/Logo/Logo';
 import Button from '../components/Button/Button';
 import TextInput from '../components/TextInput/TextInput';

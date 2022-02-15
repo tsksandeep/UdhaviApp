@@ -9,6 +9,8 @@ import { customMapStyle } from './constants/map';
 import Button from '../Button/Button';
 import { writeRequestData } from '../../firebase/requests';
 import { generateHash } from '../../helpers/hash';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 const latDelta = 0.3;
 const lngDelta = 0.2;
@@ -17,6 +19,7 @@ const mockData = require('../../mock-server/mockData.json');
 
 const MapScreen = ({ app, actions }) => {
   const mapViewRef = useRef(null);
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const [selectedCoordinates, setSelectedCoordinates] = useState({
     latitude: 0,
@@ -109,6 +112,11 @@ const MapScreen = ({ app, actions }) => {
       assignedVolunteerIds: [],
     };
     await writeRequestData(requestData);
+    navigation.navigate('Home', {
+      message:
+        Math.floor(Math.random() * 10000).toString() +
+        ': Successfully submitted the request',
+    });
   };
 
   const updateCoordinates = () => {
