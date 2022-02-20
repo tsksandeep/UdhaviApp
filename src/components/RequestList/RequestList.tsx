@@ -33,8 +33,8 @@ const RequestList = ({
   actions: any;
   allRequests: RequestsInitialState;
   allVolunteers: VolunteersInitialState;
-  requestFilter?: RequestFilterInitialState;
-  requestSelected?: RequestSelectionInitialState;
+  requestFilter: RequestFilterInitialState;
+  requestSelected: RequestSelectionInitialState;
   volunteerSelected: VolunteerSelectionInitialState;
   pendingSelection: PendingSelectionInitialState;
   mode: string;
@@ -67,11 +67,11 @@ const RequestList = ({
   }
 
   let filteredRequests = requests;
-  if (requestFilter?.requestFilter) {
+  if (requestFilter.requestFilter) {
     filteredRequests = requests.filter((request: RequestData) => {
       let sub = getItemSubCategory(
         pendingSelection.pendingSelection,
-        requestSelected?.requestSelected!,
+        requestSelected.requestSelected,
         volunteerSelected.volunteerSelected,
         'request',
         request,
@@ -94,7 +94,7 @@ const RequestList = ({
             request={item}
             requests={allRequests.requests}
             volunteers={allVolunteers.volunteers}
-            selectedRequest={requestSelected?.requestSelected!}
+            selectedRequest={requestSelected.requestSelected}
             selectedVolunteer={volunteerSelected.volunteerSelected}
             pendingSelection={pendingSelection.pendingSelection}
           />
@@ -104,7 +104,7 @@ const RequestList = ({
     );
   } else {
     var msg = '';
-    if (!requestFilter?.requestFilter || requestFilter.requestFilter == 'All') {
+    if (!requestFilter.requestFilter || requestFilter.requestFilter == 'All') {
       msg = `No requests were found`;
     } else {
       msg = `No requests were found matching filter "${requestFilter.requestFilter}"`;
@@ -120,12 +120,16 @@ const RequestList = ({
 };
 
 const selector = createSelector(
-  (state: any) => state.settings,
-  (requestFilter: RequestFilterInitialState) => ({ requestFilter }),
-  (requestSelected: RequestSelectionInitialState) => ({
+  (state: any) => state.requestFilter,
+  (state: any) => state.requestSelected,
+  (state: any) => state.pendingSelection,
+  (
+    requestFilter: RequestFilterInitialState,
+    requestSelected: RequestSelectionInitialState,
+    pendingSelection: PendingSelectionInitialState,
+  ) => ({
+    requestFilter,
     requestSelected,
-  }),
-  (pendingSelection: PendingSelectionInitialState) => ({
     pendingSelection,
   }),
 );

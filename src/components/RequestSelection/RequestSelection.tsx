@@ -118,13 +118,21 @@ const RequestSelection = ({
 };
 
 const selector = createSelector(
-  (state: any) => state.requestFilter,
-  (requests: RequestsInitialState) => ({ requests }),
-  (volunteers: VolunteersInitialState) => ({ volunteers }),
-  (volunteerSelection: VolunteerSelectionInitialState) => ({
+  (state: any) => state.requests,
+  (state: any) => state.volunteers,
+  (state: any) => state.volunteerSelection,
+  (state: any) => state.pendingSelection,
+  (
+    requests: RequestsInitialState,
+    volunteers: VolunteersInitialState,
+    volunteerSelection: VolunteerSelectionInitialState,
+    pendingSelection: PendingSelectionInitialState,
+  ) => ({
+    requests,
+    volunteers,
     volunteerSelection,
+    pendingSelection,
   }),
-  (pendingSelection: PendingSelectionInitialState) => ({ pendingSelection }),
 );
 
 export default connect(selector, bindDispatch)(RequestSelection);
