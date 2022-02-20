@@ -20,6 +20,7 @@ import { VolunteerSelectionInitialState } from '../../store/reducers/volunteerSe
 import ReleaseHeader from '../ReleaseHeader/ReleaseHeader';
 import AssignHeader from '../AssignHeader/AssignHeader';
 import { getHeaderCountInfo } from '../../common/common';
+import EntityTab from '../EntityTab/EntityTab';
 
 const initialLayout = { width: Dimensions.get('window').width };
 
@@ -57,8 +58,22 @@ const RequestSelection = ({
   }, []);
 
   var sceneMap = SceneMap({
-    // first: () => <RequestList mode={'assigned'} />,
-    // second: () => <RequestList mode={'available'} />,
+    first: () => (
+      <RequestList
+        mode={'assigned'}
+        volunteerSelected={volunteerSelection}
+        allRequests={requests}
+        allVolunteers={volunteers}
+      />
+    ),
+    second: () => (
+      <RequestList
+        mode={'available'}
+        volunteerSelected={volunteerSelection}
+        allRequests={requests}
+        allVolunteers={volunteers}
+      />
+    ),
   });
 
   var tabHeaderMap = [
@@ -91,14 +106,13 @@ const RequestSelection = ({
 
   return (
     <View style={{ flex: 1 }}>
-      {/* TODO */}
-      {/* <CustomTab
+      <EntityTab
         selectedIndex={currentTabIndex}
         sceneMap={sceneMap}
         tabHeaderMap={tabHeaderMap}
         initialLayout={initialLayout}
         onTabChange={(tabId: number) => setCurrentTabIndex(tabId)}
-      /> */}
+      />
     </View>
   );
 };
