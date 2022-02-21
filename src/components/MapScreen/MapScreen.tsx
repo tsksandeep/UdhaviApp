@@ -9,91 +9,74 @@ import { customMapStyle } from './constants/map';
 import Button from '../Button/Button';
 import { writeRequestData } from '../../firebase/requests';
 import { generateHash } from '../../helpers/hash';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import * as Location from 'expo-location';
+import Constants from 'expo-constants';
+import { cloneDeep } from 'lodash';
+import { RequestForm } from '../../store/reducers/app';
+import { RequestData } from '../../firebase/model';
 
 const latDelta = 0.3;
 const lngDelta = 0.2;
 
 const mockData = require('../../mock-server/mockData.json');
+const GOOGLE_PLACES_API_KEY = Constants.manifest?.extra?.GOOGLE_PLACES_API_KEY;
 
-const MapScreen = ({ app, actions }) => {
+const MapScreen = ({
+  app,
+  actions,
+  route,
+}: {
+  actions?: any;
+  app?: any;
+  route?: any;
+}) => {
   const mapViewRef = useRef(null);
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const [selectedCoordinates, setSelectedCoordinates] = useState({
     latitude: 0,
     longitude: 0,
   });
   const [isMapReady, setIsMapReady] = useState(false);
-  const [requesterMarkerCoordinates, setRequesterMarkerCoordinates] = useState({
-    lat: 0,
-    lng: 0,
+  const [requesterLocation, setRequesterLocation] = useState({
+    latitude: null,
+    longitude: null,
   });
 
+  const getLocation = async () => {
+    Location.setGoogleApiKey(GOOGLE_PLACES_API_KEY);
+    let { coords }: any = await Location.getCurrentPositionAsync();
+    setRequesterLocation(coords);
+  };
+
   const getInitialRegion = () => {
+    if (
+      !app?.requestForm?.location?.latitude &&
+      !app?.requestForm?.location?.longitude &&
+      !requesterLocation?.latitude &&
+      !requesterLocation?.longitude
+    ) {
+      getLocation();
+    }
     return {
-      latitude: app?.requestForm?.location?.latitude || 13.042913472281159,
-      longitude: app?.requestForm?.location?.longitude || 80.1745111895118,
+      latitude:
+        app?.requestForm?.location?.latitude || requesterLocation?.latitude,
+      longitude:
+        app?.requestForm?.location?.longitude || requesterLocation?.longitude,
       latitudeDelta: app?.requestForm?.location?.latitude ? 0.01 : latDelta,
       longitudeDelta: app?.requestForm?.location?.longitude ? 0.01 : lngDelta,
     };
   };
-
-  const onSelectCallback = (item: any, type: string) => {};
 
   const handleDragEnd = (event: any) => {
     const coordinates = event.nativeEvent.coordinate;
     setSelectedCoordinates(coordinates);
   };
 
-  const volunteerMarker = () => {
-    return (
-      <View>
-        {Object.values(mockData.Volunteers).map((item: any) => (
-          <Marker
-            coordinate={{
-              latitude: item.Lat,
-              longitude: item.Long,
-            }}
-            key={item.ID.toString()}
-            identifier={item.ID.toString()}
-            description={item.Status}
-            title={item.Name}
-            onPress={() => onSelectCallback(item, 'volunteers')}
-            icon={require('../../assets/marker/volunteer_default.ios.png')}
-          ></Marker>
-        ))}
-      </View>
-    );
-  };
-
-  const requesterMarker = () => {
-    return (
-      <View>
-        {Object.values(mockData.Requests).map((item: any) => (
-          <Marker
-            coordinate={{
-              latitude: Number(item.Lat),
-              longitude: Number(item.Long),
-            }}
-            identifier={item.ID.toString()}
-            key={item.ID.toString()}
-            description={item.Status}
-            title={item.Name}
-            onPress={() => onSelectCallback(item, 'request')}
-            icon={require('../../assets/marker/request_default.ios.png')}
-          ></Marker>
-        ))}
-      </View>
-    );
-  };
-
   const onMapLayout = () => {
     setIsMapReady(true);
   };
 
-  const makeRequest = async (requestForm) => {
+  const makeRequest = async (requestForm: RequestForm) => {
     const date = new Date().getTime();
     const requestData = {
       id: generateHash(
@@ -110,21 +93,16 @@ const MapScreen = ({ app, actions }) => {
       notes: requestForm.notes,
       date: date,
       assignedVolunteerIds: [],
-    };
+    } as RequestData;
     await writeRequestData(requestData);
-    navigation.navigate('Home', {
-      message:
-        Math.floor(Math.random() * 10000).toString() +
-        ': Successfully submitted the request',
-    });
   };
 
   const updateCoordinates = () => {
-    const requestForm = { ...app.requestForm };
+    const requestForm = cloneDeep(app.requestForm);
     requestForm.location.latitude =
-      selectedCoordinates.latitude || app?.requestForm?.location?.latitude;
+      selectedCoordinates.latitude || requestForm?.location?.latitude;
     requestForm.location.longitude =
-      selectedCoordinates.longitude || app?.requestForm?.location?.latitude;
+      selectedCoordinates.longitude || requestForm?.location?.longitude;
     actions.createRequestForm(requestForm);
     makeRequest(requestForm);
   };
@@ -134,8 +112,7 @@ const MapScreen = ({ app, actions }) => {
       <MapView
         provider={PROVIDER_GOOGLE}
         style={{
-          flex: 1,
-          minHeight: Dimensions.get('window').height - 100,
+          height: Dimensions.get('window').height - 200,
           minWidth: Dimensions.get('window').width,
         }}
         ref={mapViewRef}
@@ -146,18 +123,26 @@ const MapScreen = ({ app, actions }) => {
         initialRegion={getInitialRegion()}
         onMapReady={onMapLayout}
       >
-        {isMapReady && app?.requestForm?.location?.latitude > 0 && (
-          <Marker
-            draggable
-            coordinate={{
-              latitude: app?.requestForm?.location.latitude,
-              longitude: app?.requestForm?.location.longitude,
-            }}
-            onDragEnd={handleDragEnd}
-          />
-        )}
+        {isMapReady &&
+          (app?.requestForm?.location?.latitude > 0 ||
+            requesterLocation?.latitude) && (
+            <Marker
+              draggable
+              coordinate={{
+                latitude:
+                  app?.requestForm?.location.latitude ||
+                  requesterLocation?.latitude,
+                longitude:
+                  app?.requestForm?.location.longitude ||
+                  requesterLocation?.longitude,
+              }}
+              onDragEnd={handleDragEnd}
+            />
+          )}
       </MapView>
-      <Button onPress={updateCoordinates}>Confirm</Button>
+      {route?.params?.showConfirmButton && (
+        <Button onPress={updateCoordinates}>Confirm</Button>
+      )}
     </View>
   );
 };

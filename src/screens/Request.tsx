@@ -141,7 +141,7 @@ const Request = ({
                 label="Delivery Time"
                 returnKeyType="next"
                 autoCapitalize="none"
-                value={moment(date).format('HH:mm')}
+                value={moment(date).format('YYYY-MM-DD  HH:mm')}
                 editable={false}
                 pointerEvents="none"
               />

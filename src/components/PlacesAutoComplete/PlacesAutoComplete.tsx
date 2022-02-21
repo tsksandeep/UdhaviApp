@@ -67,7 +67,7 @@ const PlacesAutoComplete = React.forwardRef((props: Props, ref: any) => {
 
     props.actions.createRequestForm(requestForm);
     props.actions.updateShowCurrentLocationFlag(true);
-    navigation.navigate('Map', {});
+    navigation.navigate('Map', { showConfirmButton: true });
     if (ref) {
       ref.current.animateToRegion(newRegion, 500);
     }
@@ -79,19 +79,15 @@ const PlacesAutoComplete = React.forwardRef((props: Props, ref: any) => {
       if (status !== 'granted') {
         setErrorMsg('Permission to access location was denied');
       }
-
       Location.setGoogleApiKey(GOOGLE_PLACES_API_KEY);
-      let { coords } = await Location.getCurrentPositionAsync();
-
+      let { coords }: any = await Location.getCurrentPositionAsync();
       setLocation(coords);
       const requestForm = { ...props.app.requestForm };
-
       requestForm.location.latitude = coords.latitude;
       requestForm.location.longitude = coords.longitude;
-
       props.actions.createRequestForm(requestForm);
       props.actions.updateShowCurrentLocationFlag(true);
-      navigation.navigate('Map', {});
+      navigation.navigate('Map', { showConfirmButton: true });
     })();
   };
 

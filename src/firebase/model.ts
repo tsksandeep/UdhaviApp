@@ -9,19 +9,19 @@ export interface RequestData {
   name: string;
   phoneNumber: string;
   info: string;
-  location: Location;
-  deliveryTime: string;
+  location: LocationType;
+  deliveryTime: Date;
   notes: string;
   date: number;
-  eta: string;
-  status: string;
-  message: string;
-  category: string;
-  assignedTo: string;
+  eta?: string;
+  status?: string;
+  message?: string;
+  category?: string;
+  assignedTo?: string;
   assignedVolunteerIds?: Array<string>;
 }
 
-interface Location {
+export interface LocationType {
   longitude: number;
   latitude: number;
 }

@@ -35,6 +35,7 @@ export const initialState: AppInitialState = {
     deliveryTime: '',
     notes: '',
   },
+  requests: [],
   showCurrentLocation: false,
 };
 
