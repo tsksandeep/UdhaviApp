@@ -110,7 +110,7 @@ const RequestCard = (props: {
       <TouchableRipple onPress={() => callNumber('+14255168317')}>
         <Image
           size="30px"
-          source={require('../assets/CallVolunteer.png')}
+          source={require('../../assets/images/CallVolunteer.png')}
           alignSelf="center"
           alt="telephone"
         />

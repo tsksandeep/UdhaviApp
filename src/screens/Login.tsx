@@ -39,8 +39,8 @@ const Login = (props: any) => {
 
   const onLoginPressed = async () => {
     const phoneNumberError = phoneNumberValidator(phoneNumber.value);
-    if (phoneNumberError) {
-      setPhoneNumber({ ...phoneNumber, error: phoneNumberError });
+    if (!phoneNumberError) {
+      setPhoneNumber({ ...phoneNumber, error: 'Invalid phone number format' });
       return;
     }
 

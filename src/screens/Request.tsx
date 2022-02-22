@@ -51,7 +51,7 @@ const Request = ({
     navigation.navigate('GetLocation', {});
   };
 
-  const onDateChange = (event, selectedDate) => {
+  const onDateChange = (event: any, selectedDate: any) => {
     const currentDate = selectedDate || date;
     setDate(currentDate);
     setShowTimePicker(false);

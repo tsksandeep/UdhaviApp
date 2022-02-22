@@ -1,7 +1,10 @@
 import { Box, HStack, Text } from 'native-base';
 import * as React from 'react';
+import { Dimensions, StatusBar } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { TabView } from 'react-native-tab-view';
+
+const initialLayout = { width: Dimensions.get('window').width };
 
 const EntityTab = (props: any) => {
   const [index, setIndex] = React.useState(props.selectedIndex);
@@ -59,7 +62,8 @@ const EntityTab = (props: any) => {
       renderScene={props.sceneMap}
       renderTabBar={renderTabBar}
       onIndexChange={onIndexChanged}
-      initialLayout={props.initialLayout}
+      initialLayout={initialLayout}
+      style={{ marginTop: StatusBar.currentHeight! + 100 }}
     />
   );
 };

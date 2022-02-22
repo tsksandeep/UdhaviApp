@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions, View } from 'react-native';
+import { View } from 'react-native';
 import { SceneMap } from 'react-native-tab-view';
 import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
@@ -21,27 +21,27 @@ import ReleaseHeader from '../ReleaseHeader/ReleaseHeader';
 import AssignHeader from '../AssignHeader/AssignHeader';
 import { getHeaderCountInfo } from '../../common/common';
 import EntityTab from '../EntityTab/EntityTab';
-
-const initialLayout = { width: Dimensions.get('window').width };
+import Logo from '../Logo/Logo';
 
 const RequestSelection = ({
-  actions,
   requests,
   volunteers,
   volunteerSelection,
   pendingSelection,
+  actions,
 }: {
-  actions: any;
   requests: RequestsInitialState;
   volunteers: VolunteersInitialState;
   volunteerSelection: VolunteerSelectionInitialState;
   pendingSelection: PendingSelectionInitialState;
+  actions: any;
 }) => {
+  const [isInitialValuesSet, setInitialValues] = useState(false);
   const [headerCountInfo, setHeaderCountInfo] = useState<any>();
   const [currentTabIndex, setCurrentTabIndex] = useState<any>();
 
   useEffect(() => {
-    const setInitialValues = async () => {
+    const setInitialValuesCallback = async () => {
       const headerCountInfoVal = await getHeaderCountInfo(
         requests.requests,
         volunteerSelection.volunteerSelected,
@@ -53,27 +53,33 @@ const RequestSelection = ({
         volunteerSelection.volunteerSelected,
       );
       setCurrentTabIndex(isAssignedToValid(volunteer) ? 0 : 1);
+
+      setInitialValues(true);
     };
-    setInitialValues();
+    setInitialValuesCallback();
   }, []);
 
   var sceneMap = SceneMap({
-    first: () => (
-      <RequestList
-        mode={'assigned'}
-        volunteerSelected={volunteerSelection}
-        allRequests={requests}
-        allVolunteers={volunteers}
-      />
-    ),
-    second: () => (
-      <RequestList
-        mode={'available'}
-        volunteerSelected={volunteerSelection}
-        allRequests={requests}
-        allVolunteers={volunteers}
-      />
-    ),
+    first: () => {
+      return (
+        <RequestList
+          mode={'assigned'}
+          volunteerSelected={volunteerSelection}
+          allRequests={requests}
+          allVolunteers={volunteers}
+        />
+      );
+    },
+    second: () => {
+      return (
+        <RequestList
+          mode={'available'}
+          volunteerSelected={volunteerSelection}
+          allRequests={requests}
+          allVolunteers={volunteers}
+        />
+      );
+    },
   });
 
   var tabHeaderMap = [
@@ -105,21 +111,28 @@ const RequestSelection = ({
   ];
 
   return (
-    <View style={{ flex: 1 }}>
-      <EntityTab
-        selectedIndex={currentTabIndex}
-        sceneMap={sceneMap}
-        tabHeaderMap={tabHeaderMap}
-        initialLayout={initialLayout}
-        onTabChange={(tabId: number) => setCurrentTabIndex(tabId)}
-      />
-    </View>
+    <>
+      {isInitialValuesSet ? (
+        <View style={{ flex: 1 }}>
+          <EntityTab
+            selectedIndex={currentTabIndex}
+            sceneMap={sceneMap}
+            tabHeaderMap={tabHeaderMap}
+            onTabChange={(tabId: number) => setCurrentTabIndex(tabId)}
+          />
+        </View>
+      ) : (
+        <View>
+          <Logo />
+        </View>
+      )}
+    </>
   );
 };
 
 const selector = createSelector(
-  (state: any) => state.requests,
-  (state: any) => state.volunteers,
+  (state: any) => state.updateRequests,
+  (state: any) => state.updateVolunteers,
   (state: any) => state.volunteerSelection,
   (state: any) => state.pendingSelection,
   (

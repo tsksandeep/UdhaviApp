@@ -42,9 +42,9 @@ const Register = (props: any) => {
   const onSignUpPressed = async () => {
     const nameError = nameValidator(name.value);
     const phoneNumberError = phoneNumberValidator(phoneNumber.value);
-    if (nameError || phoneNumberError) {
+    if (nameError || !phoneNumberError) {
       setName({ ...name, error: nameError });
-      setPhoneNumber({ ...phoneNumber, error: phoneNumberError });
+      setPhoneNumber({ ...phoneNumber, error: 'Invalid phone number format' });
       return;
     }
 

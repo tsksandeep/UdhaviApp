@@ -104,6 +104,10 @@ export const getVolunteersByZone = async (zone: string): Promise<any> => {
 };
 
 export const getVolunteerByID = async (id: string): Promise<any> => {
+  if (!id) {
+    return {};
+  }
+
   const docSnapshot = await getDoc(doc(volunteersRef, id));
   const volunteer = docSnapshot.data();
   if (!docSnapshot.exists() || !volunteer?.name || !volunteer?.phoneNumber) {

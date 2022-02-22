@@ -8,12 +8,12 @@ export const RequestStates = [
 ];
 
 export const RequestCategoryImageMap: any = {
-  Milk: require('../assets/request_category/Milk.png'),
-  Medical: require('../assets/request_category/Medical.png'),
-  Food: require('../assets/request_category/Food.png'),
-  Transport: require('../assets/request_category/Transport.png'),
-  Misc: require('../assets/request_category/Misc.png'),
-  Accident: require('../assets/request_category/Accident.png'),
+  Milk: require('../assets/images/request_category/Milk.png'),
+  Medical: require('../assets/images/request_category/Medical.png'),
+  Food: require('../assets/images/request_category/Food.png'),
+  Transport: require('../assets/images/request_category/Transport.png'),
+  Misc: require('../assets/images/request_category/Misc.png'),
+  Accident: require('../assets/images/request_category/Accident.png'),
 };
 
 export const RequestStatesMap = {
