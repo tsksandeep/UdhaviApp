@@ -13,12 +13,15 @@ import {
 } from 'native-base';
 import { Entypo } from '@expo/vector-icons';
 import { TouchableRipple } from 'react-native-paper';
+import { createSelector } from 'reselect';
+import { connect } from 'react-redux';
 
+import bindDispatch from '../../utils/actions';
 import RequestStatus from '../RequestStatus/RequestStatus';
 import RequestETA from '../RequestETA/RequestETA';
 import { RequestData } from '../../firebase/model';
-import { RequestsMap } from '../../store/reducers/updateRequests';
-import { VolunteersMap } from '../../store/reducers/updateVolunteers';
+import { RequestsInitialState } from '../../store/reducers/updateRequests';
+import { VolunteersInitialState } from '../../store/reducers/updateVolunteers';
 import { RequestCategoryImageMap } from '../../constants/constants';
 import {
   clearPendingSelection,
@@ -27,17 +30,19 @@ import {
   setPendingSelection,
 } from '../../store/shared/shared';
 import { callNumber } from '../../common/common';
-import { PendingSelection } from '../../store/reducers/pendingSelection';
+import { PendingSelectionInitialState } from '../../store/reducers/pendingSelection';
+import { RequestSelectionInitialState } from '../../store/reducers/requestSelection';
+import { VolunteerSelectionInitialState } from '../../store/reducers/volunteerSelection';
 
 const RequestCard = (props: {
   mode: string;
-  actions: any;
   request: RequestData;
-  requests: RequestsMap;
-  volunteers: VolunteersMap;
-  selectedRequest: string;
-  selectedVolunteer: string;
-  pendingSelection: PendingSelection;
+  requests: RequestsInitialState;
+  volunteers: VolunteersInitialState;
+  requestSelection: RequestSelectionInitialState;
+  volunteerSelection: VolunteerSelectionInitialState;
+  pendingSelection: PendingSelectionInitialState;
+  actions: any;
 }) => {
   const {
     mode,
@@ -45,8 +50,8 @@ const RequestCard = (props: {
     request,
     requests,
     volunteers,
-    selectedRequest,
-    selectedVolunteer,
+    requestSelection,
+    volunteerSelection,
     pendingSelection,
   } = props;
   const itemDisplayId = `R${request.id}`;
@@ -54,8 +59,8 @@ const RequestCard = (props: {
   var servedByCount = request.assignedTo
     ? Object.keys(request.assignedTo).length
     : 0;
-  var isRequestSelected = selectedRequest ? true : false;
-  var isVolunteerSelected = selectedVolunteer ? true : false;
+  var isRequestSelected = requestSelection.requestSelected ? true : false;
+  var isVolunteerSelected = volunteerSelection.volunteerSelected ? true : false;
 
   var backButton = null;
   if (isRequestSelected) {
@@ -176,15 +181,15 @@ const RequestCard = (props: {
             <RequestETA
               actions={actions}
               request={request}
-              requests={requests}
+              requests={requests.requests}
             />
           ) : null}
           <VStack justifyContent="center" alignItems="flex-end">
             <RequestStatus
               actions={actions}
               request={request}
-              requests={requests}
-              volunteers={volunteers}
+              requests={requests.requests}
+              volunteers={volunteers.volunteers}
             />
             {servedByCount > 0 && (
               <Text bold fontSize="xs" style={{ color: 'green' }}>
@@ -198,4 +203,25 @@ const RequestCard = (props: {
   );
 };
 
-export default RequestCard;
+const selector = createSelector(
+  (state: any) => state.updateRequests,
+  (state: any) => state.updateVolunteers,
+  (state: any) => state.requestSelection,
+  (state: any) => state.volunteerSelection,
+  (state: any) => state.pendingSelection,
+  (
+    requests: RequestsInitialState,
+    volunteers: VolunteersInitialState,
+    requestSelection: RequestSelectionInitialState,
+    volunteerSelection: VolunteerSelectionInitialState,
+    pendingSelection: PendingSelectionInitialState,
+  ) => ({
+    requests,
+    volunteers,
+    requestSelection,
+    volunteerSelection,
+    pendingSelection,
+  }),
+);
+
+export default connect(selector, bindDispatch)(RequestCard);

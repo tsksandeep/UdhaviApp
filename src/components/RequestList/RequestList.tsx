@@ -18,12 +18,10 @@ import { VolunteerSelectionInitialState } from '../../store/reducers/volunteerSe
 import { RequestFilterInitialState } from '../../store/reducers/requestFilter';
 import { getItemSubCategory } from '../../common/common';
 import { RequestSelectionInitialState } from '../../store/reducers/requestSelection';
-import { VolunteersInitialState } from '../../store/reducers/updateVolunteers';
 
 const RequestList = ({
   actions,
   allRequests,
-  allVolunteers,
   requestFilter,
   requestSelected,
   volunteerSelected,
@@ -32,7 +30,6 @@ const RequestList = ({
 }: {
   actions: any;
   allRequests: RequestsInitialState;
-  allVolunteers: VolunteersInitialState;
   requestFilter: RequestFilterInitialState;
   requestSelected: RequestSelectionInitialState;
   volunteerSelected: VolunteerSelectionInitialState;
@@ -40,6 +37,7 @@ const RequestList = ({
   mode: string;
 }) => {
   let requests: any[] = [];
+
   if (!mode || mode == 'all') {
     requests = Object.values(allRequests);
   } else if (mode == 'assigned') {
@@ -88,16 +86,7 @@ const RequestList = ({
       <FlatList
         data={filteredRequests}
         renderItem={({ item }: { item: RequestData }) => (
-          <RequestCard
-            mode={mode}
-            actions={actions}
-            request={item}
-            requests={allRequests.requests}
-            volunteers={allVolunteers.volunteers}
-            selectedRequest={requestSelected.requestSelected}
-            selectedVolunteer={volunteerSelected.volunteerSelected}
-            pendingSelection={pendingSelection.pendingSelection}
-          />
+          <RequestCard mode={mode} request={item} />
         )}
         keyExtractor={(item) => item.id.toString()}
       />
