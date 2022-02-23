@@ -66,7 +66,6 @@ const RequestSelection = ({
           mode={'assigned'}
           volunteerSelected={volunteerSelection}
           allRequests={requests}
-          allVolunteers={volunteers}
         />
       );
     },
@@ -76,7 +75,6 @@ const RequestSelection = ({
           mode={'available'}
           volunteerSelected={volunteerSelection}
           allRequests={requests}
-          allVolunteers={volunteers}
         />
       );
     },

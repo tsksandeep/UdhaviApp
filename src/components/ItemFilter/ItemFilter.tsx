@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Image, Menu } from 'native-base';
 import { Pressable } from 'react-native';
 
-const filterImgDefault = require('../assets/filtersort.png');
-const filterImgSelected = require('../assets/filtersort_selected.png');
+import filterImgDefault from '../../assets/images/filtersort.png';
+import filterImgSelected from '../../assets/images/filtersort_selected.png';
 
 interface ItemFilterProps {
   filter: string;
