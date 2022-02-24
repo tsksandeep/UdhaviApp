@@ -7,6 +7,7 @@ import { RequestData, VolunteerData } from '../../firebase/model';
 import {
   assignVolunteersToRequest,
   getRequestByID,
+  getRequestsByPhoneNumber,
   releaseVolunteersFromRequest,
 } from '../../firebase/requests';
 import {
@@ -20,6 +21,20 @@ import {
 } from '../reducers/pendingSelection';
 import { RequestsMap } from '../reducers/updateRequests';
 import { VolunteersMap } from '../reducers/updateVolunteers';
+
+export const getExistingRequests = async (
+  phoneNumber: string,
+): Promise<RequestsMap> => {
+  var requestsMap: RequestsMap = {};
+
+  const requests = await getRequestsByPhoneNumber(phoneNumber);
+  requests.forEach((request: any) => {
+    const requestData = request.data();
+    requestsMap[requestData.id] = requestData;
+  });
+
+  return requestsMap;
+};
 
 export const clearPendingSelection = (actions: any) => {
   actions.updatePendingSelection({

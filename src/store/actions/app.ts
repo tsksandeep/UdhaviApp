@@ -1,5 +1,7 @@
 import * as Types from '../types/app';
 import { RequestForm } from '../reducers/requestForm';
+import { updateRequests } from './updateRequests';
+import { getExistingRequests } from '../shared/shared';
 
 const changeAppLoading = (payload: boolean) => ({
   type: Types.IS_APP_LOADING,
@@ -16,4 +18,17 @@ const updateShowCurrentLocationFlag = (payload: boolean) => ({
   payload,
 });
 
-export { changeAppLoading, createRequestForm, updateShowCurrentLocationFlag };
+const setInitialRequests = (phoneNumber: string) => {
+  // Fix thunk
+  async (dispatch: any) => {
+    const existingRequests = await getExistingRequests(phoneNumber);
+    dispatch(updateRequests(existingRequests));
+  };
+};
+
+export {
+  changeAppLoading,
+  createRequestForm,
+  updateShowCurrentLocationFlag,
+  setInitialRequests,
+};
