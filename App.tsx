@@ -43,7 +43,7 @@ declare global {
     };
     Request: undefined;
     Map: {
-      message?: string;
+      showConfirmButton?: boolean;
     };
     GetLocation: {};
     Entity: undefined;

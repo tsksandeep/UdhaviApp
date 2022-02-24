@@ -9,8 +9,8 @@ export interface RequestData {
   name: string;
   phoneNumber: string;
   info: string;
-  location: Location;
-  deliveryTime: string;
+  location: LocationType;
+  deliveryTime: Date;
   notes: string;
   date: number;
   eta: string;
@@ -21,7 +21,7 @@ export interface RequestData {
   assignedVolunteerIds?: Array<string>;
 }
 
-interface Location {
+export interface LocationType {
   longitude: number;
   latitude: number;
 }

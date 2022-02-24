@@ -36,6 +36,7 @@ const Home = (props: any) => {
         const resp = await readUserData(user.uid);
         if (resp instanceof UserNotExistsError) setLoading(false);
         setLoading(false);
+        props.actions.updateUserData(resp);
         setUser(resp);
       } else {
         setLoading(false);

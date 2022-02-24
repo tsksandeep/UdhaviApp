@@ -67,7 +67,7 @@ const PlacesAutoComplete = React.forwardRef((props: Props, ref: any) => {
 
     props.actions.createRequestForm(requestForm);
     props.actions.updateShowCurrentLocationFlag(true);
-    navigation.navigate('Map', {});
+    navigation.navigate('Map', { showConfirmButton: true });
     if (ref) {
       ref.current.animateToRegion(newRegion, 500);
     }
@@ -91,7 +91,7 @@ const PlacesAutoComplete = React.forwardRef((props: Props, ref: any) => {
 
       props.actions.createRequestForm(requestForm);
       props.actions.updateShowCurrentLocationFlag(true);
-      navigation.navigate('Map', {});
+      navigation.navigate('Map', { showConfirmButton: true });
     })();
   };
 
