@@ -8,6 +8,7 @@ export interface RequestData {
   id: string;
   name: string;
   phoneNumber: string;
+  requestorPhoneNumber: string;
   info: string;
   location: LocationType;
   deliveryTime: Date;

@@ -14,11 +14,6 @@ const createRequestForm = (payload: RequestForm) => ({
   payload,
 });
 
-const updateShowCurrentLocationFlag = (payload: boolean) => ({
-  type: Types.SHOW_CURRENT_LOCATION,
-  payload,
-});
-
 const updateRequestsMap = (payload: RequestsMap) => ({
   type: Types.UPDATE_REQUESTS_MAP,
   payload,
@@ -39,12 +34,17 @@ const updateUserData = (payload: UserData) => ({
   payload,
 });
 
+const updateRequestAddress = (payload: string) => ({
+  type: Types.UPDATE_REQUEST_ADDRESS,
+  payload,
+});
+
 export {
   changeAppLoading,
   createRequestForm,
-  updateShowCurrentLocationFlag,
   setInitialRequests,
   updateUserData,
   updateRequestsMap,
   updateVolunteersMap,
+  updateRequestAddress,
 };
