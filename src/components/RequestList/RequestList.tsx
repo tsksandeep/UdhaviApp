@@ -15,7 +15,7 @@ import { RequestData, VolunteerData } from '../../firebase/model';
 import { PendingSelectionInitialState } from '../../store/reducers/pendingSelection';
 import { VolunteerSelectionInitialState } from '../../store/reducers/volunteerSelection';
 import { RequestFilterInitialState } from '../../store/reducers/requestFilter';
-import { getItemSubCategory } from '../../common/common';
+import { getItemSubCategory, sortByDate } from '../../common/common';
 import { RequestSelectionInitialState } from '../../store/reducers/requestSelection';
 import { RequestsMap } from '../../store/reducers/app';
 
@@ -84,7 +84,7 @@ const RequestList = ({
   if (filteredRequests.length > 0) {
     return (
       <FlatList
-        data={filteredRequests}
+        data={sortByDate(filteredRequests)}
         renderItem={({ item }: { item: RequestData }) => (
           <RequestCard mode={mode} request={item} />
         )}

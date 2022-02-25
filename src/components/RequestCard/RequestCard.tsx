@@ -27,11 +27,16 @@ import {
   isAssignedToValid,
   setPendingSelection,
 } from '../../store/shared/shared';
-import { callNumber } from '../../common/common';
+import {
+  callNumber,
+  elapsedSecondsFromNow,
+  secondsToHms,
+} from '../../common/common';
 import { PendingSelectionInitialState } from '../../store/reducers/pendingSelection';
 import { RequestSelectionInitialState } from '../../store/reducers/requestSelection';
 import { VolunteerSelectionInitialState } from '../../store/reducers/volunteerSelection';
 import { AppInitialState } from '../../store/reducers/app';
+import { css } from '@emotion/native';
 
 const RequestCard = (props: {
   mode: string;
@@ -51,12 +56,15 @@ const RequestCard = (props: {
     volunteerSelection,
     pendingSelection,
   } = props;
-  const itemDisplayId = `R${request.id}`;
 
   var servedByCount = request.assignedTo
     ? Object.keys(request.assignedTo).length
     : 0;
-  var isRequestSelected = requestSelection.requestSelected ? true : false;
+  var isRequestSelected =
+    requestSelection.requestSelected &&
+    requestSelection.requestSelected === request.id
+      ? true
+      : false;
   var isVolunteerSelected = volunteerSelection.volunteerSelected ? true : false;
 
   var backButton = null;
@@ -120,6 +128,13 @@ const RequestCard = (props: {
     );
   }
 
+  const getRequestCategoryImage = () => {
+    if (RequestCategoryImageMap[request.category]) {
+      return RequestCategoryImageMap[request.category];
+    }
+    return RequestCategoryImageMap.Misc;
+  };
+
   return (
     <Pressable
       key={request.id}
@@ -145,12 +160,17 @@ const RequestCard = (props: {
           <VStack justifyContent="space-between">
             <Image
               size="20px"
-              source={RequestCategoryImageMap[request.category]}
+              source={getRequestCategoryImage()}
               alignSelf="center"
-              alt={request.category}
+              alt="category.png"
             />
-            <Badge colorScheme="info" variant={'outline'} alignSelf="center">
-              {itemDisplayId}
+            <Badge
+              style={RequestCardStyle.elapsedTime}
+              colorScheme="info"
+              variant={'outline'}
+              alignSelf="center"
+            >
+              {secondsToHms(elapsedSecondsFromNow(request.date))}
             </Badge>
           </VStack>
           <VStack justifyContent="center">
@@ -198,6 +218,12 @@ const RequestCard = (props: {
       </Box>
     </Pressable>
   );
+};
+
+const RequestCardStyle = {
+  elapsedTime: css`
+    width: 40px;
+  `,
 };
 
 const selector = createSelector(

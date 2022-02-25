@@ -1,8 +1,7 @@
 import { Alert, Linking, Platform } from 'react-native';
 import { RequestData, VolunteerData } from '../firebase/model';
+import { RequestsMap, VolunteersMap } from '../store/reducers/app';
 import { PendingSelection } from '../store/reducers/pendingSelection';
-import { RequestsMap } from '../store/reducers/updateRequests';
-import { VolunteersMap } from '../store/reducers/updateVolunteers';
 import { getPendingSelection } from '../store/shared/shared';
 
 export const callNumber = async (phone: string) => {
@@ -93,7 +92,26 @@ export const getItemSubCategory = (
   return sub;
 };
 
-export const isEmptyObject = (obj: any[]) => {
-  for (var i in obj) return false;
-  return true;
+export const elapsedSecondsFromNow = (dateTime: number): number => {
+  var now = new Date();
+  var date = new Date(dateTime);
+  return (now.getTime() - date.getTime()) / 1000;
+};
+
+export const secondsToHms = (seconds: number): string => {
+  var d = Math.floor(seconds / (3600 * 24));
+  var h = Math.floor(seconds / 3600);
+  var m = Math.floor((seconds % 3600) / 60);
+  var s = Math.floor((seconds % 3600) % 60);
+
+  if (d >= 1) return d + 'd';
+  if (h >= 1) return h + 'h';
+  if (m >= 1) return m + 'm';
+  return s + 's';
+};
+
+export const sortByDate = (requests: RequestData[]): RequestData[] => {
+  return requests.sort((d1, d2) => {
+    return new Date(d2.date).getTime() - new Date(d1.date).getTime();
+  });
 };
