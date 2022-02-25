@@ -73,6 +73,7 @@ export const writeRequestData = async (requestData: RequestData) => {
     id: requestData.id,
     name: requestData.name,
     phoneNumber: requestData.phoneNumber,
+    requestorPhoneNumber: requestData.requestorPhoneNumber,
     info: requestData.info,
     location: requestData.location,
     deliveryTime: requestData.deliveryTime,

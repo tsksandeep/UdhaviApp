@@ -21,4 +21,5 @@ export interface RequestForm {
   location: Location;
   deliveryTime: Date;
   notes: string;
+  requestorPhoneNumber: string;
 }

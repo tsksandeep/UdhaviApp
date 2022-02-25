@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Dimensions } from 'react-native';
+import { View, Dimensions, Text, StyleSheet } from 'react-native';
 import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
 import { AppInitialState } from '../../store/reducers/app';
@@ -36,6 +36,10 @@ const MapScreen = ({
 
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
+  useEffect(() => {
+    actions.setInitialRequests(app.user.phoneNumber);
+  }, [app.requestForm]);
+
   const [selectedCoordinates, setSelectedCoordinates] = useState({
     latitude: 0,
     longitude: 0,
@@ -71,9 +75,20 @@ const MapScreen = ({
     };
   };
 
-  const handleDragEnd = (event: any) => {
+  const handleDragEnd = async (event: any) => {
+    const { latitude, longitude } = event.nativeEvent.coordinate;
     const coordinates = event.nativeEvent.coordinate;
     setSelectedCoordinates(coordinates);
+    let regionName = await Location.reverseGeocodeAsync({
+      longitude,
+      latitude,
+    });
+    const { city, district, region, country, subregion } = regionName[0];
+    actions.updateRequestAddress(
+      `${city || ''}, ${district || subregion || ''}, ${region || ''}, ${
+        country || ''
+      }`,
+    );
   };
 
   const onMapLayout = () => {
@@ -88,6 +103,7 @@ const MapScreen = ({
       ),
       name: requestForm.name,
       phoneNumber: requestForm.phoneNumber,
+      requestorPhoneNumber: requestForm.requestorPhoneNumber,
       info: requestForm.info,
       location: {
         latitude: requestForm.location.latitude,
@@ -99,10 +115,12 @@ const MapScreen = ({
       assignedVolunteerIds: [''],
     } as RequestData;
     await writeRequestData(requestData);
+    actions.createRequestForm({});
   };
 
   const updateCoordinates = () => {
     const requestForm = cloneDeep(app.requestForm);
+    requestForm.phoneNumber = app.user.phoneNumber;
     requestForm.location.latitude =
       selectedCoordinates.latitude || requestForm?.location?.latitude;
     requestForm.location.longitude =
@@ -115,15 +133,45 @@ const MapScreen = ({
   const allRequestMarker = () => {
     return (
       <View>
-        {app.requestList.map((request: RequestForm, index: number) => (
+        {!route?.params?.showConfirmButton &&
+          Object.values(app?.requestsMap)?.map(
+            (request: any, index: number) => (
+              <Marker
+                key={index}
+                coordinate={{
+                  latitude: request.location.latitude,
+                  longitude: request.location.longitude,
+                }}
+              ></Marker>
+            ),
+          )}
+      </View>
+    );
+  };
+
+  const initialMarker = () => {
+    const showMarker =
+      isMapReady &&
+      (!Object.values(app?.requestsMap).length ||
+        route?.params?.showConfirmButton) &&
+      (app?.requestForm?.location?.latitude > 0 || requesterLocation?.latitude);
+
+    return (
+      <View>
+        {showMarker && (
           <Marker
-            key={index}
+            draggable
             coordinate={{
-              latitude: request.location.latitude,
-              longitude: request.location.longitude,
+              latitude:
+                app?.requestForm?.location.latitude ||
+                requesterLocation?.latitude,
+              longitude:
+                app?.requestForm?.location.longitude ||
+                requesterLocation?.longitude,
             }}
-          ></Marker>
-        ))}
+            onDragEnd={handleDragEnd}
+          />
+        )}
       </View>
     );
   };
@@ -144,30 +192,25 @@ const MapScreen = ({
         initialRegion={getInitialRegion()}
         onMapReady={onMapLayout}
       >
-        {isMapReady &&
-          (app?.requestForm?.location?.latitude > 0 ||
-            requesterLocation?.latitude) && (
-            <Marker
-              draggable
-              coordinate={{
-                latitude:
-                  app?.requestForm?.location.latitude ||
-                  requesterLocation?.latitude,
-                longitude:
-                  app?.requestForm?.location.longitude ||
-                  requesterLocation?.longitude,
-              }}
-              onDragEnd={handleDragEnd}
-            />
-          )}
+        {initialMarker()}
         {allRequestMarker()}
       </MapView>
       {route?.params?.showConfirmButton && (
         <Button onPress={updateCoordinates}>Confirm</Button>
       )}
+      {route?.params?.showConfirmButton && (
+        <Text style={styles.addressText}>{app.requestAddress}</Text>
+      )}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  addressText: {
+    color: 'blue',
+    marginLeft: 20,
+  },
+});
 
 const selector = createSelector(
   (state: any) => state.app,

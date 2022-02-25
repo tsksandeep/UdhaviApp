@@ -59,14 +59,11 @@ const PlacesAutoComplete = React.forwardRef((props: Props, ref: any) => {
       latitudeDelta: latDelta,
       longitudeDelta: lngDelta,
     };
-
     const requestForm = { ...props.app.requestForm };
-
     requestForm.location.latitude = loc.lat;
     requestForm.location.longitude = loc.lng;
-
+    props.actions.updateRequestAddress(apiData.description);
     props.actions.createRequestForm(requestForm);
-    props.actions.updateShowCurrentLocationFlag(true);
     navigation.navigate('Map', { showConfirmButton: true });
     if (ref) {
       ref.current.animateToRegion(newRegion, 500);
@@ -79,18 +76,25 @@ const PlacesAutoComplete = React.forwardRef((props: Props, ref: any) => {
       if (status !== 'granted') {
         setErrorMsg('Permission to access location was denied');
       }
-
       Location.setGoogleApiKey(GOOGLE_PLACES_API_KEY);
       let { coords } = await Location.getCurrentPositionAsync();
-
-      setLocation(coords);
+      if (coords) {
+        let { longitude, latitude } = coords;
+        let regionName = await Location.reverseGeocodeAsync({
+          longitude,
+          latitude,
+        });
+        const { city, district, region, country, subregion } = regionName[0];
+        props.actions.updateRequestAddress(
+          `${city || ''}, ${district || subregion || ''}, ${region || ''}, ${
+            country || ''
+          }`,
+        );
+      }
       const requestForm = { ...props.app.requestForm };
-
       requestForm.location.latitude = coords.latitude;
       requestForm.location.longitude = coords.longitude;
-
       props.actions.createRequestForm(requestForm);
-      props.actions.updateShowCurrentLocationFlag(true);
       navigation.navigate('Map', { showConfirmButton: true });
     })();
   };
@@ -109,7 +113,7 @@ const PlacesAutoComplete = React.forwardRef((props: Props, ref: any) => {
               }
             : {}
         }
-        onPress={(data, details = null) => {
+        onPress={(data) => {
           setLocationByAutoCompleteResult(data);
         }}
         ref={inputRef}

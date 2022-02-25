@@ -41,7 +41,7 @@ const Request = ({
   const onSubmit = async (data: any) => {
     const requestData: RequestForm = {
       name: data.name,
-      phoneNumber: data.phoneNumber,
+      requestorPhoneNumber: data.phoneNumber,
       info: data.info,
       location: selectedCoordinates,
       deliveryTime: date,
@@ -141,7 +141,7 @@ const Request = ({
                 label="Delivery Time"
                 returnKeyType="next"
                 autoCapitalize="none"
-                value={moment(date).format('HH:mm')}
+                value={moment(date).format('DD:MM:YYYY HH:MM')}
                 editable={false}
                 pointerEvents="none"
               />
