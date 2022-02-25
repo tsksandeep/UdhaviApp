@@ -1,12 +1,21 @@
+import { RequestData, VolunteerData } from '../../firebase/model';
 import * as Types from '../types/app';
 import { RequestForm, UserData, Action } from './modal/app.modal';
 
+export interface RequestsMap {
+  [id: string]: RequestData;
+}
+
+export interface VolunteersMap {
+  [id: string]: VolunteerData;
+}
 export interface AppInitialState {
   isAppLoading: boolean;
   requestForm: RequestForm;
   showCurrentLocation: boolean;
   user: UserData;
-  requestList: RequestForm[];
+  requestsMap: RequestsMap;
+  volunteersMap: VolunteersMap;
 }
 
 export const initialState: AppInitialState = {
@@ -21,7 +30,8 @@ export const initialState: AppInitialState = {
   },
   showCurrentLocation: false,
   user: { name: '', phoneNumber: '', userId: '' },
-  requestList: [],
+  requestsMap: {},
+  volunteersMap: {},
 };
 
 const reducer = (state = initialState, action: Action) => {
@@ -35,10 +45,13 @@ const reducer = (state = initialState, action: Action) => {
       return { ...state, showCurrentLocation: payload };
     case Types.UPDATE_USER_DATA:
       return { ...state, user: payload };
-    case Types.UPDATE_REQUEST_LIST:
-      return { ...state, requestList: payload };
+    case Types.UPDATE_REQUESTS_MAP:
+      return { ...state, requestsMap: payload };
+    case Types.UPDATE_VOLUNTEERS_MAP:
+      return { ...state, volunteersMap: payload };
     default:
       return state;
   }
 };
+
 export default reducer;

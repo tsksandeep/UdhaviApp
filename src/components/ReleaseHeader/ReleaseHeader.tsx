@@ -1,9 +1,8 @@
 import React from 'react';
 import { Pressable, Badge, HStack } from 'native-base';
 
-import { RequestsMap } from '../../store/reducers/updateRequests';
-import { VolunteersMap } from '../../store/reducers/updateVolunteers';
 import { PendingSelection } from '../../store/reducers/pendingSelection';
+import { RequestsMap, VolunteersMap } from '../../store/reducers/app';
 
 interface ReleaseHeaderProps {
   actions: any;

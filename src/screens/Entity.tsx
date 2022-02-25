@@ -12,16 +12,16 @@ import RequestFilter from '../components/RequestFilter/RequestFilter';
 import { VolunteerSelectionInitialState } from '../store/reducers/volunteerSelection';
 import { getVolunteerByID } from '../firebase/volunteers';
 import { isAssignedToValid } from '../store/shared/shared';
-import { RequestsInitialState } from '../store/reducers/updateRequests';
 import Logo from '../components/Logo/Logo';
+import { AppInitialState } from '../store/reducers/app';
 
 const Entity = ({
   actions,
-  requests,
+  app,
   volunteerSelection,
 }: {
   actions: any;
-  requests: RequestsInitialState;
+  app: AppInitialState;
   volunteerSelection: VolunteerSelectionInitialState;
 }) => {
   const [isInitialValuesSet, setInitialValues] = useState(false);
@@ -46,7 +46,7 @@ const Entity = ({
           <RequestList
             mode={'all'}
             volunteerSelected={volunteerSelection}
-            allRequests={requests}
+            requestsMap={app.requestsMap}
           />
         </View>
       );
@@ -57,7 +57,7 @@ const Entity = ({
           <RequestList
             mode={'all'}
             volunteerSelected={volunteerSelection}
-            allRequests={requests}
+            requestsMap={app.requestsMap}
           />
         </View>
       );
@@ -106,12 +106,12 @@ const EntityStyle = {
 };
 
 const selector = createSelector(
-  (state: any) => state.updateRequests,
+  (state: any) => state.app,
   (state: any) => state.volunteerSelection,
   (
-    requests: RequestsInitialState,
+    app: AppInitialState,
     volunteerSelection: VolunteerSelectionInitialState,
-  ) => ({ requests, volunteerSelection }),
+  ) => ({ app, volunteerSelection }),
 );
 
 export default connect(selector, bindDispatch)(Entity);

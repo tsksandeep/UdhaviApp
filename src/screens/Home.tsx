@@ -34,10 +34,14 @@ const Home = (props: any) => {
     FirebaseAuth.onAuthStateChanged(async (user) => {
       if (user) {
         const resp = await readUserData(user.uid);
-        if (resp instanceof UserNotExistsError) setLoading(false);
-        setLoading(false);
+        if (resp instanceof UserNotExistsError) {
+          setLoading(false);
+          return;
+        }
         props.actions.updateUserData(resp);
+        await props.actions.setInitialRequests(resp.phoneNumber);
         setUser(resp);
+        setLoading(false);
       } else {
         setLoading(false);
       }

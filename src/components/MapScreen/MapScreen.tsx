@@ -46,14 +46,6 @@ const MapScreen = ({
     longitude: null,
   });
 
-  const fetchRequests = () => {
-    actions.setInitialRequests(app.user.phoneNumber);
-  };
-
-  useEffect(() => {
-    fetchRequests();
-  }, [app.requestForm]);
-
   const getLocation = async () => {
     Location.setGoogleApiKey(GOOGLE_PLACES_API_KEY);
     let { coords }: any = await Location.getCurrentPositionAsync();

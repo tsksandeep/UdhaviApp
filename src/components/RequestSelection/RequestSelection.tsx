@@ -12,8 +12,6 @@ import {
   releaseAllRequestsFromVolunteer,
   releaseSelectedRequestsFromVolunteer,
 } from '../../store/shared/shared';
-import { RequestsInitialState } from '../../store/reducers/updateRequests';
-import { VolunteersInitialState } from '../../store/reducers/updateVolunteers';
 import { PendingSelectionInitialState } from '../../store/reducers/pendingSelection';
 import { getVolunteerByID } from '../../firebase/volunteers';
 import { VolunteerSelectionInitialState } from '../../store/reducers/volunteerSelection';
@@ -22,16 +20,15 @@ import AssignHeader from '../AssignHeader/AssignHeader';
 import { getHeaderCountInfo } from '../../common/common';
 import EntityTab from '../EntityTab/EntityTab';
 import Logo from '../Logo/Logo';
+import { AppInitialState } from '../../store/reducers/app';
 
 const RequestSelection = ({
-  requests,
-  volunteers,
+  app,
   volunteerSelection,
   pendingSelection,
   actions,
 }: {
-  requests: RequestsInitialState;
-  volunteers: VolunteersInitialState;
+  app: AppInitialState;
   volunteerSelection: VolunteerSelectionInitialState;
   pendingSelection: PendingSelectionInitialState;
   actions: any;
@@ -43,7 +40,7 @@ const RequestSelection = ({
   useEffect(() => {
     const setInitialValuesCallback = async () => {
       const headerCountInfoVal = await getHeaderCountInfo(
-        requests.requests,
+        app.requestsMap,
         volunteerSelection.volunteerSelected,
         getVolunteerByID,
       );
@@ -65,7 +62,7 @@ const RequestSelection = ({
         <RequestList
           mode={'assigned'}
           volunteerSelected={volunteerSelection}
-          allRequests={requests}
+          requestsMap={app.requestsMap}
         />
       );
     },
@@ -74,7 +71,7 @@ const RequestSelection = ({
         <RequestList
           mode={'available'}
           volunteerSelected={volunteerSelection}
-          allRequests={requests}
+          requestsMap={app.requestsMap}
         />
       );
     },
@@ -86,8 +83,8 @@ const RequestSelection = ({
       title: `Assigned (${headerCountInfo?.assignedCount})`,
       tabElement: ReleaseHeader({
         actions: actions,
-        requests: requests.requests,
-        volunteers: volunteers.volunteers,
+        requests: app.requestsMap,
+        volunteers: app.volunteersMap,
         pendingSelection: pendingSelection.pendingSelection,
         entityId: volunteerSelection.volunteerSelected,
         releaseCallback: releaseSelectedRequestsFromVolunteer,
@@ -99,8 +96,8 @@ const RequestSelection = ({
       title: `Available (${headerCountInfo?.availableCount})`,
       tabElement: AssignHeader({
         actions: actions,
-        requests: requests.requests,
-        volunteers: volunteers.volunteers,
+        requests: app.requestsMap,
+        volunteers: app.volunteersMap,
         pendingSelection: pendingSelection.pendingSelection,
         entityId: volunteerSelection.volunteerSelected,
         assignCallback: assignSelectedRequestsToVolunteer,
@@ -129,18 +126,15 @@ const RequestSelection = ({
 };
 
 const selector = createSelector(
-  (state: any) => state.updateRequests,
-  (state: any) => state.updateVolunteers,
+  (state: any) => state.app,
   (state: any) => state.volunteerSelection,
   (state: any) => state.pendingSelection,
   (
-    requests: RequestsInitialState,
-    volunteers: VolunteersInitialState,
+    app: AppInitialState,
     volunteerSelection: VolunteerSelectionInitialState,
     pendingSelection: PendingSelectionInitialState,
   ) => ({
-    requests,
-    volunteers,
+    app,
     volunteerSelection,
     pendingSelection,
   }),

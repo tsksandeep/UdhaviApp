@@ -20,8 +20,6 @@ import bindDispatch from '../../utils/actions';
 import RequestStatus from '../RequestStatus/RequestStatus';
 import RequestETA from '../RequestETA/RequestETA';
 import { RequestData } from '../../firebase/model';
-import { RequestsInitialState } from '../../store/reducers/updateRequests';
-import { VolunteersInitialState } from '../../store/reducers/updateVolunteers';
 import { RequestCategoryImageMap } from '../../constants/constants';
 import {
   clearPendingSelection,
@@ -33,12 +31,12 @@ import { callNumber } from '../../common/common';
 import { PendingSelectionInitialState } from '../../store/reducers/pendingSelection';
 import { RequestSelectionInitialState } from '../../store/reducers/requestSelection';
 import { VolunteerSelectionInitialState } from '../../store/reducers/volunteerSelection';
+import { AppInitialState } from '../../store/reducers/app';
 
 const RequestCard = (props: {
   mode: string;
   request: RequestData;
-  requests: RequestsInitialState;
-  volunteers: VolunteersInitialState;
+  app: AppInitialState;
   requestSelection: RequestSelectionInitialState;
   volunteerSelection: VolunteerSelectionInitialState;
   pendingSelection: PendingSelectionInitialState;
@@ -48,8 +46,7 @@ const RequestCard = (props: {
     mode,
     actions,
     request,
-    requests,
-    volunteers,
+    app,
     requestSelection,
     volunteerSelection,
     pendingSelection,
@@ -181,15 +178,15 @@ const RequestCard = (props: {
             <RequestETA
               actions={actions}
               request={request}
-              requests={requests.requests}
+              requests={app.requestsMap}
             />
           ) : null}
           <VStack justifyContent="center" alignItems="flex-end">
             <RequestStatus
               actions={actions}
               request={request}
-              requests={requests.requests}
-              volunteers={volunteers.volunteers}
+              requests={app.requestsMap}
+              volunteers={app.volunteersMap}
             />
             {servedByCount > 0 && (
               <Text bold fontSize="xs" style={{ color: 'green' }}>
@@ -204,20 +201,17 @@ const RequestCard = (props: {
 };
 
 const selector = createSelector(
-  (state: any) => state.updateRequests,
-  (state: any) => state.updateVolunteers,
+  (state: any) => state.app,
   (state: any) => state.requestSelection,
   (state: any) => state.volunteerSelection,
   (state: any) => state.pendingSelection,
   (
-    requests: RequestsInitialState,
-    volunteers: VolunteersInitialState,
+    app: AppInitialState,
     requestSelection: RequestSelectionInitialState,
     volunteerSelection: VolunteerSelectionInitialState,
     pendingSelection: PendingSelectionInitialState,
   ) => ({
-    requests,
-    volunteers,
+    app,
     requestSelection,
     volunteerSelection,
     pendingSelection,

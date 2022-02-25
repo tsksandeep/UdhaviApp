@@ -2,10 +2,9 @@ import React from 'react';
 import { Menu, Pressable, Badge } from 'native-base';
 
 import { releaseAllVolunteersFromRequest } from '../../store/shared/shared';
-import { RequestsMap } from '../../store/reducers/updateRequests';
-import { VolunteersMap } from '../../store/reducers/updateVolunteers';
 import { RequestData } from '../../firebase/model';
 import { RequestStates } from '../../constants/constants';
+import { RequestsMap, VolunteersMap } from '../../store/reducers/app';
 
 const getRequestStatusColor = (status: string) => {
   var colorScheme = 'warning';
@@ -24,6 +23,7 @@ const getRequestStatusColor = (status: string) => {
 
 const getRequestStatusBadge = (request: RequestData) => {
   var colorScheme = getRequestStatusColor(request.status);
+  if (!request.status) return <></>;
   var words = request.status.split(' ');
   return (
     <Badge colorScheme={colorScheme} variant={'subtle'}>

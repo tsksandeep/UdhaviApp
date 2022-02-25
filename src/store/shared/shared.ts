@@ -15,24 +15,24 @@ import {
   getVolunteerByID,
   releaseRequestsFromVolunteer,
 } from '../../firebase/volunteers';
-import { RequestForm } from '../reducers/modal/app.modal';
+import { RequestsMap, VolunteersMap } from '../reducers/app';
 import {
   initialPendingSelection,
   PendingSelection,
 } from '../reducers/pendingSelection';
-import { RequestsMap } from '../reducers/updateRequests';
-import { VolunteersMap } from '../reducers/updateVolunteers';
 
 export const getExistingRequests = async (
   phoneNumber: string,
-): Promise<RequestForm[]> => {
+): Promise<RequestsMap> => {
   var requestsMap: RequestsMap = {};
 
   const requests = await getRequestsByPhoneNumber(phoneNumber);
-  return requests.map((request: any) => {
+  requests.map((request: any) => {
     const requestData = request.data();
-    return requestData;
+    requestsMap[requestData.id] = requestData;
   });
+
+  return requestsMap;
 };
 
 export const clearPendingSelection = (actions: any) => {

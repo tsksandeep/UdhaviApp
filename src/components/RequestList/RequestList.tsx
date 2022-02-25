@@ -12,16 +12,16 @@ import {
 } from '../../store/shared/shared';
 import RequestCard from '../RequestCard/RequestCard';
 import { RequestData, VolunteerData } from '../../firebase/model';
-import { RequestsInitialState } from '../../store/reducers/updateRequests';
 import { PendingSelectionInitialState } from '../../store/reducers/pendingSelection';
 import { VolunteerSelectionInitialState } from '../../store/reducers/volunteerSelection';
 import { RequestFilterInitialState } from '../../store/reducers/requestFilter';
 import { getItemSubCategory } from '../../common/common';
 import { RequestSelectionInitialState } from '../../store/reducers/requestSelection';
+import { RequestsMap } from '../../store/reducers/app';
 
 const RequestList = ({
   actions,
-  allRequests,
+  requestsMap,
   requestFilter,
   requestSelected,
   volunteerSelected,
@@ -29,7 +29,7 @@ const RequestList = ({
   mode,
 }: {
   actions: any;
-  allRequests: RequestsInitialState;
+  requestsMap: RequestsMap;
   requestFilter: RequestFilterInitialState;
   requestSelected: RequestSelectionInitialState;
   volunteerSelected: VolunteerSelectionInitialState;
@@ -39,13 +39,13 @@ const RequestList = ({
   let requests: any[] = [];
 
   if (!mode || mode == 'all') {
-    requests = Object.values(allRequests);
+    requests = Object.values(requestsMap);
   } else if (mode == 'assigned') {
     getVolunteerByID(volunteerSelected.volunteerSelected).then(
       (volunteer: VolunteerData) => {
         if (volunteer.assignedTo) {
           let reqIds = Object.keys(volunteer.assignedTo);
-          requests = reqIds.map((rid) => allRequests.requests[rid]);
+          requests = reqIds.map((rid) => requestsMap[rid]);
         }
       },
     );
@@ -54,11 +54,11 @@ const RequestList = ({
       (volunteer: VolunteerData) => {
         if (isAssignedToValid(volunteer)) {
           let reqIds = Object.keys(volunteer.assignedTo);
-          requests = Object.values(allRequests).filter(
-            (r) => !reqIds.includes(r.ID),
+          requests = Object.values(requestsMap).filter(
+            (r) => !reqIds.includes(r.id),
           );
         } else {
-          requests = Object.values(allRequests);
+          requests = Object.values(requestsMap);
         }
       },
     );

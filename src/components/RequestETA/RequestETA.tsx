@@ -7,8 +7,8 @@ import {
   Modal,
   Pressable,
 } from 'native-base';
-import { RequestsMap } from '../../store/reducers/updateRequests';
 import { RequestData } from '../../firebase/model';
+import { RequestsMap } from '../../store/reducers/app';
 
 const RequestETA = (props: {
   actions: any;
