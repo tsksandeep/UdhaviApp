@@ -46,14 +46,12 @@ const Request = ({
   } = useForm();
 
   const getCategory = (info: string): string => {
-    const splitValue = info.split(' ');
-    let category = '';
-    splitValue.forEach((value: string) => {
-      Object.keys(RequestCategoryImageMap).forEach((requestCategory) => {
-        if (requestCategory.toLowerCase() === value.toLowerCase()) {
-          category = requestCategory;
-        }
-      });
+    const splitWords = info.split(' ');
+    var category = 'Misc';
+
+    splitWords.forEach((word: string) => {
+      if (RequestCategoryImageMap[word.toLowerCase()])
+        return word.toLowerCase();
     });
 
     return category;

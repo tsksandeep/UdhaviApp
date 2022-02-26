@@ -115,7 +115,7 @@ const RequestCard = (props: {
     if (RequestCategoryImageMap[request.category]) {
       return RequestCategoryImageMap[request.category];
     }
-    return RequestCategoryImageMap.Misc;
+    return RequestCategoryImageMap.misc;
   };
 
   return (
