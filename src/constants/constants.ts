@@ -1,3 +1,10 @@
+import Milk from '../assets/images/request_category/Milk.png';
+import Medical from '../assets/images/request_category/Medical.png';
+import Food from '../assets/images/request_category/Food.png';
+import Transport from '../assets/images/request_category/Transport.png';
+import Misc from '../assets/images/request_category/Misc.png';
+import Accident from '../assets/images/request_category/Accident.png';
+
 export const RequestStates = [
   'New',
   'Under Review',
@@ -8,12 +15,12 @@ export const RequestStates = [
 ];
 
 export const RequestCategoryImageMap: any = {
-  Milk: require('../assets/images/request_category/Milk.png'),
-  Medical: require('../assets/images/request_category/Medical.png'),
-  Food: require('../assets/images/request_category/Food.png'),
-  Transport: require('../assets/images/request_category/Transport.png'),
-  Misc: require('../assets/images/request_category/Misc.png'),
-  Accident: require('../assets/images/request_category/Accident.png'),
+  Milk: Milk,
+  Medical: Medical,
+  Food: Food,
+  Transport: Transport,
+  Misc: Misc,
+  Accident: Accident,
 };
 
 export const RequestStatesMap = {

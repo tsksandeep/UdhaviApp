@@ -6,34 +6,25 @@ import { createSelector } from 'reselect';
 
 import bindDispatch from '../../utils/actions';
 import { getVolunteerByID } from '../../firebase/volunteers';
-import {
-  isAssignedToValid,
-  isRequestMatchingFilter,
-} from '../../store/shared/shared';
+import { isAssignedToValid } from '../../store/shared/shared';
 import RequestCard from '../RequestCard/RequestCard';
 import { RequestData, VolunteerData } from '../../firebase/model';
-import { PendingSelectionInitialState } from '../../store/reducers/pendingSelection';
 import { VolunteerSelectionInitialState } from '../../store/reducers/volunteerSelection';
 import { RequestFilterInitialState } from '../../store/reducers/requestFilter';
-import { getItemSubCategory, sortByDate } from '../../common/common';
-import { RequestSelectionInitialState } from '../../store/reducers/requestSelection';
+import { sortByDate } from '../../common/common';
 import { RequestsMap } from '../../store/reducers/app';
 
 const RequestList = ({
   actions,
   requestsMap,
   requestFilter,
-  requestSelected,
   volunteerSelected,
-  pendingSelection,
   mode,
 }: {
   actions: any;
   requestsMap: RequestsMap;
   requestFilter: RequestFilterInitialState;
-  requestSelected: RequestSelectionInitialState;
   volunteerSelected: VolunteerSelectionInitialState;
-  pendingSelection: PendingSelectionInitialState;
   mode: string;
 }) => {
   let requests: any[] = [];
@@ -64,21 +55,15 @@ const RequestList = ({
     );
   }
 
-  let filteredRequests = requests;
-  if (requestFilter.requestFilter) {
-    filteredRequests = requests.filter((request: RequestData) => {
-      let sub = getItemSubCategory(
-        pendingSelection.pendingSelection,
-        requestSelected.requestSelected,
-        volunteerSelected.volunteerSelected,
-        'request',
-        request,
-      );
-      return (
-        sub != 'default' ||
-        isRequestMatchingFilter(request, requestFilter.requestFilter)
-      );
+  var filteredRequests = requests;
+  if (requestFilter.requestFilter && requestFilter.requestFilter !== 'all') {
+    var newFilteredRequests: RequestData[] = [];
+    filteredRequests.forEach((request: RequestData) => {
+      if (request.status == requestFilter.requestFilter) {
+        newFilteredRequests.push(request);
+      }
     });
+    filteredRequests = newFilteredRequests;
   }
 
   if (filteredRequests.length > 0) {
@@ -110,16 +95,8 @@ const RequestList = ({
 
 const selector = createSelector(
   (state: any) => state.requestFilter,
-  (state: any) => state.requestSelected,
-  (state: any) => state.pendingSelection,
-  (
-    requestFilter: RequestFilterInitialState,
-    requestSelected: RequestSelectionInitialState,
-    pendingSelection: PendingSelectionInitialState,
-  ) => ({
+  (requestFilter: RequestFilterInitialState) => ({
     requestFilter,
-    requestSelected,
-    pendingSelection,
   }),
 );
 

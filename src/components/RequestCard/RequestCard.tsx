@@ -8,10 +8,8 @@ import {
   Spacer,
   Text,
   VStack,
-  IconButton,
   Checkbox,
 } from 'native-base';
-import { Entypo } from '@expo/vector-icons';
 import { TouchableRipple } from 'react-native-paper';
 import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
@@ -67,22 +65,6 @@ const RequestCard = (props: {
       : false;
   var isVolunteerSelected = volunteerSelection.volunteerSelected ? true : false;
 
-  var backButton = null;
-  if (isRequestSelected) {
-    backButton = (
-      <IconButton
-        onPress={() => clearPendingSelection(actions)}
-        colorScheme="danger"
-        key={request.id}
-        size={'sm'}
-        _icon={{
-          as: Entypo,
-          name: 'back',
-        }}
-      />
-    );
-  }
-
   var checkColorTheme = 'success';
   if (isVolunteerSelected) {
     if (mode == 'assigned') {
@@ -94,6 +76,7 @@ const RequestCard = (props: {
   const [selectedState, setSelectedState] = useState(
     getPendingSelection(pendingSelection, 'request', mode, request.id),
   );
+  // to check the logic
   if (isVolunteerSelected) {
     checkBox = (
       <Checkbox
@@ -137,52 +120,39 @@ const RequestCard = (props: {
 
   return (
     <Pressable
+      style={RequestCardStyle.container}
       key={request.id}
-      onPress={() => actions.updateRequestSelection(request.id)}
+      onPress={() => {
+        if (isRequestSelected) {
+          clearPendingSelection(actions);
+        } else {
+          actions.updateRequestSelection(request.id);
+        }
+      }}
     >
       <Box
+        style={RequestCardStyle.box}
         key={request.id}
-        shadow={isRequestSelected ? '3' : '0'}
-        borderBottomWidth={isRequestSelected ? '3' : '1'}
         _dark={{
           borderColor: 'gray.600',
         }}
-        borderColor={isRequestSelected ? 'red.800' : 'coolGray.200'}
-        borderWidth={isRequestSelected ? '3' : '0'}
         bg={isRequestSelected ? 'yellow.100' : 'white'}
-        pl="2"
-        pr="2"
-        py="1"
       >
         <HStack space={3} alignItems="center" justifyContent="space-between">
-          {backButton}
           {checkBox}
           <VStack justifyContent="space-between">
             <Image
-              size="20px"
+              size={'35px'}
               source={getRequestCategoryImage()}
               alignSelf="center"
               alt="category.png"
             />
-            <Badge
-              style={RequestCardStyle.elapsedTime}
-              colorScheme="info"
-              variant={'outline'}
-              alignSelf="center"
-            >
+            <Badge style={RequestCardStyle.elapsedTime}>
               {secondsToHms(elapsedSecondsFromNow(request.date))}
             </Badge>
           </VStack>
           <VStack justifyContent="center">
-            <Text
-              _dark={{
-                color: 'warmGray.50',
-              }}
-              color="coolGray.800"
-              bold
-            >
-              {request.name}
-            </Text>
+            <Text style={RequestCardStyle.requestName}>{request.name}</Text>
             <Text
               color="coolGray.600"
               _dark={{
@@ -190,6 +160,9 @@ const RequestCard = (props: {
               }}
             >
               {request.message ? request.message : 'Help needed'}
+            </Text>
+            <Text style={RequestCardStyle.requestId}>
+              Request ID: {request.id}
             </Text>
           </VStack>
           <Spacer />
@@ -221,8 +194,27 @@ const RequestCard = (props: {
 };
 
 const RequestCardStyle = {
+  container: css`
+    margin-top: 5px;
+  `,
+  box: css`
+    margin: 3px 0;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #d3d3d3;
+  `,
   elapsedTime: css`
     width: 40px;
+    margin-top: 5px;
+  `,
+  requestName: css`
+    font-size: 18px;
+    font-weight: 600;
+    text-transform: capitalize;
+  `,
+  requestId: css`
+    color: gray;
+    font-size: 10px;
   `,
 };
 

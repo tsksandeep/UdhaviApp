@@ -19,9 +19,11 @@ import moment from 'moment';
 const Request = ({
   actions,
   request,
+  showHeading,
 }: {
   actions: any;
   request: RequestInitialState;
+  showHeading: boolean;
 }) => {
   const [selectedCoordinates, setSelectedCoordinates] = useState({
     latitude: 0,
@@ -29,6 +31,10 @@ const Request = ({
   });
   const [date, setDate] = useState(new Date());
   const [showTimePicker, setShowTimePicker] = useState(false);
+
+  if (showHeading === undefined) {
+    showHeading = true;
+  }
 
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
@@ -65,7 +71,9 @@ const Request = ({
     <SafeAreaView style={RequestStyle.container}>
       <KeyboardAwareScrollView>
         <View>
-          <Text style={RequestStyle.header}>Submit your request</Text>
+          {showHeading && (
+            <Text style={RequestStyle.header}>Submit your request</Text>
+          )}
           <Controller
             control={control}
             name="name"

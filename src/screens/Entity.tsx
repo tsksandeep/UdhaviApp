@@ -10,10 +10,8 @@ import RequestList from '../components/RequestList/RequestList';
 import EntityTab from '../components/EntityTab/EntityTab';
 import RequestFilter from '../components/RequestFilter/RequestFilter';
 import { VolunteerSelectionInitialState } from '../store/reducers/volunteerSelection';
-import { getVolunteerByID } from '../firebase/volunteers';
-import { isAssignedToValid } from '../store/shared/shared';
-import Logo from '../components/Logo/Logo';
 import { AppInitialState } from '../store/reducers/app';
+import Request from './Request';
 
 const Entity = ({
   actions,
@@ -24,20 +22,7 @@ const Entity = ({
   app: AppInitialState;
   volunteerSelection: VolunteerSelectionInitialState;
 }) => {
-  const [isInitialValuesSet, setInitialValues] = useState(false);
-  const [currentTabIndex, setCurrentTabIndex] = useState<any>();
-
-  useEffect(() => {
-    const setInitialValuesCallback = async () => {
-      const volunteer = await getVolunteerByID(
-        volunteerSelection.volunteerSelected,
-      );
-      setCurrentTabIndex(isAssignedToValid(volunteer) ? 0 : 1);
-
-      setInitialValues(true);
-    };
-    setInitialValuesCallback();
-  }, []);
+  const [currentTabIndex, setCurrentTabIndex] = useState(0);
 
   let sceneMap = SceneMap({
     first: () => {
@@ -54,11 +39,7 @@ const Entity = ({
     second: () => {
       return (
         <View style={{ flex: 1 }}>
-          <RequestList
-            mode={'all'}
-            volunteerSelected={volunteerSelection}
-            requestsMap={app.requestsMap}
-          />
+          <Request showHeading={false} />
         </View>
       );
     },
@@ -72,27 +53,20 @@ const Entity = ({
     },
     {
       key: 'second',
-      title: `Volunteers`,
-      filter: <RequestFilter />,
+      title: `Submit Request`,
     },
   ];
 
   return (
     <>
-      {isInitialValuesSet ? (
-        <View style={EntityStyle.container}>
-          <EntityTab
-            selectedIndex={currentTabIndex}
-            sceneMap={sceneMap}
-            tabHeaderMap={tabHeaderMap}
-            onTabChange={(tabId: number) => setCurrentTabIndex(tabId)}
-          />
-        </View>
-      ) : (
-        <View>
-          <Logo />
-        </View>
-      )}
+      <View style={EntityStyle.container}>
+        <EntityTab
+          selectedIndex={currentTabIndex}
+          sceneMap={sceneMap}
+          tabHeaderMap={tabHeaderMap}
+          onTabChange={(tabId: number) => setCurrentTabIndex(tabId)}
+        />
+      </View>
     </>
   );
 };

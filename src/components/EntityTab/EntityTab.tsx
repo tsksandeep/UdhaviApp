@@ -1,3 +1,4 @@
+import { css } from '@emotion/native';
 import { Box, HStack, Text } from 'native-base';
 import * as React from 'react';
 import { Dimensions, StatusBar } from 'react-native';
@@ -17,33 +18,25 @@ const EntityTab = (props: any) => {
     }
   };
 
-  if (props.store) {
-    props.store.refreshMap['SwitchToTab'] = (newTabIndex: any) => {
-      onIndexChanged(newTabIndex);
-    };
-  }
-
   const renderTabBar = (props: any) => {
     return (
       <Box flexDirection="row">
         {props.navigationState.routes.map((route: any, i: any) => {
-          const color = index === i ? 'green' : 'gray';
           const borderColor = index === i ? '#F61023' : '#a1a1aa';
 
           return (
             <Box
               key={i}
-              borderBottomWidth="4"
+              style={EntityTabStyle.box}
+              borderBottomWidth="1"
               borderColor={borderColor}
               flex={1}
               alignItems="center"
-              p="2"
-              rounded="xl"
             >
               <HStack justifyContent={'center'}>
                 {route.filter ? route.filter : null}
                 <TouchableOpacity onPress={() => onIndexChanged(i)}>
-                  <Text bold style={{ color: color }}>
+                  <Text bold style={EntityTabStyle.heading}>
                     {route.title}
                   </Text>
                 </TouchableOpacity>
@@ -66,6 +59,17 @@ const EntityTab = (props: any) => {
       style={{ marginTop: StatusBar.currentHeight! + 100 }}
     />
   );
+};
+
+const EntityTabStyle = {
+  box: css`
+    padding-bottom: 10px;
+    margin: 0 5px;
+  `,
+  heading: css`
+    margin-left: 10px;
+    font-size: 16px;
+  `,
 };
 
 export default EntityTab;

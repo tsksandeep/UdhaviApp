@@ -23,7 +23,12 @@ const getRequestStatusColor = (status: string) => {
 
 const getRequestStatusBadge = (request: RequestData) => {
   var colorScheme = getRequestStatusColor(request.status);
-  if (!request.status) return <></>;
+  if (!request.status)
+    return (
+      <Badge colorScheme={colorScheme} variant={'subtle'}>
+        Loading
+      </Badge>
+    );
   var words = request.status.split(' ');
   return (
     <Badge colorScheme={colorScheme} variant={'subtle'}>
