@@ -31,7 +31,6 @@ const EntityTab = (props: any) => {
               borderBottomWidth="1"
               borderColor={borderColor}
               flex={1}
-              alignItems="flex-start"
             >
               <HStack justifyContent={'center'}>
                 {route.filter ? route.filter : null}
@@ -65,6 +64,7 @@ const EntityTabStyle = {
   box: css`
     padding-bottom: 10px;
     margin: 0 5px;
+    align-items: center;
   `,
   heading: css`
     margin-left: 10px;
