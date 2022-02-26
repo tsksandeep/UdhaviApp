@@ -15,12 +15,12 @@ export const RequestStates = [
 ];
 
 export const RequestCategoryImageMap: any = {
-  Milk: Milk,
-  Medical: Medical,
-  Food: Food,
-  Transport: Transport,
-  Misc: Misc,
-  Accident: Accident,
+  milk: Milk,
+  medical: Medical,
+  food: Food,
+  transport: Transport,
+  misc: Misc,
+  accident: Accident,
 };
 
 export const RequestStatesMap = {

@@ -115,7 +115,7 @@ const RequestCard = (props: {
     if (RequestCategoryImageMap[request.category]) {
       return RequestCategoryImageMap[request.category];
     }
-    return RequestCategoryImageMap.Misc;
+    return RequestCategoryImageMap.misc;
   };
 
   return (
@@ -204,7 +204,7 @@ const RequestCardStyle = {
     border: 1px solid #d3d3d3;
   `,
   elapsedTime: css`
-    width: 40px;
+    width: 50px;
     margin-top: 5px;
   `,
   requestName: css`

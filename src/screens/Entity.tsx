@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import React, { useState } from 'react';
+import { View, SafeAreaView } from 'react-native';
 import { css } from '@emotion/native';
 import { SceneMap } from 'react-native-tab-view';
 
@@ -11,7 +11,8 @@ import EntityTab from '../components/EntityTab/EntityTab';
 import RequestFilter from '../components/RequestFilter/RequestFilter';
 import { VolunteerSelectionInitialState } from '../store/reducers/volunteerSelection';
 import { AppInitialState } from '../store/reducers/app';
-import Request from './Request';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import RequestFormComponent from '../components/RequestForm/RequestForm';
 
 const Entity = ({
   actions,
@@ -27,7 +28,7 @@ const Entity = ({
   let sceneMap = SceneMap({
     first: () => {
       return (
-        <View style={{ flex: 1 }}>
+        <View style={EntityStyle.requestList}>
           <RequestList
             mode={'all'}
             volunteerSelected={volunteerSelection}
@@ -39,7 +40,11 @@ const Entity = ({
     second: () => {
       return (
         <View style={{ flex: 1 }}>
-          <Request showHeading={false} />
+          <SafeAreaView style={EntityStyle.submitRequest}>
+            <KeyboardAwareScrollView>
+              <RequestFormComponent showHeading={false} />
+            </KeyboardAwareScrollView>
+          </SafeAreaView>
         </View>
       );
     },
@@ -75,6 +80,13 @@ const EntityStyle = {
   container: css`
     height: 100%;
     background: white;
+  `,
+  requestList: css`
+    flex: 1;
+    padding: 10px 20px;
+  `,
+  submitRequest: css`
+    height: 570px;
   `,
 };
 
