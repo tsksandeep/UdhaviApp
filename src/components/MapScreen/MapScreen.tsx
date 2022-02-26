@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Dimensions, Text, StyleSheet } from 'react-native';
+import { View, Dimensions, Text, StyleSheet, SafeAreaView } from 'react-native';
 import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
 import { AppInitialState } from '../../store/reducers/app';
@@ -18,6 +18,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Logo from '../Logo/Logo';
 import { css } from '@emotion/native';
+import MapScreenAutoComplete from '../MapScreenAutoComplete/MapScreenAutoComplete';
 
 const latDelta = 0.3;
 const lngDelta = 0.2;
@@ -126,6 +127,8 @@ const MapScreen = ({
     actions.createRequestForm({});
   };
 
+  const onSelectCoordinates = (data: any) => {};
+
   const updateCoordinates = () => {
     const requestForm = cloneDeep(app.requestForm);
     requestForm.phoneNumber = app.user.phoneNumber;
@@ -187,7 +190,7 @@ const MapScreen = ({
   return (
     <>
       {isInitialRegionSet ? (
-        <View>
+        <View style={MapScreenStyle.container}>
           <MapView
             provider={PROVIDER_GOOGLE}
             style={MapScreenStyle.map}
@@ -208,6 +211,10 @@ const MapScreen = ({
           {route?.params?.showConfirmButton && (
             <Text style={MapScreenStyle.addressText}>{app.requestAddress}</Text>
           )}
+          <MapScreenAutoComplete
+            onSelectCoordinates={onSelectCoordinates}
+            ref={mapViewRef}
+          />
         </View>
       ) : (
         <View style={MapScreenStyle.logo}>
@@ -230,6 +237,7 @@ const MapScreenStyle = {
   map: css`
     height: ${getHeight()};
     min-width: ${getMinWidth()};
+    margin-top: 40px;
   `,
   logo: css`
     height: ${getHeight()};
@@ -240,6 +248,9 @@ const MapScreenStyle = {
   addressText: css`
     color: blue;
     margin-left: 20px;
+  `,
+  container: css`
+    margin-top: 40px;
   `,
 };
 
