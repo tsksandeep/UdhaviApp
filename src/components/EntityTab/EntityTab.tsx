@@ -31,7 +31,7 @@ const EntityTab = (props: any) => {
               borderBottomWidth="1"
               borderColor={borderColor}
               flex={1}
-              alignItems="center"
+              alignItems="flex-start"
             >
               <HStack justifyContent={'center'}>
                 {route.filter ? route.filter : null}
@@ -41,7 +41,7 @@ const EntityTab = (props: any) => {
                   </Text>
                 </TouchableOpacity>
               </HStack>
-              {route.tabElement}
+              {/* {route.tabElement} */}
             </Box>
           );
         })}
@@ -56,7 +56,7 @@ const EntityTab = (props: any) => {
       renderTabBar={renderTabBar}
       onIndexChange={onIndexChanged}
       initialLayout={initialLayout}
-      style={{ marginTop: StatusBar.currentHeight! + 100 }}
+      style={{ marginTop: 20 }}
     />
   );
 };

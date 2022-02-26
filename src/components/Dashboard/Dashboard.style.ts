@@ -2,7 +2,6 @@ import { css } from '@emotion/native';
 
 const DashboardComponentStyle = {
   container: css`
-    height: 100%;
     display: flex;
     align-items: center;
     background: white;

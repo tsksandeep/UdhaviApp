@@ -12,9 +12,10 @@ import bindDispatch from '../utils/actions';
 import { phoneNumberValidator } from '../helpers/validator';
 import { RequestInitialState } from '../store/reducers/requestForm';
 import { useForm, Controller } from 'react-hook-form';
-import { RequestForm } from '../store/reducers/app';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
+import { RequestCategoryImageMap } from '../constants/constants';
+import { RequestForm } from '../store/reducers/modal/app.modal';
 
 const Request = ({
   actions,

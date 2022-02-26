@@ -181,7 +181,7 @@ const MapScreen = ({
       <MapView
         provider={PROVIDER_GOOGLE}
         style={{
-          height: Dimensions.get('window').height - 200,
+          height: Dimensions.get('window').height - 300,
           minWidth: Dimensions.get('window').width,
         }}
         ref={mapViewRef}

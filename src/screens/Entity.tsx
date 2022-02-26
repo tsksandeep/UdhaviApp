@@ -75,7 +75,6 @@ const EntityStyle = {
   container: css`
     height: 100%;
     background: white;
-    padding: 150px 30px 0 30px;
   `,
 };
 

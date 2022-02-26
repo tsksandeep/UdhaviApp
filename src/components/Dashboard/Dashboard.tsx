@@ -7,6 +7,7 @@ import { FirebaseAuth } from '../../firebase/config';
 import Button from '../Button/Button';
 import DashboardComponentStyle from './Dashboard.style';
 import MapScreen from '../MapScreen/MapScreen';
+import Entity from '../../screens/Entity';
 
 const getCleanedMessageText = (msg: string): string => {
   return msg.split(': ')[1];
@@ -32,16 +33,9 @@ const DashboardComponent = (props: any) => {
   }
 
   return (
-    <View style={DashboardComponentStyle.container}>
+    <View>
       <MapScreen></MapScreen>
-      <Button
-        mode="outlined"
-        onPress={() => {
-          navigation.navigate('Request');
-        }}
-      >
-        Submit a request
-      </Button>
+      <Entity />
     </View>
   );
 };
