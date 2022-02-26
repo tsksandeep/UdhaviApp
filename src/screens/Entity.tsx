@@ -28,7 +28,7 @@ const Entity = ({
   let sceneMap = SceneMap({
     first: () => {
       return (
-        <View style={{ flex: 1 }}>
+        <View style={EntityStyle.requestList}>
           <RequestList
             mode={'all'}
             volunteerSelected={volunteerSelection}
@@ -80,6 +80,10 @@ const EntityStyle = {
   container: css`
     height: 100%;
     background: white;
+  `,
+  requestList: css`
+    flex: 1;
+    padding: 10px 20px;
   `,
   submitRequest: css`
     height: 570px;

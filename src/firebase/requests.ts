@@ -10,8 +10,7 @@ import {
 } from 'firebase/firestore';
 
 import { RequestNotExistsError } from '../errors/errors';
-import { RequestsMap } from '../store/reducers/updateRequests';
-import { VolunteersMap } from '../store/reducers/updateVolunteers';
+import { RequestsMap, VolunteersMap } from '../store/reducers/app';
 import { RequestData, VolunteerData } from './model';
 import { requestsRef } from './ref';
 import {
@@ -69,18 +68,7 @@ export const releaseVolunteersFromRequest = async (
 };
 
 export const writeRequestData = async (requestData: RequestData) => {
-  await setDoc(doc(requestsRef, requestData.id), {
-    id: requestData.id,
-    name: requestData.name,
-    phoneNumber: requestData.phoneNumber,
-    requestorPhoneNumber: requestData.requestorPhoneNumber,
-    info: requestData.info,
-    location: requestData.location,
-    deliveryTime: requestData.deliveryTime,
-    notes: requestData.notes,
-    date: requestData.date,
-    assignedVolunteerIds: requestData.assignedVolunteerIds,
-  });
+  await setDoc(doc(requestsRef, requestData.id), requestData);
 };
 
 export const updateRequestData = async (
@@ -114,18 +102,7 @@ export const getRequestByID = async (id: string): Promise<any> => {
   if (!docSnapshot.exists() || !request?.name || !request?.phoneNumber) {
     return new RequestNotExistsError(`request ${id} does not exists`);
   }
-
-  return {
-    id: id,
-    name: request.name,
-    phoneNumber: request.phoneNumber,
-    info: request.info,
-    location: request.location,
-    deliveryTime: request.deliveryTime,
-    notes: request.notes,
-    date: request.date,
-    assignedVolunteerIds: request.assignedVolunteerIds,
-  };
+  return request as RequestData;
 };
 
 export const addVolunteersToRequest = async (

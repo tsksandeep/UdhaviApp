@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Dimensions, Text, StyleSheet } from 'react-native';
+import { View, Dimensions, Text } from 'react-native';
 import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
 import { AppInitialState } from '../../store/reducers/app';
@@ -16,7 +16,6 @@ import { RequestData, LocationType } from '../../firebase/model';
 import { RequestForm } from '../../store/reducers/modal/app.modal';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import Logo from '../Logo/Logo';
 import { css } from '@emotion/native';
 
 const latDelta = 0.3;
@@ -45,14 +44,19 @@ const MapScreen = ({
     latitude: 0,
     longitude: 0,
   });
-  const [isInitialRegionSet, setIsInitialRegionSet] = useState(false);
   const [isMapReady, setIsMapReady] = useState(false);
   const [requesterLocation, setRequesterLocation] = useState({
     latitude: null,
     longitude: null,
   });
 
-  useEffect(() => {
+  const getLocation = async () => {
+    Location.setGoogleApiKey(GOOGLE_PLACES_API_KEY);
+    let { coords }: any = await Location.getCurrentPositionAsync();
+    setRequesterLocation(coords);
+  };
+
+  const getInitialRegion = () => {
     if (
       !app?.requestForm?.location?.latitude &&
       !app?.requestForm?.location?.longitude &&
@@ -61,16 +65,6 @@ const MapScreen = ({
     ) {
       getLocation();
     }
-  }, []);
-
-  const getLocation = async () => {
-    Location.setGoogleApiKey(GOOGLE_PLACES_API_KEY);
-    let { coords }: any = await Location.getCurrentPositionAsync();
-    setRequesterLocation(coords);
-    setIsInitialRegionSet(true);
-  };
-
-  const getInitialRegion = () => {
     return {
       latitude:
         app?.requestForm?.location?.latitude || requesterLocation?.latitude,
@@ -118,9 +112,9 @@ const MapScreen = ({
       deliveryTime: requestForm.deliveryTime,
       notes: requestForm.notes,
       date,
-      assignedVolunteerIds: [''],
       status: requestForm.status,
       category: requestForm.category,
+      assignedVolunteerIds: [''],
     } as RequestData;
     await writeRequestData(requestData);
     actions.createRequestForm({});
@@ -150,7 +144,7 @@ const MapScreen = ({
                   latitude: request.location.latitude,
                   longitude: request.location.longitude,
                 }}
-              />
+              ></Marker>
             ),
           )}
       </View>
@@ -185,36 +179,28 @@ const MapScreen = ({
   };
 
   return (
-    <>
-      {isInitialRegionSet ? (
-        <View>
-          <MapView
-            provider={PROVIDER_GOOGLE}
-            style={MapScreenStyle.map}
-            ref={mapViewRef}
-            zoomEnabled={true}
-            zoomControlEnabled={true}
-            moveOnMarkerPress={false}
-            customMapStyle={customMapStyle}
-            initialRegion={getInitialRegion()}
-            onMapReady={onMapLayout}
-          >
-            {initialMarker()}
-            {allRequestMarker()}
-          </MapView>
-          {route?.params?.showConfirmButton && (
-            <Button onPress={updateCoordinates}>Confirm</Button>
-          )}
-          {route?.params?.showConfirmButton && (
-            <Text style={MapScreenStyle.addressText}>{app.requestAddress}</Text>
-          )}
-        </View>
-      ) : (
-        <View style={MapScreenStyle.logo}>
-          <Logo />
-        </View>
+    <View>
+      <MapView
+        provider={PROVIDER_GOOGLE}
+        style={MapScreenStyle.map}
+        ref={mapViewRef}
+        zoomEnabled={true}
+        zoomControlEnabled={true}
+        moveOnMarkerPress={false}
+        customMapStyle={customMapStyle}
+        // initialRegion={getInitialRegion()}
+        onMapReady={onMapLayout}
+      >
+        {initialMarker()}
+        {allRequestMarker()}
+      </MapView>
+      {route?.params?.showConfirmButton && (
+        <Button onPress={updateCoordinates}>Confirm</Button>
       )}
-    </>
+      {route?.params?.showConfirmButton && (
+        <Text style={MapScreenStyle.addressText}>{app.requestAddress}</Text>
+      )}
+    </View>
   );
 };
 
@@ -231,12 +217,12 @@ const MapScreenStyle = {
     height: ${getHeight()};
     min-width: ${getMinWidth()};
   `,
-  logo: css`
-    height: ${getHeight()};
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  `,
+  // logo: css`
+  //   height: ${getHeight()};
+  //   display: flex;
+  //   align-items: center;
+  //   justify-content: center;
+  // `,
   addressText: css`
     color: blue;
     margin-left: 20px;

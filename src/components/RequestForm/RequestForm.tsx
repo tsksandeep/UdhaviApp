@@ -46,14 +46,14 @@ const RequestFormComponent = ({
 
   const getCategory = (info: string): string => {
     const splitWords = info.split(' ');
-    var category = 'Misc';
 
-    splitWords.forEach((word: string) => {
+    for (let i = 0; i < splitWords.length; i++) {
+      var word = splitWords[i];
       if (RequestCategoryImageMap[word.toLowerCase()])
         return word.toLowerCase();
-    });
+    }
 
-    return category;
+    return 'Misc';
   };
 
   const onSubmit = async (data: any) => {
