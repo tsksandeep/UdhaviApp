@@ -113,6 +113,8 @@ const MapScreen = ({
       notes: requestForm.notes,
       date,
       assignedVolunteerIds: [''],
+      status: requestForm.status,
+      category: requestForm.category,
     } as RequestData;
     await writeRequestData(requestData);
     actions.createRequestForm({});

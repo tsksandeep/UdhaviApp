@@ -45,6 +45,20 @@ const Request = ({
     formState: { errors },
   } = useForm();
 
+  const getCategory = (info: string): string => {
+    const splitValue = info.split(' ');
+    let category = '';
+    splitValue.forEach((value: string) => {
+      Object.keys(RequestCategoryImageMap).forEach((requestCategory) => {
+        if (requestCategory.toLowerCase() === value.toLowerCase()) {
+          category = requestCategory;
+        }
+      });
+    });
+
+    return category;
+  };
+
   const onSubmit = async (data: any) => {
     const requestData: RequestForm = {
       name: data.name,
@@ -53,6 +67,8 @@ const Request = ({
       location: selectedCoordinates,
       deliveryTime: date,
       notes: data.notes,
+      status: 'New',
+      category: getCategory(data.info),
     };
     actions.createRequestForm(requestData);
     navigation.navigate('GetLocation', {});
@@ -62,10 +78,6 @@ const Request = ({
     const currentDate = selectedDate || date;
     setDate(currentDate);
     setShowTimePicker(false);
-  };
-
-  const onSelectCoordinates = (data: any) => {
-    setSelectedCoordinates(data);
   };
 
   return (

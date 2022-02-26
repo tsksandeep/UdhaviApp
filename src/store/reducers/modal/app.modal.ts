@@ -16,10 +16,14 @@ export interface UserData {
 
 export interface RequestForm {
   name: string;
-  phoneNumber: string;
+  phoneNumber?: string;
   info: string;
   location: Location;
   deliveryTime: Date;
   notes: string;
   requestorPhoneNumber: string;
+  date?: Date;
+  status?: string;
+  category?: string;
+  id?: string;
 }
