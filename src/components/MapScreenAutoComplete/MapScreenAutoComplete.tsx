@@ -1,15 +1,14 @@
 import React from 'react';
 import { searchBarStyles } from '../PlacesAutoComplete/constants/searchBar';
 import { HStack } from 'native-base';
-import { Dimensions, StyleSheet } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Constants from 'expo-constants';
+import { css } from '@emotion/native';
 
 type Props = {
   onSelectCoordinates: any;
 };
 
-const screenWidth = Dimensions.get('window').width;
 const GOOGLE_PLACES_API_KEY = Constants.manifest?.extra?.GOOGLE_PLACES_API_KEY;
 const latDelta = 0.3;
 const lngDelta = 0.2;
@@ -38,11 +37,11 @@ const MapScreenAutoComplete = React.forwardRef((props: Props, ref: any) => {
   }
 
   return (
-    <HStack space={1} style={styles.search}>
+    <HStack space={1} style={MapSearchStyle.search}>
       <GooglePlacesAutocomplete
         suppressDefaultStyles={true}
         styles={searchBarStyles}
-        placeholder="Search with address/pincode/anything"
+        placeholder="Search address or pincode or anything"
         onPress={(data, details = null) => {
           setLocationByAutoCompleteResult(data);
         }}
@@ -56,15 +55,16 @@ const MapScreenAutoComplete = React.forwardRef((props: Props, ref: any) => {
   );
 });
 
-const styles = StyleSheet.create({
-  search: {
-    position: 'absolute',
-    alignItems: 'center',
-    top: 3,
-    left: 2,
-    width: screenWidth - 3,
-    backgroundColor: 'white',
-  },
-});
+const MapSearchStyle = {
+  search: css`
+    position: absolute;
+    align-items: center;
+    width: 100%;
+    background-color: white;
+    min-height: 40px;
+    border: 1.5px solid black;
+    padding: 0 10px;
+  `,
+};
 
 export default MapScreenAutoComplete;

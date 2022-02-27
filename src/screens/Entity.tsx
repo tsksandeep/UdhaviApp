@@ -13,6 +13,9 @@ import { VolunteerSelectionInitialState } from '../store/reducers/volunteerSelec
 import { AppInitialState } from '../store/reducers/app';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import RequestFormComponent from '../components/RequestForm/RequestForm';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
+
+const totalStatusBarHeight = (10 + getStatusBarHeight()).toString();
 
 const Entity = ({
   actions,
@@ -80,6 +83,7 @@ const EntityStyle = {
   container: css`
     height: 100%;
     background: white;
+    top: ${totalStatusBarHeight}px;
   `,
   requestList: css`
     flex: 1;

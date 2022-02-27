@@ -1,12 +1,7 @@
 export interface settingsDataItem {
+  entity: string;
   elementValue: string;
   itemValue: string;
-  callbackValues: {
-    fieldName1: string;
-    fieldValue1: boolean;
-    fieldName2: string;
-    fieldValue2: boolean;
-  };
 }
 
 export interface settingsDataType {
@@ -20,34 +15,19 @@ export const settingsData: Array<settingsDataType> = [
     title: 'View',
     items: [
       {
-        elementValue: 'showAll',
+        entity: 'view',
+        elementValue: 'all',
         itemValue: 'Show All',
-        callbackValues: {
-          fieldName1: 'hideMap',
-          fieldValue1: false,
-          fieldName2: 'hideDetails',
-          fieldValue2: false,
-        },
       },
       {
-        elementValue: 'hideMap',
+        entity: 'view',
+        elementValue: 'details',
         itemValue: 'Show details only',
-        callbackValues: {
-          fieldName1: 'hideMap',
-          fieldValue1: true,
-          fieldName2: 'hideDetails',
-          fieldValue2: false,
-        },
       },
       {
-        elementValue: 'hideDetails',
+        entity: 'view',
+        elementValue: 'map',
         itemValue: 'Show map only',
-        callbackValues: {
-          fieldName1: 'hideMap',
-          fieldValue1: false,
-          fieldName2: 'hideDetails',
-          fieldValue2: true,
-        },
       },
     ],
   },
@@ -55,34 +35,19 @@ export const settingsData: Array<settingsDataType> = [
     title: 'Type',
     items: [
       {
-        elementValue: 'showAll',
+        entity: 'type',
+        elementValue: 'all',
         itemValue: 'Show All',
-        callbackValues: {
-          fieldName1: 'hideRequests',
-          fieldValue1: false,
-          fieldName2: 'hideVolunteers',
-          fieldValue2: false,
-        },
       },
       {
-        elementValue: 'hideRequests',
+        entity: 'type',
+        elementValue: 'volunteers',
         itemValue: 'Show volunteers only',
-        callbackValues: {
-          fieldName1: 'hideRequests',
-          fieldValue1: true,
-          fieldName2: 'hideVolunteers',
-          fieldValue2: false,
-        },
       },
       {
-        elementValue: 'hideVolunteers',
+        entity: 'type',
+        elementValue: 'requests',
         itemValue: 'Show requests only',
-        callbackValues: {
-          fieldName1: 'hideRequests',
-          fieldValue1: false,
-          fieldName2: 'hideVolunteers',
-          fieldValue2: true,
-        },
       },
     ],
   },

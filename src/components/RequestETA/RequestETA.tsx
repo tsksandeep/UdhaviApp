@@ -6,9 +6,11 @@ import {
   Input,
   Modal,
   Pressable,
+  View,
 } from 'native-base';
 import { RequestData } from '../../firebase/model';
 import { RequestsMap } from '../../store/reducers/app';
+import { css } from '@emotion/native';
 
 const RequestETA = (props: {
   actions: any;
@@ -20,11 +22,10 @@ const RequestETA = (props: {
   const [etaText, setEtaText] = useState('');
 
   return (
-    <>
-      <Pressable onPress={() => setShowModal(true)}>
+    <View style={RequestEtaStyle.container}>
+      <Pressable>
         <Badge colorScheme="default" variant={'outline'} alignSelf="center">
-          {'ETA'}
-          {request.eta}
+          {request.eta ? request.eta : 'ETA'}
         </Badge>
       </Pressable>
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
@@ -51,7 +52,7 @@ const RequestETA = (props: {
                 onPress={() => {
                   request.eta = etaText;
                   requests[request.id] = request;
-                  actions.updateRequests(requests);
+                  actions.updateRequestsMap(requests);
                   setShowModal(false);
                 }}
               >
@@ -61,8 +62,14 @@ const RequestETA = (props: {
           </Modal.Footer>
         </Modal.Content>
       </Modal>
-    </>
+    </View>
   );
+};
+
+const RequestEtaStyle = {
+  container: css`
+    margin-right: 10px;
+  `,
 };
 
 export default RequestETA;

@@ -56,19 +56,7 @@ const Home = (props: any) => {
     );
   }
 
-  return (
-    <>
-      {!user.userId ? (
-        <AuthComponent />
-      ) : (
-        <DashboardComponent
-          user={user}
-          setUser={setUser}
-          message={props?.route?.params?.message}
-        />
-      )}
-    </>
-  );
+  return <>{!user.userId ? <AuthComponent /> : <DashboardComponent />}</>;
 };
 
 const HomeStyle = {

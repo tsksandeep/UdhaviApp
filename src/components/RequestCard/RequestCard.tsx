@@ -76,6 +76,7 @@ const RequestCard = (props: {
   const [selectedState, setSelectedState] = useState(
     getPendingSelection(pendingSelection, 'request', mode, request.id),
   );
+
   // to check the logic
   if (isVolunteerSelected) {
     checkBox = (
@@ -94,20 +95,6 @@ const RequestCard = (props: {
         }}
         colorScheme={checkColorTheme}
       />
-    );
-  }
-
-  var callVolunteerElement = null;
-  if (isAssignedToValid(request)) {
-    callVolunteerElement = (
-      <TouchableRipple onPress={() => callNumber('+14255168317')}>
-        <Image
-          size="30px"
-          source={require('../../assets/images/CallVolunteer.png')}
-          alignSelf="center"
-          alt="telephone"
-        />
-      </TouchableRipple>
     );
   }
 
@@ -166,26 +153,25 @@ const RequestCard = (props: {
             </Text>
           </VStack>
           <Spacer />
-          {callVolunteerElement}
-          {request.eta ? (
-            <RequestETA
-              actions={actions}
-              request={request}
-              requests={app.requestsMap}
-            />
-          ) : null}
           <VStack justifyContent="center" alignItems="flex-end">
-            <RequestStatus
-              actions={actions}
-              request={request}
-              requests={app.requestsMap}
-              volunteers={app.volunteersMap}
-            />
-            {servedByCount > 0 && (
-              <Text bold fontSize="xs" style={{ color: 'green' }}>
+            <HStack alignItems="center" justifyContent="space-between">
+              <RequestETA
+                actions={actions}
+                request={request}
+                requests={app.requestsMap}
+              />
+              <RequestStatus
+                actions={actions}
+                request={request}
+                requests={app.requestsMap}
+                volunteers={app.volunteersMap}
+              />
+            </HStack>
+            <HStack alignItems="center" justifyContent="center">
+              <Text bold fontSize="xs" style={RequestCardStyle.volunteersCount}>
                 {servedByCount} Volunteers
               </Text>
-            )}
+            </HStack>
           </VStack>
         </HStack>
       </Box>
@@ -215,6 +201,13 @@ const RequestCardStyle = {
   requestId: css`
     color: gray;
     font-size: 10px;
+  `,
+  volunteersCount: css`
+    color: green;
+    font-size: 13px;
+    margin-top: 15px;
+    position: relative;
+    top: 1px;
   `,
 };
 

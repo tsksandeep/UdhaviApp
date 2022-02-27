@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Dimensions, Text, SafeAreaView } from 'react-native';
+import { Dimensions, Text, SafeAreaView } from 'react-native';
 import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
 import { AppInitialState } from '../../store/reducers/app';
@@ -18,6 +18,9 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { css } from '@emotion/native';
 import MapScreenAutoComplete from '../MapScreenAutoComplete/MapScreenAutoComplete';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
+
+const totalStatusBarHeight = (10 + getStatusBarHeight()).toString();
 
 const latDelta = 0.3;
 const lngDelta = 0.2;
@@ -28,10 +31,12 @@ const MapScreen = ({
   app,
   actions,
   route,
+  fullscreen,
 }: {
   actions?: any;
   app?: any;
   route?: any;
+  fullscreen: boolean;
 }) => {
   const mapViewRef = useRef(null);
 
@@ -181,6 +186,32 @@ const MapScreen = ({
     );
   };
 
+  const getHeight = () => {
+    if (fullscreen) {
+      return Dimensions.get('window').height + 'px';
+    }
+    return Dimensions.get('window').height / 2.3 + 'px';
+  };
+
+  const getMinWidth = () => {
+    return Dimensions.get('window').width + 'px';
+  };
+
+  const MapScreenStyle = {
+    map: css`
+      height: ${getHeight()};
+      min-width: ${getMinWidth()};
+    `,
+    addressText: css`
+      color: blue;
+      margin-left: 20px;
+    `,
+    container: css`
+      background: white;
+      top: ${totalStatusBarHeight}px;
+    `,
+  };
+
   return (
     <SafeAreaView style={MapScreenStyle.container}>
       <MapView
@@ -191,7 +222,7 @@ const MapScreen = ({
         zoomControlEnabled={true}
         moveOnMarkerPress={false}
         customMapStyle={customMapStyle}
-        initialRegion={getInitialRegion()}
+        // initialRegion={getInitialRegion()}
         onMapReady={onMapLayout}
       >
         {initialMarker()}
@@ -209,29 +240,6 @@ const MapScreen = ({
       />
     </SafeAreaView>
   );
-};
-
-const getHeight = () => {
-  return Dimensions.get('window').height / 2 + 'px';
-};
-
-const getMinWidth = () => {
-  return Dimensions.get('window').width + 'px';
-};
-
-const MapScreenStyle = {
-  map: css`
-    height: ${getHeight()};
-    min-width: ${getMinWidth()};
-    margin-top: 40px;
-  `,
-  addressText: css`
-    color: blue;
-    margin-left: 20px;
-  `,
-  container: css`
-    margin-top: 40px;
-  `,
 };
 
 const selector = createSelector(

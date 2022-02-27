@@ -1,14 +1,19 @@
-import React, { useState } from 'react';
-import { Pressable } from 'react-native';
-import { Divider, Icon, Menu } from 'native-base';
-import { Ionicons } from '@expo/vector-icons';
+// Should rename the entire component as menu
+
+import React from 'react';
+import { Pressable, Text } from 'react-native';
+import { Divider, HStack, Icon, Menu, View } from 'native-base';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
-import { cloneDeep } from 'lodash';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 
 import { settingsData, settingsDataType, settingsDataItem } from './data';
 import bindDispatch from '../../utils/actions';
 import { SettingsInitialState } from '../../store/reducers/settings';
+import { css } from '@emotion/native';
+
+const totalStatusBarHeight = (10 + getStatusBarHeight()).toString();
 
 const Settings = ({
   actions,
@@ -17,47 +22,25 @@ const Settings = ({
   actions: any;
   settings: SettingsInitialState;
 }) => {
-  const [localSettingsInfo, setSettingsInfo] = useState(
-    cloneDeep(settings.settingsInfo),
-  );
-
-  const setSettingsInfoCallback = (
-    fieldName1: string,
-    fieldValue1: boolean | string,
-    fieldName2: string | null,
-    fieldValue2: boolean | string | null,
-  ) => {
-    setSettingsInfo({ ...localSettingsInfo, [fieldName1]: fieldValue1 });
-    if (fieldName2 && fieldValue2) {
-      setSettingsInfo({ ...localSettingsInfo, [fieldName2]: fieldValue2 });
-    }
-    actions.updateSettingsInfo(localSettingsInfo);
-  };
-
-  if (localSettingsInfo.hideMap) {
-    setSettingsInfoCallback('defaultViewMode', 'hideMap', null, null);
-  } else if (localSettingsInfo.hideDetails) {
-    setSettingsInfoCallback('defaultViewMode', 'hideDetails', null, null);
-  }
-
-  if (localSettingsInfo.hideRequests) {
-    setSettingsInfoCallback('defaultViewMode', 'hideRequests', null, null);
-  } else if (localSettingsInfo.hideVolunteers) {
-    setSettingsInfoCallback('defaultViewMode', 'hideVolunteers', null, null);
-  }
+  const settingsInfo = settings.settingsInfo;
 
   const MenuOptionItem = (props: settingsDataItem) => {
-    const { itemValue, elementValue, callbackValues } = props;
+    const { itemValue, elementValue, entity } = props;
     return (
       <Menu.ItemOption
-        onPress={() =>
-          setSettingsInfoCallback(
-            callbackValues.fieldName1,
-            callbackValues.fieldValue1,
-            callbackValues.fieldName2,
-            callbackValues.fieldValue2,
-          )
-        }
+        onPress={() => {
+          if (entity == 'view') {
+            actions.updateSettingsInfo({
+              view: elementValue,
+              type: settingsInfo.type,
+            });
+            return;
+          }
+          actions.updateSettingsInfo({
+            view: settingsInfo.view,
+            type: elementValue,
+          });
+        }}
         value={elementValue}
       >
         {itemValue}
@@ -69,7 +52,7 @@ const Settings = ({
     const { defaultValue, title, items } = props;
     return (
       <Menu.OptionGroup defaultValue={defaultValue} title={title} type="radio">
-        {items.map((item, index) => {
+        {items.map((item: settingsDataItem, index) => {
           return <MenuOptionItem key={index} {...item} />;
         })}
       </Menu.OptionGroup>
@@ -77,35 +60,65 @@ const Settings = ({
   };
 
   return (
-    <Menu
-      trigger={(triggerProps) => {
-        return (
-          <Pressable {...triggerProps}>
-            <Icon
-              as={Ionicons}
-              name="options"
-              color="coolGray.800"
-              _dark={{
-                color: 'warmGray.50',
-              }}
-            />
-          </Pressable>
-        );
-      }}
-    >
-      <MenuOptionGroup
-        key={0}
-        {...settingsData[0]}
-        defaultValue={localSettingsInfo.defaultViewMode}
-      />
-      <Divider mt="3" w="100%" />
-      <MenuOptionGroup
-        key={1}
-        {...settingsData[1]}
-        defaultValue={localSettingsInfo.defaultType}
-      />
-    </Menu>
+    <View style={SettingsStyle.container}>
+      <HStack alignItems="center" justifyContent="space-between">
+        <MaterialIcons
+          style={SettingsStyle.account}
+          name="account-circle"
+          size={40}
+          color="#232323"
+        />
+        <Text style={SettingsStyle.header}>Udhavi</Text>
+        <Menu
+          trigger={(triggerProps) => {
+            return (
+              <Pressable {...triggerProps}>
+                <Icon
+                  style={SettingsStyle.menu}
+                  as={Ionicons}
+                  name="options"
+                  color="coolGray.800"
+                  _dark={{
+                    color: 'warmGray.50',
+                  }}
+                />
+              </Pressable>
+            );
+          }}
+        >
+          <MenuOptionGroup
+            key={0}
+            {...settingsData[0]}
+            defaultValue={settingsInfo.view}
+          />
+          {/* Use Requestor flow logic */}
+          {/* <Divider mt="3" w="100%" />
+          <MenuOptionGroup
+            key={1}
+            {...settingsData[1]}
+            defaultValue={settingsInfo.type}
+          /> */}
+        </Menu>
+      </HStack>
+    </View>
   );
+};
+
+const SettingsStyle = {
+  container: css`
+    top: ${totalStatusBarHeight};
+  `,
+  account: css`
+    margin-left: 10px;
+  `,
+  menu: css`
+    margin-right: 10px;
+  `,
+  header: css`
+    font-family: 'Pacifico';
+    font-size: 35px;
+    color: #560cce;
+  `,
 };
 
 const selector = createSelector(

@@ -6,12 +6,8 @@ export interface Action {
 }
 
 export interface SettingsInfo {
-  hideMap: boolean;
-  hideDetails: boolean;
-  hideRequests: boolean;
-  hideVolunteers: boolean;
-  defaultType: string;
-  defaultViewMode: string;
+  type: string;
+  view: string;
 }
 
 export interface SettingsInitialState {
@@ -20,12 +16,8 @@ export interface SettingsInitialState {
 
 export const initialState: SettingsInitialState = {
   settingsInfo: {
-    hideMap: false,
-    hideDetails: false,
-    hideRequests: false,
-    hideVolunteers: false,
-    defaultType: 'showAll',
-    defaultViewMode: 'showAll',
+    type: 'all',
+    view: 'all',
   },
 };
 
