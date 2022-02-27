@@ -15,4 +15,7 @@ export default {
     FIREBASE_MEASUREMENT_ID: process.env.FIREBASE_MEASUREMENT_ID,
     GOOGLE_PLACES_API_KEY: process.env.GOOGLE_PLACES_API_KEY,
   },
+  ios: {
+    bundleIdentifier: 'com.tsksandeep.udhaviapp',
+  },
 };
