@@ -212,7 +212,6 @@ const RequestFormComponent = ({
 const RequestFormStyle = {
   container: css`
     padding: 0 20px;
-    margin-bottom: 200px;
   `,
   header: css`
     min-height: 80px;

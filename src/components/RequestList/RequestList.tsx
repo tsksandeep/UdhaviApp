@@ -1,5 +1,5 @@
 import React from 'react';
-import { Badge, VStack } from 'native-base';
+import { Badge, View, VStack } from 'native-base';
 import { FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -13,6 +13,7 @@ import { VolunteerSelectionInitialState } from '../../store/reducers/volunteerSe
 import { RequestFilterInitialState } from '../../store/reducers/requestFilter';
 import { sortByDate } from '../../common/common';
 import { RequestsMap } from '../../store/reducers/app';
+import { css } from '@emotion/native';
 
 const RequestList = ({
   actions,
@@ -68,13 +69,15 @@ const RequestList = ({
 
   if (filteredRequests.length > 0) {
     return (
-      <FlatList
-        data={sortByDate(filteredRequests)}
-        renderItem={({ item }: { item: RequestData }) => (
-          <RequestCard mode={mode} request={item} />
-        )}
-        keyExtractor={(item) => item.id.toString()}
-      />
+      <View style={RequestListStyle.container}>
+        <FlatList
+          data={sortByDate(filteredRequests)}
+          renderItem={({ item }: { item: RequestData }) => (
+            <RequestCard mode={mode} request={item} />
+          )}
+          keyExtractor={(item) => item.id.toString()}
+        />
+      </View>
     );
   } else {
     var msg = '';
@@ -84,13 +87,27 @@ const RequestList = ({
       msg = `No requests were found matching filter "${requestFilter.requestFilter}"`;
     }
     return (
-      <VStack flex={1} justifyContent="center" alignItems="center">
+      <VStack
+        style={RequestListStyle.notFound}
+        flex={1}
+        justifyContent="center"
+        alignItems="center"
+      >
         <Badge variant="subtle" colorScheme="danger" alignSelf="center">
           {msg}
         </Badge>
       </VStack>
     );
   }
+};
+
+const RequestListStyle = {
+  container: css`
+    padding: 10px 20px;
+  `,
+  notFound: css`
+    margin-top: 20px;
+  `,
 };
 
 const selector = createSelector(

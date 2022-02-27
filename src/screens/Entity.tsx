@@ -32,11 +32,15 @@ const Entity = ({
     first: () => {
       return (
         <View style={EntityStyle.requestList}>
-          <RequestList
-            mode={'all'}
-            volunteerSelected={volunteerSelection}
-            requestsMap={app.requestsMap}
-          />
+          <SafeAreaView style={EntityStyle.requests}>
+            <KeyboardAwareScrollView>
+              <RequestList
+                mode={'all'}
+                volunteerSelected={volunteerSelection}
+                requestsMap={app.requestsMap}
+              />
+            </KeyboardAwareScrollView>
+          </SafeAreaView>
         </View>
       );
     },
@@ -87,10 +91,12 @@ const EntityStyle = {
   `,
   requestList: css`
     flex: 1;
-    padding: 10px 20px;
+  `,
+  requests: css`
+    height: 300px;
   `,
   submitRequest: css`
-    height: 570px;
+    height: 300px;
   `,
 };
 
