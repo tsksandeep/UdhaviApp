@@ -19,6 +19,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { css } from '@emotion/native';
 import MapScreenAutoComplete from '../MapScreenAutoComplete/MapScreenAutoComplete';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
+import RequestDefaultMarker from '../../assets/marker/Request_default_marker.png';
 
 const totalStatusBarHeight = (10 + getStatusBarHeight()).toString();
 
@@ -169,8 +170,8 @@ const MapScreen = ({
                 }}
               >
                 <Image
-                  source={require('../../assets/marker/Request_default_marker.png')}
-                  style={{ height: 35, width: 35 }}
+                  source={RequestDefaultMarker}
+                  style={{ height: 40, width: 40 }}
                 />
               </Marker>
             ),
@@ -202,8 +203,8 @@ const MapScreen = ({
             onDragEnd={handleDragEnd}
           >
             <Image
-              source={require('../../assets/marker/Request_default_marker.png')}
-              style={{ height: 35, width: 35 }}
+              source={RequestDefaultMarker}
+              style={{ height: 40, width: 40 }}
             />
           </Marker>
         )}
