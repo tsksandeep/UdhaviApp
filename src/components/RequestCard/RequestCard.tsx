@@ -9,8 +9,8 @@ import {
   Text,
   VStack,
   Checkbox,
+  View,
 } from 'native-base';
-import { TouchableRipple } from 'react-native-paper';
 import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
 
@@ -35,6 +35,7 @@ import { RequestSelectionInitialState } from '../../store/reducers/requestSelect
 import { VolunteerSelectionInitialState } from '../../store/reducers/volunteerSelection';
 import { AppInitialState } from '../../store/reducers/app';
 import { css } from '@emotion/native';
+import RequestDataModal from '../RequestData/RequestData';
 
 const RequestCard = (props: {
   mode: string;
@@ -72,6 +73,8 @@ const RequestCard = (props: {
     }
   }
 
+  const [showModal, setShowModal] = useState(false);
+
   var checkBox = null;
   const [selectedState, setSelectedState] = useState(
     getPendingSelection(pendingSelection, 'request', mode, request.id),
@@ -106,76 +109,89 @@ const RequestCard = (props: {
   };
 
   return (
-    <Pressable
-      style={RequestCardStyle.container}
-      key={request.id}
-      onPress={() => {
-        if (isRequestSelected) {
-          clearPendingSelection(actions);
-        } else {
-          actions.updateRequestSelection(request.id);
-        }
-      }}
-    >
-      <Box
-        style={RequestCardStyle.box}
+    <View>
+      <Pressable
+        style={RequestCardStyle.container}
         key={request.id}
-        _dark={{
-          borderColor: 'gray.600',
+        onPress={() => {
+          if (isRequestSelected) {
+            setShowModal(false);
+            clearPendingSelection(actions);
+          } else {
+            setShowModal(true);
+            actions.updateRequestSelection(request.id);
+          }
         }}
-        bg={isRequestSelected ? 'yellow.100' : 'white'}
       >
-        <HStack space={3} alignItems="center" justifyContent="space-between">
-          {checkBox}
-          <VStack justifyContent="space-between">
-            <Image
-              size={'35px'}
-              source={getRequestCategoryImage()}
-              alignSelf="center"
-              alt="category.png"
-            />
-            <Badge style={RequestCardStyle.elapsedTime}>
-              {secondsToHms(elapsedSecondsFromNow(request.date))}
-            </Badge>
-          </VStack>
-          <VStack justifyContent="center">
-            <Text style={RequestCardStyle.requestName}>{request.name}</Text>
-            <Text
-              color="coolGray.600"
-              _dark={{
-                color: 'warmGray.200',
-              }}
-            >
-              {request.message ? request.message : 'Help needed'}
-            </Text>
-            <Text style={RequestCardStyle.requestId}>
-              Request ID: {request.id}
-            </Text>
-          </VStack>
-          <Spacer />
-          <VStack justifyContent="center" alignItems="flex-end">
-            <HStack alignItems="center" justifyContent="space-between">
-              <RequestETA
-                actions={actions}
-                request={request}
-                requests={app.requestsMap}
+        <Box
+          style={RequestCardStyle.box}
+          key={request.id}
+          _dark={{
+            borderColor: 'gray.600',
+          }}
+          bg="white"
+        >
+          <HStack space={3} alignItems="center" justifyContent="space-between">
+            {checkBox}
+            <VStack justifyContent="space-between">
+              <Image
+                size={'35px'}
+                source={getRequestCategoryImage()}
+                alignSelf="center"
+                alt="category.png"
               />
-              <RequestStatus
-                actions={actions}
-                request={request}
-                requests={app.requestsMap}
-                volunteers={app.volunteersMap}
-              />
-            </HStack>
-            <HStack alignItems="center" justifyContent="center">
-              <Text bold fontSize="xs" style={RequestCardStyle.volunteersCount}>
-                {servedByCount} Volunteers
+              <Badge style={RequestCardStyle.elapsedTime}>
+                {secondsToHms(elapsedSecondsFromNow(request.date))}
+              </Badge>
+            </VStack>
+            <VStack justifyContent="center">
+              <Text style={RequestCardStyle.requestName}>{request.name}</Text>
+              <Text
+                color="coolGray.600"
+                _dark={{
+                  color: 'warmGray.200',
+                }}
+              >
+                {request.message ? request.message : 'Help needed'}
               </Text>
-            </HStack>
-          </VStack>
-        </HStack>
-      </Box>
-    </Pressable>
+              <Text style={RequestCardStyle.requestId}>
+                Request ID: {request.id}
+              </Text>
+            </VStack>
+            <Spacer />
+            <VStack justifyContent="center" alignItems="flex-end">
+              <HStack alignItems="center" justifyContent="space-between">
+                <RequestETA
+                  actions={actions}
+                  request={request}
+                  requests={app.requestsMap}
+                />
+                <RequestStatus
+                  actions={actions}
+                  request={request}
+                  requests={app.requestsMap}
+                  volunteers={app.volunteersMap}
+                />
+              </HStack>
+              <HStack alignItems="center" justifyContent="center">
+                <Text
+                  bold
+                  fontSize="xs"
+                  style={RequestCardStyle.volunteersCount}
+                >
+                  {servedByCount} Volunteers
+                </Text>
+              </HStack>
+            </VStack>
+          </HStack>
+        </Box>
+      </Pressable>
+      <RequestDataModal
+        request={request}
+        showModal={showModal}
+        setShowModalCallback={setShowModal}
+      />
+    </View>
   );
 };
 
