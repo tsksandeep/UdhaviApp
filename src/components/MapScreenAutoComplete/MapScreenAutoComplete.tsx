@@ -5,21 +5,17 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import Constants from 'expo-constants';
 import { css } from '@emotion/native';
 
-type Props = {
-  onSelectCoordinates: any;
-};
-
 const GOOGLE_PLACES_API_KEY = Constants.manifest?.extra?.GOOGLE_PLACES_API_KEY;
 const latDelta = 0.3;
 const lngDelta = 0.2;
 
-const MapScreenAutoComplete = React.forwardRef((props: Props, ref: any) => {
+const MapScreenAutoComplete = React.forwardRef((ref: any) => {
   async function getLatLongFromAutoComplete(apiData: any) {
     const placeCode = apiData.place_id;
     const reqUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeCode}&key=${GOOGLE_PLACES_API_KEY}`;
     const response = await fetch(reqUrl);
     const json = await response.json();
-    props.onSelectCoordinates(json.result.geometry.location);
+
     return json.result.geometry.location;
   }
 

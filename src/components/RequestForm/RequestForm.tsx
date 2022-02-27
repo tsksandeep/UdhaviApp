@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { css } from '@emotion/native';
 import { Text, View, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -9,20 +9,20 @@ import TextInput from '../TextInput/TextInput';
 import Button from '../Button/Button';
 import bindDispatch from '../../utils/actions';
 import { phoneNumberValidator } from '../../helpers/validator';
-import { RequestInitialState } from '../../store/reducers/requestForm';
 import { useForm, Controller } from 'react-hook-form';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import { RequestCategoryImageMap } from '../../constants/constants';
 import { RequestForm } from '../../store/reducers/modal/app.modal';
+import { AppInitialState } from '../../store/reducers/app';
 
 const RequestFormComponent = ({
   actions,
-  request,
+  app,
   showHeading,
 }: {
   actions: any;
-  request: RequestInitialState;
+  app: AppInitialState;
   showHeading: boolean;
 }) => {
   const [selectedCoordinates, setSelectedCoordinates] = useState({
@@ -31,6 +31,16 @@ const RequestFormComponent = ({
   });
   const [date, setDate] = useState(new Date());
   const [showTimePicker, setShowTimePicker] = useState(false);
+
+  useEffect(() => {
+    if (Object.values(app.requestForm).length) {
+      const { name, info, notes, requestorPhoneNumber } = app.requestForm;
+      setValue('name', name);
+      setValue('phoneNumber', requestorPhoneNumber);
+      setValue('info', info);
+      setValue('notes', notes);
+    }
+  }, []);
 
   if (showHeading === undefined) {
     showHeading = true;
@@ -41,6 +51,7 @@ const RequestFormComponent = ({
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm();
 
@@ -157,7 +168,9 @@ const RequestFormComponent = ({
             label="Delivery Time"
             returnKeyType="next"
             autoCapitalize="none"
-            value={moment(date).format('DD:MM:YYYY HH:MM')}
+            value={moment(app.requestForm.deliveryTime || date).format(
+              'DD:MM:YYYY HH:MM',
+            )}
             editable={false}
             pointerEvents="none"
           />
@@ -168,7 +181,7 @@ const RequestFormComponent = ({
         <DateTimePicker
           testID="dateTimePicker"
           mode={'time'}
-          value={date}
+          value={app.requestForm.deliveryTime || date}
           display="default"
           onChange={onDateChange}
         />
@@ -184,7 +197,6 @@ const RequestFormComponent = ({
             value={value}
             onChangeText={(text: string) => onChange(text)}
             autoCapitalize="none"
-            multiline={true}
             numberOfLines={150}
             error={!!errors?.notes?.message}
             errorText={errors?.notes?.message}
@@ -239,8 +251,8 @@ const RequestFormStyle = {
 };
 
 const selector = createSelector(
-  (state: any) => state.request,
-  (request: RequestInitialState) => ({ request }),
+  (state: any) => state.app,
+  (app: AppInitialState) => ({ app }),
 );
 
 export default connect(selector, bindDispatch)(RequestFormComponent);

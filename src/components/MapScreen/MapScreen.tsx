@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Dimensions, Text, SafeAreaView } from 'react-native';
+import { Dimensions, Text, SafeAreaView, Image } from 'react-native';
 import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
 import { AppInitialState } from '../../store/reducers/app';
@@ -25,6 +25,9 @@ const totalStatusBarHeight = (10 + getStatusBarHeight()).toString();
 const latDelta = 0.3;
 const lngDelta = 0.2;
 
+const DEFAULT_LAT = 11.127123;
+const DEFAULT_LON = 78.656891;
+
 const GOOGLE_PLACES_API_KEY = Constants.manifest?.extra?.GOOGLE_PLACES_API_KEY;
 
 const MapScreen = ({
@@ -39,27 +42,39 @@ const MapScreen = ({
   fullscreen: boolean;
 }) => {
   const mapViewRef = useRef(null);
-
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-
-  useEffect(() => {
-    actions.setInitialRequests(app.user.phoneNumber);
-  }, [app.requestForm]);
-
   const [selectedCoordinates, setSelectedCoordinates] = useState({
     latitude: 0,
     longitude: 0,
   });
+
+  const [initialRegion, setInitialRegion] = useState({
+    latitude: DEFAULT_LAT,
+    longitude: DEFAULT_LON,
+    latitudeDelta: 6,
+    longitudeDelta: 6,
+  });
+
   const [isMapReady, setIsMapReady] = useState(false);
   const [requesterLocation, setRequesterLocation] = useState({
     latitude: null,
     longitude: null,
   });
 
+  useEffect(() => {
+    actions.setInitialRequests(app.user.phoneNumber);
+  }, [app.requestForm]);
+
+  useEffect(() => {
+    getInitialRegion();
+  }, [requesterLocation]);
+
   const getLocation = async () => {
     Location.setGoogleApiKey(GOOGLE_PLACES_API_KEY);
     let { coords }: any = await Location.getCurrentPositionAsync();
-    setRequesterLocation(coords);
+    if (coords.latitude) {
+      setRequesterLocation(coords);
+    }
   };
 
   const getInitialRegion = () => {
@@ -71,14 +86,16 @@ const MapScreen = ({
     ) {
       getLocation();
     }
-    return {
-      latitude:
-        app?.requestForm?.location?.latitude || requesterLocation?.latitude,
-      longitude:
-        app?.requestForm?.location?.longitude || requesterLocation?.longitude,
-      latitudeDelta: app?.requestForm?.location?.latitude ? 0.01 : latDelta,
-      longitudeDelta: app?.requestForm?.location?.longitude ? 0.01 : lngDelta,
-    };
+    if (app?.requestForm?.location?.latitude || requesterLocation?.latitude) {
+      setInitialRegion({
+        latitude:
+          app?.requestForm?.location?.latitude || requesterLocation?.latitude,
+        longitude:
+          app?.requestForm?.location?.longitude || requesterLocation?.longitude,
+        latitudeDelta: app?.requestForm?.location?.latitude ? 0.01 : latDelta,
+        longitudeDelta: app?.requestForm?.location?.longitude ? 0.01 : lngDelta,
+      });
+    }
   };
 
   const handleDragEnd = async (event: any) => {
@@ -126,8 +143,6 @@ const MapScreen = ({
     actions.createRequestForm({});
   };
 
-  const onSelectCoordinates = (data: any) => {};
-
   const updateCoordinates = () => {
     const requestForm = cloneDeep(app.requestForm);
     requestForm.phoneNumber = app.user.phoneNumber;
@@ -152,7 +167,12 @@ const MapScreen = ({
                   latitude: request.location.latitude,
                   longitude: request.location.longitude,
                 }}
-              ></Marker>
+              >
+                <Image
+                  source={require('../../assets/marker/Request_default_marker.png')}
+                  style={{ height: 35, width: 35 }}
+                />
+              </Marker>
             ),
           )}
       </>
@@ -180,7 +200,12 @@ const MapScreen = ({
                 requesterLocation?.longitude,
             }}
             onDragEnd={handleDragEnd}
-          />
+          >
+            <Image
+              source={require('../../assets/marker/Request_default_marker.png')}
+              style={{ height: 35, width: 35 }}
+            />
+          </Marker>
         )}
       </>
     );
@@ -222,7 +247,8 @@ const MapScreen = ({
         zoomControlEnabled={true}
         moveOnMarkerPress={false}
         customMapStyle={customMapStyle}
-        // initialRegion={getInitialRegion()}
+        initialRegion={initialRegion}
+        region={initialRegion}
         onMapReady={onMapLayout}
       >
         {initialMarker()}
@@ -234,10 +260,7 @@ const MapScreen = ({
       {route?.params?.showConfirmButton && (
         <Text style={MapScreenStyle.addressText}>{app.requestAddress}</Text>
       )}
-      <MapScreenAutoComplete
-        onSelectCoordinates={onSelectCoordinates}
-        ref={mapViewRef}
-      />
+      {isMapReady && <MapScreenAutoComplete ref={mapViewRef} />}
     </SafeAreaView>
   );
 };
