@@ -7,7 +7,7 @@ import bindDispatch from '../../utils/actions';
 import { SettingsInitialState } from '../../store/reducers/settings';
 import MapScreen from '../MapScreen/MapScreen';
 import Entity from '../../screens/Entity';
-import Settings from '../Settings/Settings';
+import MenuBar from '../MenuBar/MenuBar';
 
 const DashboardComponent = ({
   actions,
@@ -19,7 +19,7 @@ const DashboardComponent = ({
   if (settings.settingsInfo.view === 'details') {
     return (
       <View>
-        <Settings />
+        <MenuBar />
         <Entity />
       </View>
     );
@@ -28,7 +28,7 @@ const DashboardComponent = ({
   if (settings.settingsInfo.view === 'map') {
     return (
       <View>
-        <Settings />
+        <MenuBar />
         <MapScreen fullscreen={true} />
       </View>
     );
@@ -36,7 +36,7 @@ const DashboardComponent = ({
 
   return (
     <View>
-      <Settings />
+      <MenuBar />
       <MapScreen fullscreen={false} />
       <Entity />
     </View>
