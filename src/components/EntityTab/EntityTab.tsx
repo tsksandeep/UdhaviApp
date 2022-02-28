@@ -1,7 +1,7 @@
 import { css } from '@emotion/native';
 import { Box, HStack, Text } from 'native-base';
 import * as React from 'react';
-import { Dimensions, StatusBar } from 'react-native';
+import { Dimensions } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { TabView } from 'react-native-tab-view';
 

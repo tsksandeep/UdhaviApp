@@ -20,7 +20,7 @@ const DashboardComponent = ({
     return (
       <View>
         <MenuBar />
-        <Entity />
+        <Entity fullscreen={true} />
       </View>
     );
   }
@@ -38,7 +38,7 @@ const DashboardComponent = ({
     <View>
       <MenuBar />
       <MapScreen fullscreen={false} />
-      <Entity />
+      <Entity fullscreen={false} />
     </View>
   );
 };

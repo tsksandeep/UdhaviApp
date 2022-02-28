@@ -21,10 +21,12 @@ const Entity = ({
   actions,
   app,
   volunteerSelection,
+  fullscreen,
 }: {
   actions: any;
   app: AppInitialState;
   volunteerSelection: VolunteerSelectionInitialState;
+  fullscreen: boolean;
 }) => {
   const [currentTabIndex, setCurrentTabIndex] = useState(0);
 
@@ -69,6 +71,23 @@ const Entity = ({
     },
   ];
 
+  const EntityStyle = {
+    container: css`
+      height: 100%;
+      background: white;
+      top: ${totalStatusBarHeight}px;
+    `,
+    requestList: css`
+      flex: 1;
+    `,
+    requests: css`
+      ${fullscreen ? '' : 'height: 300px'};
+    `,
+    submitRequest: css`
+      ${fullscreen ? '' : 'height: 300px'};
+    `,
+  };
+
   return (
     <>
       <View style={EntityStyle.container}>
@@ -81,23 +100,6 @@ const Entity = ({
       </View>
     </>
   );
-};
-
-const EntityStyle = {
-  container: css`
-    height: 100%;
-    background: white;
-    top: ${totalStatusBarHeight}px;
-  `,
-  requestList: css`
-    flex: 1;
-  `,
-  requests: css`
-    height: 300px;
-  `,
-  submitRequest: css`
-    height: 300px;
-  `,
 };
 
 const selector = createSelector(
