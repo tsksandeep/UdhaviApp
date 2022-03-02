@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, SafeAreaView } from 'react-native';
 import { css } from '@emotion/native';
 import { SceneMap } from 'react-native-tab-view';
-
-import bindDispatch from '../utils/actions';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import RequestList from '../components/RequestList/RequestList';
@@ -18,7 +16,6 @@ import { getStatusBarHeight } from 'react-native-status-bar-height';
 const totalStatusBarHeight = (10 + getStatusBarHeight()).toString();
 
 const Entity = ({
-  actions,
   app,
   volunteerSelection,
   fullscreen,
@@ -30,34 +27,37 @@ const Entity = ({
 }) => {
   const [currentTabIndex, setCurrentTabIndex] = useState(0);
 
-  let sceneMap = SceneMap({
-    first: () => {
-      return (
-        <View style={EntityStyle.requestList}>
-          <SafeAreaView style={EntityStyle.requests}>
-            <KeyboardAwareScrollView>
-              <RequestList
-                mode={'all'}
-                volunteerSelected={volunteerSelection}
-                requestsMap={app.requestsMap}
-              />
-            </KeyboardAwareScrollView>
-          </SafeAreaView>
-        </View>
-      );
-    },
-    second: () => {
-      return (
-        <View style={{ flex: 1 }}>
-          <SafeAreaView style={EntityStyle.submitRequest}>
-            <KeyboardAwareScrollView>
-              <RequestFormComponent showHeading={false} />
-            </KeyboardAwareScrollView>
-          </SafeAreaView>
-        </View>
-      );
-    },
-  });
+  let sceneMap = useCallback(
+    SceneMap({
+      first: () => {
+        return (
+          <View style={EntityStyle.requestList}>
+            <SafeAreaView style={EntityStyle.requests}>
+              <KeyboardAwareScrollView>
+                <RequestList
+                  mode={'all'}
+                  volunteerSelected={volunteerSelection}
+                  requestsMap={app?.requestsMap}
+                />
+              </KeyboardAwareScrollView>
+            </SafeAreaView>
+          </View>
+        );
+      },
+      second: () => {
+        return (
+          <View style={{ flex: 1 }}>
+            <SafeAreaView style={EntityStyle.submitRequest}>
+              <KeyboardAwareScrollView>
+                <RequestFormComponent showHeading={false} />
+              </KeyboardAwareScrollView>
+            </SafeAreaView>
+          </View>
+        );
+      },
+    }),
+    [],
+  );
 
   const tabHeaderMap = [
     {
@@ -111,4 +111,4 @@ const selector = createSelector(
   ) => ({ app, volunteerSelection }),
 );
 
-export default connect(selector, bindDispatch)(Entity);
+export default connect(selector, null)(Entity);
