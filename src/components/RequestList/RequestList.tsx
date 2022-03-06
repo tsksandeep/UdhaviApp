@@ -1,6 +1,5 @@
 import React from 'react';
-import { Badge, View, VStack } from 'native-base';
-import { FlatList } from 'react-native';
+import { Badge, VStack } from 'native-base';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 
@@ -14,18 +13,24 @@ import { RequestFilterInitialState } from '../../store/reducers/requestFilter';
 import { sortByDate } from '../../common/common';
 import { RequestsMap } from '../../store/reducers/app';
 import { css } from '@emotion/native';
+import {
+  BottomSheetFlatList,
+  BottomSheetFlatListMethods,
+} from '@gorhom/bottom-sheet';
 
 const RequestList = ({
   actions,
   requestsMap,
   requestFilter,
   volunteerSelected,
+  flatlistRef,
   mode,
 }: {
   actions: any;
   requestsMap: RequestsMap;
   requestFilter: RequestFilterInitialState;
   volunteerSelected: VolunteerSelectionInitialState;
+  flatlistRef: React.Ref<BottomSheetFlatListMethods>;
   mode: string;
 }) => {
   let requests: any[] = [];
@@ -69,15 +74,15 @@ const RequestList = ({
 
   if (filteredRequests.length > 0) {
     return (
-      <View style={RequestListStyle.container}>
-        <FlatList
-          data={sortByDate(filteredRequests)}
-          renderItem={({ item }: { item: RequestData }) => (
-            <RequestCard mode={mode} request={item} />
-          )}
-          keyExtractor={(item) => item.id.toString()}
-        />
-      </View>
+      <BottomSheetFlatList
+        ref={flatlistRef}
+        contentContainerStyle={RequestListStyle.container}
+        data={sortByDate(filteredRequests)}
+        renderItem={({ item }: { item: RequestData }) => (
+          <RequestCard mode={mode} request={item} />
+        )}
+        keyExtractor={(item) => item.id.toString()}
+      />
     );
   } else {
     var msg = '';
@@ -103,7 +108,7 @@ const RequestList = ({
 
 const RequestListStyle = {
   container: css`
-    padding: 10px 20px;
+    padding: 20px 20px 40px 20px;
   `,
   notFound: css`
     margin-top: 20px;

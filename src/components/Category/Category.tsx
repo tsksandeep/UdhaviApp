@@ -1,26 +1,27 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { CategoryType } from '../CategoryList/categoryList.modal';
+import { View, Text } from 'react-native';
+import { CategoryType } from '../CategoryList/CategoryList.modal';
+import { MaterialIcons } from '@expo/vector-icons';
+import { css } from '@emotion/native';
 
 const Category = ({ categoryData }: { categoryData: CategoryType }) => {
   return (
     <View style={styles.container}>
-      {/* <Image
-        style={{ width: 75, height: 75, borderRadius: 150 / 2 }}
-      /> */}
-      <Text style={styles.label}>{categoryData.name}</Text>
+      <MaterialIcons name="account-circle" size={40} color="black" />
+      <Text>{categoryData.name}</Text>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 100,
-    marginBottom: 20,
-  },
-  label: {},
-});
+const styles = {
+  container: css`
+    width: 100px;
+    margin: 10px;
+    padding: 10px 0;
+    align-items: center;
+    background: #dfe6e9;
+    border-radius: 30px;
+  `,
+};
 
 export default Category;

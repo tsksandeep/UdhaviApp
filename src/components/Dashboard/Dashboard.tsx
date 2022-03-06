@@ -1,51 +1,22 @@
-import React from 'react';
-import { View } from 'react-native';
-import { createSelector } from 'reselect';
-import { connect } from 'react-redux';
+import React, { useCallback } from 'react';
 
-import bindDispatch from '../../utils/actions';
-import { SettingsInitialState } from '../../store/reducers/settings';
-import MapScreen from '../MapScreen/MapScreen';
-import Entity from '../../screens/Entity';
+import RequestSlider from '../RequestSlider/RequestSlider';
 import MenuBar from '../MenuBar/MenuBar';
+import CategoryList from '../CategoryList/CategoryList';
 
-const DashboardComponent = ({
-  actions,
-  settings,
-}: {
-  actions: any;
-  settings: SettingsInitialState;
-}) => {
-  if (settings.settingsInfo.view === 'details') {
-    return (
-      <View>
-        <MenuBar />
-        <Entity fullscreen={true} />
-      </View>
-    );
-  }
-
-  if (settings.settingsInfo.view === 'map') {
-    return (
-      <View>
-        <MenuBar />
-        <MapScreen fullscreen={true} />
-      </View>
-    );
-  }
-
+const DashboardComponent = () => {
   return (
-    <View>
-      <MenuBar />
-      <MapScreen fullscreen={false} />
-      <Entity fullscreen={false} />
-    </View>
+    <RequestSlider
+      backdropComponent={useCallback(() => {
+        return (
+          <>
+            <MenuBar />
+            <CategoryList />
+          </>
+        );
+      }, [])}
+    />
   );
 };
 
-const selector = createSelector(
-  (state: any) => state.settings,
-  (settings: SettingsInitialState) => ({ settings }),
-);
-
-export default connect(selector, bindDispatch)(DashboardComponent);
+export default DashboardComponent;

@@ -1,7 +1,8 @@
+import { css } from '@emotion/native';
 import React from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, FlatList, Text } from 'react-native';
 import Category from '../Category/Category';
-import { CategoryType } from './categoryList.modal';
+import { CategoryType } from './CategoryList.modal';
 
 const mockData: CategoryType[] = [
   {
@@ -30,7 +31,22 @@ const mockData: CategoryType[] = [
     image: '',
   },
   {
+    id: 6,
+    name: 'Shelter',
+    image: '',
+  },
+  {
     id: 7,
+    name: 'Transport',
+    image: '',
+  },
+  {
+    id: 8,
+    name: 'Groceries',
+    image: '',
+  },
+  {
+    id: 9,
     name: 'More',
     image: '',
   },
@@ -38,27 +54,45 @@ const mockData: CategoryType[] = [
 
 const CategoryList = () => {
   const renderItem = ({ item }: { item: CategoryType }) => {
-    return <Category categoryData={item}></Category>;
+    return <Category categoryData={item} />;
   };
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        key={'#'}
-        keyExtractor={(item) => '#' + item.id}
-        data={mockData}
-        renderItem={renderItem}
-        numColumns={3}
-      />
+    <View>
+      <Text style={styles.headerText}>
+        I need <Text style={styles.specialHeaderText}>udhavi</Text> for
+      </Text>
+      <View style={styles.listContainer}>
+        <FlatList
+          key={'#'}
+          keyExtractor={(item) => '#' + item.id}
+          data={mockData}
+          renderItem={renderItem}
+          numColumns={3}
+        />
+      </View>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    width: ' 100%',
-    margin: 20,
-  },
-});
+const styles = {
+  headerText: css`
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  `,
+  specialHeaderText: css`
+    font-family: 'Pacifico';
+    font-size: 30px;
+    color: #560cce;
+    text-transform: capitalize;
+  `,
+  listContainer: css`
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  `,
+};
 
 export default CategoryList;

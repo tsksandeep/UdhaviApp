@@ -28,6 +28,7 @@ const MenuBar = () => {
 const MenuBarStyle = {
   container: css`
     top: ${totalStatusBarHeight};
+    height: 130px;
   `,
   account: css`
     margin-left: 10px;
