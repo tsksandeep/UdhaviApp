@@ -22,7 +22,7 @@ const RequestSlider = ({
 }) => {
   const flatlistRef = useRef<BottomSheetFlatListMethods>(null);
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['40%', '70%'], []);
+  const snapPoints = useMemo(() => ['30%', '70%'], []);
 
   const handleSheetChanges = useCallback((index: number) => {
     flatlistRef.current?.scrollToOffset({ animated: true, offset: 0 });

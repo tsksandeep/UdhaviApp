@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react';
-
 import RequestSlider from '../RequestSlider/RequestSlider';
 import MenuBar from '../MenuBar/MenuBar';
 import CategoryList from '../CategoryList/CategoryList';

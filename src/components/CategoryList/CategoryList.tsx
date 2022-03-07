@@ -1,76 +1,39 @@
 import { css } from '@emotion/native';
-import React from 'react';
+import React, { useState } from 'react';
 import { View, FlatList, Text } from 'react-native';
 import Category from '../Category/Category';
+import GroupList from '../GroupList/GroupList';
 import { CategoryType } from './CategoryList.modal';
-
-const mockData: CategoryType[] = [
-  {
-    id: 1,
-    name: 'Food',
-    image: '',
-  },
-  {
-    id: 2,
-    name: 'Shelter',
-    image: '',
-  },
-  {
-    id: 3,
-    name: 'Medicine',
-    image: '',
-  },
-  {
-    id: 4,
-    name: 'Transport',
-    image: '',
-  },
-  {
-    id: 5,
-    name: 'Groceries',
-    image: '',
-  },
-  {
-    id: 6,
-    name: 'Shelter',
-    image: '',
-  },
-  {
-    id: 7,
-    name: 'Transport',
-    image: '',
-  },
-  {
-    id: 8,
-    name: 'Groceries',
-    image: '',
-  },
-  {
-    id: 9,
-    name: 'More',
-    image: '',
-  },
-];
+import { categoryListData } from './constants/categoryListData';
 
 const CategoryList = () => {
+  const [showGroupedList, setShowGroupedList] = useState();
   const renderItem = ({ item }: { item: CategoryType }) => {
-    return <Category categoryData={item} />;
+    return (
+      <Category categoryData={item} setShowGroupedList={setShowGroupedList} />
+    );
   };
 
   return (
     <View>
-      <Text style={styles.headerText}>
-        I need <Text style={styles.specialHeaderText}>udhavi</Text> for
-      </Text>
-      <View style={styles.listContainer}>
-        <FlatList
-          key={'#'}
-          keyExtractor={(item) => '#' + item.id}
-          data={mockData}
-          renderItem={renderItem}
-          numColumns={3}
-        />
-      </View>
+      {showGroupedList ? (
+        <GroupList />
+      ) : (
+        <>
+          <Text style={styles.headerText}>
+            I need <Text style={styles.specialHeaderText}>udhavi</Text> for
+          </Text>
+          <View style={styles.listContainer}>
+            <FlatList
+              key={'#'}
+              keyExtractor={(item) => '#' + item.id}
+              data={categoryListData}
+              renderItem={renderItem}
+              numColumns={3}
+            />
+          </View>
+        </>
+      )}
     </View>
   );
 };
@@ -89,6 +52,7 @@ const styles = {
   `,
   listContainer: css`
     width: 100%;
+    height: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;

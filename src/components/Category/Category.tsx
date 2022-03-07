@@ -1,24 +1,38 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { Text, Pressable } from 'react-native';
 import { CategoryType } from '../CategoryList/CategoryList.modal';
 import { MaterialIcons } from '@expo/vector-icons';
 import { css } from '@emotion/native';
 
-const Category = ({ categoryData }: { categoryData: CategoryType }) => {
+const Category = ({
+  categoryData,
+  setShowGroupedList,
+}: {
+  categoryData: CategoryType;
+  setShowGroupedList: any;
+}) => {
   return (
-    <View style={styles.container}>
+    <Pressable
+      style={styles.container}
+      onPress={() => {
+        if (categoryData.name === 'More') {
+          setShowGroupedList(true);
+        }
+      }}
+    >
       <MaterialIcons name="account-circle" size={40} color="black" />
       <Text>{categoryData.name}</Text>
-    </View>
+    </Pressable>
   );
 };
 
 const styles = {
   container: css`
-    width: 100px;
+    width: 27%;
     margin: 10px;
     padding: 10px 0;
     align-items: center;
+    justify-content: center;
     background: #dfe6e9;
     border-radius: 30px;
   `,
