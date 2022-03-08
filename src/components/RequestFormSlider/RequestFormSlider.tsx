@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useRef } from 'react';
-import { View } from 'react-native';
+import { View, KeyboardAvoidingView, Platform } from 'react-native';
 import BottomSheet from '@gorhom/bottom-sheet';
 import RequestForm from '../RequestForm/RequestForm';
 import { css } from '@emotion/native';
@@ -18,24 +18,32 @@ const RequestFormSlider = ({
   const handleSheetChanges = useCallback((index: number) => {}, []);
 
   return (
-    <View style={RequestFormSliderStyles.container}>
-      <BottomSheet
-        ref={bottomSheetRef}
-        index={0}
-        snapPoints={snapPointsMemo}
-        animateOnMount={true}
-        backdropComponent={backdropComponent}
-        onChange={handleSheetChanges}
-        handleComponent={SliderHandle}
-        handleStyle={RequestFormSliderStyles.handleStyle}
-      >
-        <RequestForm showHeading={true} />
-      </BottomSheet>
-    </View>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={RequestFormSliderStyles.keyboardContainer}
+    >
+      <View style={RequestFormSliderStyles.container}>
+        <BottomSheet
+          ref={bottomSheetRef}
+          index={0}
+          snapPoints={snapPointsMemo}
+          animateOnMount={true}
+          backdropComponent={backdropComponent}
+          onChange={handleSheetChanges}
+          handleComponent={SliderHandle}
+          handleStyle={RequestFormSliderStyles.handleStyle}
+        >
+          <RequestForm showHeading={true} />
+        </BottomSheet>
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 
 const RequestFormSliderStyles = {
+  keyboardContainer: css`
+    flex: 1;
+  `,
   container: css`
     flex: 1;
     padding: 24px;

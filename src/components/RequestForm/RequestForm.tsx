@@ -98,7 +98,7 @@ const RequestFormComponent = ({
         name="name"
         render={({ field: { onChange, value } }) => (
           <TextInput
-            label="Name"
+            placeholder="Name"
             returnKeyType="next"
             value={value}
             onChangeText={(text: string) => onChange(text)}
@@ -120,7 +120,7 @@ const RequestFormComponent = ({
         name="phoneNumber"
         render={({ field: { onChange, value } }) => (
           <TextInput
-            label="Phone"
+            placeholder="Phone"
             returnKeyType="next"
             value={value}
             onChangeText={(text: string) => onChange(text)}
@@ -143,13 +143,11 @@ const RequestFormComponent = ({
         name="info"
         render={({ field: { onChange, value } }) => (
           <TextInput
-            label="What is needed?"
+            placeholder="What is needed?"
             returnKeyType="next"
             value={value}
             onChangeText={(text: string) => onChange(text)}
             autoCapitalize="none"
-            multiline={true}
-            numberOfLines={5}
             error={!!errors?.info?.message}
             errorText={errors?.info?.message}
           />
@@ -165,7 +163,7 @@ const RequestFormComponent = ({
       <Pressable onPress={() => setShowTimePicker(true)}>
         <View pointerEvents="none">
           <TextInput
-            label="Delivery Time"
+            placeholder="Delivery Time"
             returnKeyType="next"
             autoCapitalize="none"
             value={moment(app.requestForm.deliveryTime || date).format(
@@ -192,7 +190,7 @@ const RequestFormComponent = ({
         name="notes"
         render={({ field: { onChange, value } }) => (
           <TextInput
-            label="Notes"
+            placeholder="Notes"
             returnKeyType="next"
             value={value}
             onChangeText={(text: string) => onChange(text)}

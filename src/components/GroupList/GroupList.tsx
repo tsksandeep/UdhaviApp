@@ -5,12 +5,21 @@ import { css } from '@emotion/native';
 import { CategoryType } from '../CategoryList/CategoryList.modal';
 import { groupListData } from './constants/groupListData';
 import BackButton from '../BackButton/BackButton';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 const GroupList = ({ setShowGroupedList }: { setShowGroupedList: any }) => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
   const Item = ({ item }: { item: CategoryType }) => (
-    <Pressable style={styles.itemContainer} onPress={() => {}}>
-      <MaterialIcons name="account-circle" size={40} color="black" />
-      <Text>{item.name}</Text>
+    <Pressable
+      style={styles.itemContainer}
+      onPress={() => {
+        navigation.navigate('Request', { name: item.name });
+      }}
+    >
+      <MaterialIcons name="account-circle" size={20} color="black" />
+      <Text style={styles.itemName}>{item.name}</Text>
     </Pressable>
   );
 
@@ -18,6 +27,7 @@ const GroupList = ({ setShowGroupedList }: { setShowGroupedList: any }) => {
     <View style={styles.container}>
       <BackButton setState={setShowGroupedList} styles={styles.backButton} />
       <SectionList
+        showsVerticalScrollIndicator={false}
         sections={groupListData}
         keyExtractor={(_, index) => '#' + index}
         renderItem={({ item }) => <Item item={item} />}
@@ -40,16 +50,22 @@ const styles = {
   itemContainer: css`
     flex-direction: row;
     background: #dfe6e9;
-    margin: 12px;
+    margin: 4px 0;
     border-radius: 8px;
-    padding: 10px;
+    padding: 8px;
     align-items: center;
   `,
+  itemName: css`
+    font-size: 16px;
+    font-weight: 500;
+    margin-left: 5px;
+  `,
   header: css`
-    font-size: 32px;
+    font-size: 24px;
     color: #560cce;
     font-family: 'Pacifico';
     background: #fdf6e4;
+    padding-top: 10px;
   `,
 };
 
