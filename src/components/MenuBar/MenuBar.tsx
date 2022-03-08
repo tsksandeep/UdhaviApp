@@ -11,15 +11,15 @@ const totalStatusBarHeight = (10 + getStatusBarHeight()).toString();
 const MenuBar = () => {
   return (
     <View style={MenuBarStyle.container}>
-      <HStack alignItems="center" justifyContent="space-between">
-        <MaterialIcons
+      <HStack alignItems="center" justifyContent="center">
+        {/* <MaterialIcons
           style={MenuBarStyle.account}
           name="account-circle"
           size={40}
           color="#232323"
-        />
+        /> */}
         <Text style={MenuBarStyle.header}>Udhavi</Text>
-        <Settings />
+        {/* <Settings /> */}
       </HStack>
     </View>
   );

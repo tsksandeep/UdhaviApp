@@ -42,6 +42,8 @@ const styles = {
   header: css`
     font-size: 32px;
     color: #560cce;
+    font-family: 'Pacifico';
+    background: #fdf6e4;
   `,
 };
 

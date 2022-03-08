@@ -4,9 +4,15 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import RequestForm from '../RequestForm/RequestForm';
 import { css } from '@emotion/native';
 
-const RequestFormSlider = () => {
+const RequestFormSlider = ({
+  backdropComponent,
+  snapPoints,
+}: {
+  backdropComponent: any;
+  snapPoints: Array<string>;
+}) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['45%', '85%'], []);
+  const snapPointsMemo = useMemo(() => snapPoints, []);
 
   const handleSheetChanges = useCallback((index: number) => {
     console.log('handleSheetChanges', index);
@@ -16,8 +22,9 @@ const RequestFormSlider = () => {
     <View style={RequestFormSliderStyles.container}>
       <BottomSheet
         ref={bottomSheetRef}
-        index={1}
-        snapPoints={snapPoints}
+        index={0}
+        snapPoints={snapPointsMemo}
+        backdropComponent={backdropComponent}
         onChange={handleSheetChanges}
       >
         <RequestForm showHeading={true} />
@@ -30,7 +37,7 @@ const RequestFormSliderStyles = {
   container: css`
     flex: 1;
     padding: 24px;
-    background-color: gray;
+    background: #fdf6e4;
   `,
 };
 

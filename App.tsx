@@ -40,7 +40,9 @@ declare global {
     Register: {
       error?: Error;
     };
-    Request: undefined;
+    Request: {
+      name: string;
+    };
     Map: {
       showConfirmButton?: boolean;
     };
