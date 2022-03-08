@@ -4,8 +4,9 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { css } from '@emotion/native';
 import { CategoryType } from '../CategoryList/CategoryList.modal';
 import { groupListData } from './constants/groupListData';
+import BackButton from '../BackButton/BackButton';
 
-const GroupList = () => {
+const GroupList = ({ setShowGroupedList }: { setShowGroupedList: any }) => {
   const Item = ({ item }: { item: CategoryType }) => (
     <Pressable style={styles.itemContainer} onPress={() => {}}>
       <MaterialIcons name="account-circle" size={40} color="black" />
@@ -15,6 +16,7 @@ const GroupList = () => {
 
   return (
     <View style={styles.container}>
+      <BackButton setState={setShowGroupedList} styles={styles.backButton} />
       <SectionList
         sections={groupListData}
         keyExtractor={(_, index) => '#' + index}
@@ -29,7 +31,11 @@ const GroupList = () => {
 
 const styles = {
   container: css`
-    height: 80%;
+    height: 73%;
+    position: relative;
+  `,
+  backButton: css`
+    position: relative;
   `,
   itemContainer: css`
     flex-direction: row;

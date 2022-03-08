@@ -40,7 +40,7 @@ export const groupListData = [
     ],
   },
   {
-    title: 'Basic',
+    title: 'Basic Needs',
     data: [
       {
         id: 1,

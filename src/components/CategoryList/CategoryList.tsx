@@ -17,7 +17,7 @@ const CategoryList = () => {
   return (
     <View>
       {showGroupedList ? (
-        <GroupList />
+        <GroupList setShowGroupedList={setShowGroupedList} />
       ) : (
         <>
           <Text style={styles.headerText}>
