@@ -8,6 +8,7 @@ import RequestList from '../RequestList/RequestList';
 import { connect } from 'react-redux';
 import { VolunteerSelectionInitialState } from '../../store/reducers/volunteerSelection';
 import bindDispatch from '../../utils/actions';
+import SliderHandle from '../SliderHandle/SliderHandle';
 
 const RequestSlider = ({
   actions,
@@ -37,6 +38,8 @@ const RequestSlider = ({
         animateOnMount={true}
         backdropComponent={backdropComponent}
         onChange={handleSheetChanges}
+        handleComponent={SliderHandle}
+        handleStyle={RequestFormSliderStyles.handleStyle}
       >
         <RequestList
           flatlistRef={flatlistRef}
@@ -54,6 +57,9 @@ const RequestFormSliderStyles = {
     flex: 1;
     padding: 24px;
     background: #fdf6e4;
+  `,
+  handleStyle: css`
+    height: 40px;
   `,
 };
 
