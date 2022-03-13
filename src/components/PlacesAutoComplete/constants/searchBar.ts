@@ -17,11 +17,11 @@ const searchBarStyles = (isRegisterForm?: boolean) => {
       borderColor: 'gray',
     },
     listView: {
-      width: 300,
+      width: 330,
       borderTopWidth: 1,
       borderColor: 'gray',
-      marginLeft: 10,
-      marginTop: 20,
+      top: 50,
+      zIndex: 999,
     },
     predefinedPlacesDescription: {
       color: '#1faadb',

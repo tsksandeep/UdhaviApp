@@ -1,25 +1,25 @@
 import React from 'react';
-import { Text, SafeAreaView, StyleSheet, ScrollView } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { css } from '@emotion/native';
 import PlacesAutoComplete from '../components/PlacesAutoComplete/PlacesAutoComplete';
 import {} from 'react-native-gesture-handler';
 
 const GetLocation = () => {
   return (
-    <SafeAreaView style={getLocationStyles.container}>
-      <Text style={getLocationStyles.header}>Your Location</Text>
+    <View style={getLocationStyles.container}>
       <ScrollView keyboardShouldPersistTaps="always">
-        <PlacesAutoComplete styles={styles.locationInput}></PlacesAutoComplete>
+        <PlacesAutoComplete
+          styles={getLocationStyles.locationInput}
+        ></PlacesAutoComplete>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 
 const getLocationStyles = {
   container: css`
-    flex: 1;
     background: white;
-    padding: 70px 30px 0px 30px;
+    padding: 10px;
   `,
   header: css`
     width: 100%;
@@ -30,15 +30,13 @@ const getLocationStyles = {
     padding: 0 10px;
     color: #560cce;
   `,
+  locationInput: css`
+    width: 100%;
+    background: white;
+    flex-direction: column;
+    position: relative;
+    height: 500px;
+  `,
 };
-
-const styles = StyleSheet.create({
-  locationInput: {
-    width: ' 100%',
-    backgroundColor: 'white',
-    flexDirection: 'column',
-    marginTop: 200,
-  },
-});
 
 export default GetLocation;
