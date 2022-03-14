@@ -11,8 +11,8 @@ const DashboardComponent = () => {
   const requestSliderBackdropComponent = useCallback(() => {
     return (
       <>
-        <UserLocation setShowLocationSlider={setShowLocationSlider} />
         <MenuBar />
+        <UserLocation setShowLocationSlider={setShowLocationSlider} />
         <CategoryList />
       </>
     );

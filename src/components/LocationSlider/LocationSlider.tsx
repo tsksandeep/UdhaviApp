@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useRef } from 'react';
 import { TouchableOpacity, View, Image } from 'react-native';
-import BottomSheet, { BottomSheetFlatListMethods } from '@gorhom/bottom-sheet';
+import BottomSheet from '@gorhom/bottom-sheet';
 import { css } from '@emotion/native';
 import { AppInitialState } from '../../store/reducers/app';
 import { VolunteerSelectionInitialState } from '../../store/reducers/volunteerSelection';
@@ -12,20 +12,15 @@ const LocationSlider = ({
   backdropComponent,
   setShowLocationSlider,
 }: {
-  actions: any;
-  app: AppInitialState;
-  volunteerSelection: VolunteerSelectionInitialState;
+  actions?: any;
+  app?: AppInitialState;
+  volunteerSelection?: VolunteerSelectionInitialState;
   backdropComponent: any;
   setShowLocationSlider: any;
   showLocationSlider: boolean;
 }) => {
-  const flatlistRef = useRef<BottomSheetFlatListMethods>(null);
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['70%', '70%'], []);
-
-  const handleSheetChanges = useCallback((index: number) => {
-    flatlistRef.current?.scrollToOffset({ animated: true, offset: 0 });
-  }, []);
 
   const handleClosePress = () => {
     bottomSheetRef.current?.close();
@@ -42,16 +37,14 @@ const LocationSlider = ({
         snapPoints={snapPoints}
         animateOnMount={true}
         backdropComponent={backdropComponent}
-        onChange={handleSheetChanges}
         handleComponent={SliderHandle}
         handleStyle={RequestFormSliderStyles.handleStyle}
       >
-        <TouchableOpacity
-          onPress={handleClosePress}
-          style={RequestFormSliderStyles.clearButton}
-        >
-          <Image source={clearIcon} style={{ height: 32, width: 32 }} />
-        </TouchableOpacity>
+        <View style={RequestFormSliderStyles.clearButton}>
+          <TouchableOpacity onPress={handleClosePress}>
+            <Image source={clearIcon} style={{ height: 32, width: 32 }} />
+          </TouchableOpacity>
+        </View>
         <GetLocation />
       </BottomSheet>
     </View>

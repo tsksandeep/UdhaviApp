@@ -43,21 +43,6 @@ export const categoryListData: CategoryType[] = [
   },
   {
     id: 9,
-    name: 'Shelter',
-    image: '',
-  },
-  {
-    id: 10,
-    name: 'Transport',
-    image: '',
-  },
-  {
-    id: 11,
-    name: 'Groceries',
-    image: '',
-  },
-  {
-    id: 12,
     name: 'More',
     image: '',
   },

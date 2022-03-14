@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { css } from '@emotion/native';
 import * as Location from 'expo-location';
 import Constants from 'expo-constants';
 import { useEffect } from 'react';
+import { connect } from 'react-redux';
+import bindDispatch from '../../utils/actions';
+import { AppInitialState } from '../../store/reducers/app';
+import { createSelector } from 'reselect';
 
-const totalStatusBarHeight = (10 + getStatusBarHeight()).toString();
 const GOOGLE_PLACES_API_KEY = Constants.manifest?.extra?.GOOGLE_PLACES_API_KEY;
 
 type Props = {
   setShowLocationSlider: any;
+  actions: any;
+  app: AppInitialState;
 };
 
 const UserLocation = (props: Props) => {
@@ -30,11 +34,11 @@ const UserLocation = (props: Props) => {
         latitude,
       });
       const { city, district, region, country, subregion } = regionName[0];
-      setUserLocation(
-        `${city || ''}, ${district || subregion || ''}, ${region || ''}, ${
-          country || ''
-        }`,
-      );
+      const addressText = `${city || ''}, ${district || subregion || ''}, ${
+        region || ''
+      }, ${country || ''}`;
+      setUserLocation(addressText);
+      props.actions.updateRequestAddress(addressText);
     }
   };
 
@@ -46,7 +50,7 @@ const UserLocation = (props: Props) => {
     >
       <View style={UserLocationStyles.container}>
         <Text numberOfLines={1} style={UserLocationStyles.addressText}>
-          {userLocation || 'Your location....'}
+          {props.app?.requestAddress || userLocation || 'Your location....'}
         </Text>
       </View>
     </Pressable>
@@ -55,9 +59,11 @@ const UserLocation = (props: Props) => {
 
 const UserLocationStyles = {
   container: css`
-    margin-top: ${totalStatusBarHeight}px;
     border: 1px solid black;
     padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
   `,
   addressText: css`
     font-size: 16px;
@@ -65,4 +71,9 @@ const UserLocationStyles = {
   `,
 };
 
-export default UserLocation;
+const selector = createSelector(
+  (state: any) => state.app,
+  (app: AppInitialState) => ({ app }),
+);
+
+export default connect(selector, bindDispatch)(UserLocation);

@@ -6,7 +6,7 @@ import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { css } from '@emotion/native';
 import Settings from '../Settings/Settings';
 
-const totalStatusBarHeight = (10 + getStatusBarHeight()).toString();
+const totalStatusBarHeight = (getStatusBarHeight() - 30).toString();
 
 const MenuBar = () => {
   return (
@@ -28,7 +28,6 @@ const MenuBar = () => {
 const MenuBarStyle = {
   container: css`
     top: ${totalStatusBarHeight};
-    height: 130px;
   `,
   account: css`
     margin-left: 10px;

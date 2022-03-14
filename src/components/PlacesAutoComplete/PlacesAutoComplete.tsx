@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { searchBarStyles, searchBarErrorStyles } from './constants/searchBar';
 import { HStack } from 'native-base';
 import {
@@ -7,9 +7,13 @@ import {
   Text,
   Image,
   TouchableOpacity,
+  View,
 } from 'react-native';
 import { connect } from 'react-redux';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import {
+  GooglePlacesAutocomplete,
+  GooglePlacesAutocompleteRef,
+} from 'react-native-google-places-autocomplete';
 import Constants from 'expo-constants';
 import { ReactNativeStyle } from '@emotion/native';
 import * as Location from 'expo-location';
@@ -27,6 +31,7 @@ type Props = {
   onChangeText?: any;
   app: AppInitialState;
   actions: any;
+  getUserLocation?: boolean;
 };
 
 const screenWidth = Dimensions.get('window').width;
@@ -35,10 +40,10 @@ const latDelta = 0.3;
 const lngDelta = 0.2;
 
 const PlacesAutoComplete = React.forwardRef((props: Props, ref: any) => {
-  const inputRef = useRef(null);
+  let inputRef = useRef<GooglePlacesAutocompleteRef>();
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
-  const [location, setLocation] = useState();
+  const [location, setLocation] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [address, setAddress] = useState();
 
@@ -50,6 +55,16 @@ const PlacesAutoComplete = React.forwardRef((props: Props, ref: any) => {
     // props.onSelectCoordinates(json.result.geometry.location);
     return json.result.geometry.location;
   }
+
+  useEffect(() => {
+    if (props.getUserLocation && inputRef) {
+      getLocation(true, inputRef);
+    }
+  }, [inputRef]);
+
+  useEffect(() => {
+    fetchCurrentLocation();
+  }, []);
 
   async function setLocationByAutoCompleteResult(apiData: any) {
     const loc = await getLatLongFromAutoComplete(apiData);
@@ -64,13 +79,35 @@ const PlacesAutoComplete = React.forwardRef((props: Props, ref: any) => {
     requestForm.location.longitude = loc.lng;
     props.actions.updateRequestAddress(apiData.description);
     props.actions.createRequestForm(requestForm);
-    navigation.navigate('Map', { showConfirmButton: true });
-    if (ref) {
-      ref.current.animateToRegion(newRegion, 500);
-    }
+    // navigation.navigate('Map', { showConfirmButton: true });
+    // if (ref) {
+    //   ref.current.animateToRegion(newRegion, 500);
+    // }
   }
 
-  const getLocation = () => {
+  const fetchCurrentLocation = async (): Promise<void> => {
+    Location.setGoogleApiKey(GOOGLE_PLACES_API_KEY);
+    let { coords } = await Location.getCurrentPositionAsync();
+    if (coords) {
+      let { longitude, latitude } = coords;
+      let regionName = await Location.reverseGeocodeAsync({
+        longitude,
+        latitude,
+      });
+      const { city, district, region, country, subregion } = regionName[0];
+      setLocation(
+        `${city || ''}, ${district || subregion || ''}, ${region || ''}, ${
+          country || ''
+        }`,
+      );
+    }
+  };
+
+  const getLocation = (
+    setUserRequest?: boolean,
+    autoCompleteRef?: any,
+    returnAddress?: boolean,
+  ) => {
     (async () => {
       let { status } = await Location.requestPermissionsAsync();
       if (status !== 'granted') {
@@ -85,22 +122,40 @@ const PlacesAutoComplete = React.forwardRef((props: Props, ref: any) => {
           latitude,
         });
         const { city, district, region, country, subregion } = regionName[0];
-        props.actions.updateRequestAddress(
-          `${city || ''}, ${district || subregion || ''}, ${region || ''}, ${
-            country || ''
-          }`,
-        );
+        const addressText = `${city || ''}, ${district || subregion || ''}, ${
+          region || ''
+        }, ${country || ''}`;
+
+        if (returnAddress) {
+          return addressText;
+        }
+        props.actions.updateRequestAddress(addressText);
+        if (setUserRequest) {
+          autoCompleteRef?.setAddressText(addressText);
+        }
       }
-      const requestForm = { ...props.app.requestForm };
-      requestForm.location.latitude = coords.latitude;
-      requestForm.location.longitude = coords.longitude;
-      props.actions.createRequestForm(requestForm);
-      navigation.navigate('Map', { showConfirmButton: true });
+      if (!setUserRequest) {
+        const requestForm = { ...props.app.requestForm };
+        requestForm.location.latitude = coords.latitude;
+        requestForm.location.longitude = coords.longitude;
+        props.actions.createRequestForm(requestForm);
+        navigation.navigate('Map', { showConfirmButton: true });
+      }
     })();
   };
 
   return (
     <HStack space={1} style={props.styles || styles.search}>
+      <View style={styles.currentAddressContainer}>
+        <TouchableOpacity
+          style={styles.image}
+          onPress={() => getLocation(true, inputRef)}
+        >
+          <Image source={require('../../assets/images/gps.png')} />
+          <Text style={styles.text}>Use Current Location</Text>
+        </TouchableOpacity>
+        <Text style={styles.currentAddressText}>{location}</Text>
+      </View>
       <GooglePlacesAutocomplete
         styles={
           props.error ? searchBarErrorStyles : searchBarStyles(!!props.styles)
@@ -116,16 +171,16 @@ const PlacesAutoComplete = React.forwardRef((props: Props, ref: any) => {
         onPress={(data) => {
           setLocationByAutoCompleteResult(data);
         }}
-        ref={inputRef}
+        ref={(autoCompleteRef) => {
+          inputRef = autoCompleteRef;
+        }}
         query={{
           key: GOOGLE_PLACES_API_KEY,
           language: 'en',
           components: 'country:in',
         }}
       />
-      <TouchableOpacity style={styles.image} onPress={() => getLocation()}>
-        <Image source={require('../../assets/images/gps.png')} />
-      </TouchableOpacity>
+
       {props.error && <Text style={{ color: 'red' }}>{props.errorText}</Text>}
     </HStack>
   );
@@ -144,9 +199,21 @@ const styles = StyleSheet.create({
     height: '56px',
   },
   image: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  text: {
+    paddingLeft: 10,
+    color: '#560cce',
+  },
+  currentAddressContainer: {
+    marginTop: 30,
     position: 'absolute',
-    left: 295,
-    top: 15,
+    top: 50,
+    zIndex: 999,
+  },
+  currentAddressText: {
+    marginLeft: 33,
   },
 });
 
