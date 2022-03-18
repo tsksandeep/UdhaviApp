@@ -25,7 +25,7 @@ const DashboardComponent = () => {
           backdropComponent={requestSliderBackdropComponent}
           setShowLocationSlider={setShowLocationSlider}
           showLocationSlider={showLocationSlider}
-        ></LocationSlider>
+        />
       ) : (
         <RequestSlider backdropComponent={requestSliderBackdropComponent} />
       )}

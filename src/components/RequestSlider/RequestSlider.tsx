@@ -11,19 +11,17 @@ import bindDispatch from '../../utils/actions';
 import SliderHandle from '../SliderHandle/SliderHandle';
 
 const RequestSlider = ({
-  actions,
   app,
   volunteerSelection,
   backdropComponent,
 }: {
-  actions: any;
   app: AppInitialState;
   volunteerSelection: VolunteerSelectionInitialState;
   backdropComponent: any;
 }) => {
   const flatlistRef = useRef<BottomSheetFlatListMethods>(null);
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['30%', '70%'], []);
+  const snapPoints = useMemo(() => ['40%', '70%'], []);
 
   const handleSheetChanges = useCallback((index: number) => {
     flatlistRef.current?.scrollToOffset({ animated: true, offset: 0 });
@@ -54,6 +52,7 @@ const RequestSlider = ({
 
 const RequestFormSliderStyles = {
   container: css`
+    width: 100%;
     flex: 1;
     padding: 24px;
     background: #fdf6e4;
