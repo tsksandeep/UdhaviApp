@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { css } from '@emotion/native';
-import { ScrollView, View, RefreshControl } from 'react-native';
+import { View } from 'react-native';
 import { useFonts } from 'expo-font';
 import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
@@ -14,7 +14,6 @@ import DashboardComponent from '../components/Dashboard/Dashboard';
 import { UserNotExistsError } from '../errors/errors';
 import bindDispatch from '../utils/actions';
 import { AppInitialState } from '../store/reducers/app';
-import { getExistingRequests } from '../store/shared/shared';
 
 const Home = ({ actions, app }: { actions: any; app: AppInitialState }) => {
   let [fontsLoaded] = useFonts({
@@ -26,7 +25,6 @@ const Home = ({ actions, app }: { actions: any; app: AppInitialState }) => {
     phoneNumber: '',
     userId: '',
   });
-  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     actions.changeAppLoading(false);
@@ -50,13 +48,6 @@ const Home = ({ actions, app }: { actions: any; app: AppInitialState }) => {
     });
   }, []);
 
-  const onRefresh = async () => {
-    setRefreshing(true);
-    const requests = await getExistingRequests(user.phoneNumber!);
-    actions.updateRequestsMap(requests);
-    setRefreshing(false);
-  };
-
   if (loading || !fontsLoaded) {
     return (
       <View style={HomeStyle.logoContainer}>
@@ -67,22 +58,7 @@ const Home = ({ actions, app }: { actions: any; app: AppInitialState }) => {
 
   return (
     <View style={HomeStyle.dashboardContainer}>
-      {!user.userId ? (
-        <AuthComponent />
-      ) : (
-        <ScrollView
-          contentContainerStyle={HomeStyle.scrollView}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-              title="Pulling latest updates..."
-            />
-          }
-        >
-          <DashboardComponent />
-        </ScrollView>
-      )}
+      {!user.userId ? <AuthComponent /> : <DashboardComponent />}
     </View>
   );
 };
@@ -98,11 +74,6 @@ const HomeStyle = {
   dashboardContainer: css`
     flex: 1;
     background: #fdf6e4;
-  `,
-  scrollView: css`
-    flex: 1;
-    align-items: center;
-    justify-content: center;
   `,
 };
 

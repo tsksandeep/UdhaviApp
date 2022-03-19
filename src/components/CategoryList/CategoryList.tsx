@@ -1,6 +1,6 @@
 import { css } from '@emotion/native';
 import React, { useState } from 'react';
-import { View, FlatList, Text } from 'react-native';
+import { FlatList, Text } from 'react-native';
 import Category from '../Category/Category';
 import GroupList from '../GroupList/GroupList';
 import { CategoryType } from './CategoryList.modal';
@@ -22,22 +22,20 @@ const CategoryList = () => {
     );
   };
 
+  if (showGroupedList) {
+    return <GroupList setShowGroupedList={setShowGroupedList} />;
+  }
+
   return (
-    <View>
-      {showGroupedList ? (
-        <GroupList setShowGroupedList={setShowGroupedList} />
-      ) : (
-        <FlatList
-          key={'#'}
-          keyExtractor={(item) => '#' + item.id}
-          data={categoryListData}
-          ListHeaderComponent={listHeaderComponent}
-          renderItem={renderItem}
-          numColumns={3}
-          scrollEnabled={false}
-        />
-      )}
-    </View>
+    <FlatList
+      key={'#'}
+      keyExtractor={(item) => '#' + item.id}
+      data={categoryListData}
+      ListHeaderComponent={listHeaderComponent}
+      renderItem={renderItem}
+      numColumns={3}
+      scrollEnabled={false}
+    />
   );
 };
 

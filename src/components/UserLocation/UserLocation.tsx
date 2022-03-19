@@ -8,6 +8,8 @@ import { connect } from 'react-redux';
 import bindDispatch from '../../utils/actions';
 import { AppInitialState } from '../../store/reducers/app';
 import { createSelector } from 'reselect';
+import { Entypo } from '@expo/vector-icons';
+import { HStack } from 'native-base';
 
 const GOOGLE_PLACES_API_KEY = Constants.manifest?.extra?.GOOGLE_PLACES_API_KEY;
 
@@ -49,9 +51,18 @@ const UserLocation = (props: Props) => {
       }}
     >
       <View style={UserLocationStyles.container}>
-        <Text numberOfLines={1} style={UserLocationStyles.addressText}>
-          {props.app?.requestAddress || userLocation || 'Your location....'}
-        </Text>
+        <HStack>
+          <Entypo
+            name="location-pin"
+            size={34}
+            style={UserLocationStyles.locationPin}
+          />
+          <Text numberOfLines={1} style={UserLocationStyles.addressText}>
+            {props.app?.requestAddress ||
+              userLocation ||
+              'Your location (Auto detecting)'}
+          </Text>
+        </HStack>
       </View>
     </Pressable>
   );
@@ -59,15 +70,20 @@ const UserLocation = (props: Props) => {
 
 const UserLocationStyles = {
   container: css`
-    border: 1px solid black;
-    padding: 10px;
+    padding: 10px 0;
     margin-top: 10px;
-    margin-bottom: 10px;
-    border-radius: 8px;
   `,
   addressText: css`
     font-size: 16px;
     color: #560cce;
+    position: relative;
+    left: -5px;
+  `,
+  locationPin: css`
+    color: #232323;
+    position: relative;
+    left: -5px;
+    top: -8px;
   `,
 };
 

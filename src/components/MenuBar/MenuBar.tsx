@@ -27,7 +27,7 @@ const MenuBar = () => {
 
 const MenuBarStyle = {
   container: css`
-    top: ${totalStatusBarHeight};
+    top: ${totalStatusBarHeight}px;
   `,
   account: css`
     margin-left: 10px;
