@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { searchBarStyles } from '../PlacesAutoComplete/constants/searchBar';
 import { HStack } from 'native-base';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
@@ -9,7 +9,7 @@ const GOOGLE_PLACES_API_KEY = Constants.manifest?.extra?.GOOGLE_PLACES_API_KEY;
 const latDelta = 0.3;
 const lngDelta = 0.2;
 
-const MapScreenAutoComplete = React.forwardRef((ref: any) => {
+const MapScreenAutoComplete = forwardRef((props: any, ref: any) => {
   async function getLatLongFromAutoComplete(apiData: any) {
     const placeCode = apiData.place_id;
     const reqUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeCode}&key=${GOOGLE_PLACES_API_KEY}`;

@@ -1,11 +1,9 @@
 import {
-  setDoc,
   getDocs,
   query,
   doc,
   where,
   orderBy,
-  getDoc,
   updateDoc,
 } from 'firebase/firestore';
 
@@ -15,8 +13,10 @@ import { RequestData, VolunteerData } from './model';
 import { requestsRef } from './ref';
 import {
   addRequestToVolunteers,
+  getRequestByID,
   removeRequestFromVolunteers,
-} from './volunteers';
+  writeRequestData,
+} from './entity';
 
 export const assignVolunteersToRequest = async (
   actions: any,
@@ -67,10 +67,6 @@ export const releaseVolunteersFromRequest = async (
   actions.updateVolunteers(volunteers);
 };
 
-export const writeRequestData = async (requestData: RequestData) => {
-  await setDoc(doc(requestsRef, requestData.id), requestData);
-};
-
 export const updateRequestData = async (
   id: string,
   data: { [key: string]: any },
@@ -96,15 +92,6 @@ export const getRequestsByPhoneNumber = async (
   ).docs;
 };
 
-export const getRequestByID = async (id: string): Promise<any> => {
-  const docSnapshot = await getDoc(doc(requestsRef, id));
-  const request = docSnapshot.data();
-  if (!docSnapshot.exists() || !request?.name || !request?.phoneNumber) {
-    return new RequestNotExistsError(`request ${id} does not exists`);
-  }
-  return request as RequestData;
-};
-
 export const addVolunteersToRequest = async (
   requestId: string,
   volunteerIds: Array<string>,
@@ -122,47 +109,6 @@ export const addVolunteersToRequest = async (
 
   await writeRequestData(request);
   return request;
-};
-
-export const addVolunteerToRequests = async (
-  volunteerId: string,
-  requestIds: Array<string>,
-): Promise<RequestData[]> => {
-  var requests: RequestData[] = [];
-  requestIds.forEach(async (id: string) => {
-    var request = await getRequestByID(id);
-    if (request instanceof RequestNotExistsError) {
-      return null;
-    }
-    if (!request.assignedVolunteerIds.includes(volunteerId)) {
-      request.assignedVolunteerIds.push(volunteerId);
-    }
-    await writeRequestData(request);
-    requests.push(request);
-  });
-  return requests;
-};
-
-export const removeVolunteerFromRequests = async (
-  volunteerId: string,
-  requestIds: Array<string>,
-): Promise<RequestData[]> => {
-  var requests: RequestData[] = [];
-  requestIds.forEach(async (id: string) => {
-    var request = await getRequestByID(id);
-    if (request instanceof RequestNotExistsError) {
-      return null;
-    }
-
-    const index = request.assignedVolunteerIds.indexOf(volunteerId);
-    if (index !== -1) {
-      request.assignedVolunteerIds.splice(index, 1);
-    }
-
-    await writeRequestData(request);
-    requests.push(request);
-  });
-  return requests;
 };
 
 export const removeVolunteersFromRequest = async (

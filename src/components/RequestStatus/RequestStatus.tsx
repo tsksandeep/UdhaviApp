@@ -44,9 +44,12 @@ const MenuItemWithAction = (props: {
 }) => {
   return (
     <>
-      {props.menuItems.map((menuItem) => {
+      {props.menuItems.map((menuItem, index) => {
         return (
-          <Menu.Item onPress={() => props.onSelectedCallback(menuItem)}>
+          <Menu.Item
+            key={index}
+            onPress={() => props.onSelectedCallback(menuItem)}
+          >
             {menuItem}
           </Menu.Item>
         );

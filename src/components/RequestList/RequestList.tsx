@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 
 import bindDispatch from '../../utils/actions';
-import { getVolunteerByID } from '../../firebase/volunteers';
 import { isAssignedToValid } from '../../store/shared/shared';
 import RequestCard from '../RequestCard/RequestCard';
 import { RequestData, VolunteerData } from '../../firebase/model';
@@ -17,6 +16,7 @@ import {
   BottomSheetFlatList,
   BottomSheetFlatListMethods,
 } from '@gorhom/bottom-sheet';
+import { getVolunteerByID } from '../../firebase/entity';
 
 const RequestList = ({
   actions,

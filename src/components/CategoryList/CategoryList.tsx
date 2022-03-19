@@ -6,6 +6,14 @@ import GroupList from '../GroupList/GroupList';
 import { CategoryType } from './CategoryList.modal';
 import { categoryListData } from './constants/categoryListData';
 
+const listHeaderComponent = () => {
+  return (
+    <Text style={styles.headerText}>
+      I need <Text style={styles.specialHeaderText}>udhavi</Text> for
+    </Text>
+  );
+};
+
 const CategoryList = () => {
   const [showGroupedList, setShowGroupedList] = useState();
   const renderItem = ({ item }: { item: CategoryType }) => {
@@ -19,20 +27,15 @@ const CategoryList = () => {
       {showGroupedList ? (
         <GroupList setShowGroupedList={setShowGroupedList} />
       ) : (
-        <>
-          <Text style={styles.headerText}>
-            I need <Text style={styles.specialHeaderText}>udhavi</Text> for
-          </Text>
-          <View style={styles.listContainer}>
-            <FlatList
-              key={'#'}
-              keyExtractor={(item) => '#' + item.id}
-              data={categoryListData}
-              renderItem={renderItem}
-              numColumns={3}
-            />
-          </View>
-        </>
+        <FlatList
+          key={'#'}
+          keyExtractor={(item) => '#' + item.id}
+          data={categoryListData}
+          ListHeaderComponent={listHeaderComponent}
+          renderItem={renderItem}
+          numColumns={3}
+          scrollEnabled={false}
+        />
       )}
     </View>
   );

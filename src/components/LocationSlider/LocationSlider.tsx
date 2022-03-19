@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { TouchableOpacity, View, Image } from 'react-native';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { css } from '@emotion/native';
@@ -20,7 +20,7 @@ const LocationSlider = ({
   showLocationSlider: boolean;
 }) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['70%', '70%'], []);
+  const snapPoints = useMemo(() => ['70%'], []);
 
   const handleClosePress = () => {
     bottomSheetRef.current?.close();

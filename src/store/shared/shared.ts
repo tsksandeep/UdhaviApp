@@ -1,18 +1,16 @@
-import { isEmptyObject } from '../../common/common';
 import {
   RequestsAssignedFilterOption,
   VolunteersAssignedFilterOption,
 } from '../../constants/constants';
+import { getRequestByID, getVolunteerByID } from '../../firebase/entity';
 import { RequestData, VolunteerData } from '../../firebase/model';
 import {
   assignVolunteersToRequest,
-  getRequestByID,
   getRequestsByPhoneNumber,
   releaseVolunteersFromRequest,
 } from '../../firebase/requests';
 import {
   assignRequestsToVolunteer,
-  getVolunteerByID,
   releaseRequestsFromVolunteer,
 } from '../../firebase/volunteers';
 import { RequestsMap, VolunteersMap } from '../reducers/app';
@@ -75,8 +73,11 @@ export const isRequestMatchingFilter = (
     return true;
   }
 
-  if (requestFilter == VolunteersAssignedFilterOption) {
-    if (!isEmptyObject(request.assignedVolunteerIds as any[])) {
+  if (
+    requestFilter == VolunteersAssignedFilterOption &&
+    request?.assignedVolunteerIds
+  ) {
+    if (!(Object.keys(request.assignedVolunteerIds).length === 0)) {
       return true;
     }
   }
@@ -104,8 +105,11 @@ export const isVolunteerMatchingFilter = (
     return true;
   }
 
-  if (volunteerFilter == RequestsAssignedFilterOption) {
-    if (!isEmptyObject(volunteer.assignedRequestIds as any[])) {
+  if (
+    volunteerFilter == RequestsAssignedFilterOption &&
+    volunteer?.assignedRequestIds
+  ) {
+    if (!(Object.keys(volunteer.assignedRequestIds).length === 0)) {
       return true;
     }
   }
