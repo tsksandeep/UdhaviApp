@@ -2,11 +2,12 @@ import { css } from '@emotion/native';
 
 const AuthStyleComponent = {
   container: css`
-    height: 100%;
-    display: flex;
+    width: 100%;
+    flex: 1;
+    padding: 24px;
+    background: #fdf6e4;
     align-items: center;
-    background: white;
-    padding: 150px 30px 0 30px;
+    margin-top: 100px;
   `,
   header: css`
     width: 100%;

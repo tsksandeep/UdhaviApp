@@ -8,7 +8,6 @@ import { connect } from 'react-redux';
 import { settingsData, settingsDataType, settingsDataItem } from './data';
 import bindDispatch from '../../utils/actions';
 import { SettingsInitialState } from '../../store/reducers/settings';
-import { css } from '@emotion/native';
 
 const Settings = ({
   actions,
@@ -60,7 +59,6 @@ const Settings = ({
         return (
           <Pressable {...triggerProps}>
             <Icon
-              style={SettingsStyle.menu}
               as={Ionicons}
               name="options"
               color="coolGray.800"
@@ -86,12 +84,6 @@ const Settings = ({
           /> */}
     </Menu>
   );
-};
-
-const SettingsStyle = {
-  menu: css`
-    margin-right: 10px;
-  `,
 };
 
 const selector = createSelector(

@@ -6,13 +6,7 @@ import { css } from '@emotion/native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
-const Category = ({
-  categoryData,
-  setShowGroupedList,
-}: {
-  categoryData: CategoryType;
-  setShowGroupedList: any;
-}) => {
+const Category = ({ categoryData }: { categoryData: CategoryType }) => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   return (
@@ -20,7 +14,7 @@ const Category = ({
       style={styles.container}
       onPress={() => {
         if (categoryData.name === 'More') {
-          setShowGroupedList(true);
+          navigation.navigate('RequestCategory');
           return;
         }
         navigation.navigate('Request', { name: categoryData.name });

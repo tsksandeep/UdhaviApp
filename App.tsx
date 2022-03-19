@@ -17,6 +17,7 @@ import configureStore from './src/store';
 import { theme } from './src/core/theme';
 import MapScreen from './src/components/MapScreen/MapScreen';
 import GetLocation from './src/screens/GetLocation';
+import RequestCategory from './src/screens/RequestCategory';
 
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
@@ -49,6 +50,7 @@ declare global {
       showConfirmButton?: boolean;
     };
     GetLocation: {};
+    RequestCategory: undefined;
   };
 }
 
@@ -62,8 +64,9 @@ const linking = {
       Login: '/login',
       Register: '/register',
       Request: '/request',
-      Map: '/Map',
-      getLocation: '/getLocation',
+      Map: '/map',
+      GetLocation: '/getLocation',
+      RequestCategory: '/requestCategory',
     },
   },
 };
@@ -88,6 +91,10 @@ const App = () => {
                 <Stack.Screen name="Request" component={Request} />
                 <Stack.Screen name="Map" component={MapScreen} />
                 <Stack.Screen name="GetLocation" component={GetLocation} />
+                <Stack.Screen
+                  name="RequestCategory"
+                  component={RequestCategory}
+                />
               </Stack.Navigator>
             </NavigationContainer>
           </ThemeWrapper>

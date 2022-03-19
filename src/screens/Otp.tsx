@@ -19,6 +19,7 @@ import {
   UserExistsError,
   UserNotExistsError,
 } from '../errors/errors';
+import MenuBar from '../components/MenuBar/MenuBar';
 
 const Otp = (props: any) => {
   const page = props.route.params.page;
@@ -79,37 +80,42 @@ const Otp = (props: any) => {
   };
 
   return (
-    <View style={OtpStyleComponent.container}>
-      <BackButton />
-      <Logo />
-      <Text style={OtpStyleComponent.header}>Enter your OTP</Text>
-      <OTPInputView
-        style={OtpStyleComponent.otpInputView}
-        pinCount={6}
-        codeInputFieldStyle={OtpStyleComponent.codeInputField}
-        codeInputHighlightStyle={OtpStyleComponent.codeInputFieldHighLight}
-        autoFocusOnLoad
-        onCodeFilled={onCodeFilled}
-      />
-      <TouchableOpacity
-        style={OtpStyleComponent.resendOtpWrapper}
-        onPress={() => {
-          navigation.navigate(page, {});
-        }}
-      >
-        <Text style={OtpStyleComponent.resendOtp}>Resend otp</Text>
-      </TouchableOpacity>
+    <View style={OtpStyleComponent.containerWrapper}>
+      <MenuBar showBackButton={true} showOnlyBackButton={true} />
+      <View style={OtpStyleComponent.container}>
+        <Logo />
+        <Text style={OtpStyleComponent.header}>Enter your OTP</Text>
+        <OTPInputView
+          style={OtpStyleComponent.otpInputView}
+          pinCount={6}
+          codeInputFieldStyle={OtpStyleComponent.codeInputField}
+          codeInputHighlightStyle={OtpStyleComponent.codeInputFieldHighLight}
+          autoFocusOnLoad
+          onCodeFilled={onCodeFilled}
+        />
+        <TouchableOpacity
+          style={OtpStyleComponent.resendOtpWrapper}
+          onPress={() => {
+            navigation.navigate(page, {});
+          }}
+        >
+          <Text style={OtpStyleComponent.resendOtp}>Resend otp</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
 const OtpStyleComponent = {
+  containerWrapper: css`
+    width: 100%;
+    flex: 1;
+    padding: 24px;
+    background: #fdf6e4;
+  `,
   container: css`
-    height: 100%;
-    display: flex;
+    margin-top: 50px;
     align-items: center;
-    background: white;
-    padding: 150px 30px 0 30px;
   `,
   header: css`
     width: 100%;

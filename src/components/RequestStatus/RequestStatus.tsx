@@ -77,7 +77,7 @@ const RequestStatus = (props: {
     }
     request.status = newState;
     requests[request.id] = request;
-    actions.updateRequests(requests);
+    actions.updateRequestsMap(requests);
   };
 
   return (

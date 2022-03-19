@@ -9,11 +9,11 @@ import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import Logo from '../components/Logo/Logo';
 import Button from '../components/Button/Button';
 import TextInput from '../components/TextInput/TextInput';
-import BackButton from '../components/BackButton/BackButton';
 import { theme } from '../core/theme';
 import { phoneNumberValidator, nameValidator } from '../helpers/validator';
 import { FirebaseApp, FirebaseAuth } from '../firebase/config';
 import { InvalidOtpError, UserNotExistsError } from '../errors/errors';
+import MenuBar from '../components/MenuBar/MenuBar';
 
 const getErrText = (registerErr: Error): string => {
   if (!registerErr) {
@@ -78,61 +78,68 @@ const Register = (props: any) => {
   };
 
   return (
-    <View style={RegisterStyle.container}>
+    <View style={RegisterStyle.containerWrapper}>
       <FirebaseRecaptchaVerifierModal
         ref={recaptchaVerifier}
         firebaseConfig={FirebaseApp.options}
         attemptInvisibleVerification={false}
       />
-      <BackButton />
-      {registerErr && (
-        <Text style={RegisterStyle.errorHeader}>{getErrText(registerErr)}</Text>
-      )}
-      <Logo />
-      <Text style={RegisterStyle.header}>Create Account</Text>
-      <TextInput
-        label="Name"
-        returnKeyType="next"
-        value={name.value}
-        onChangeText={(text: string) => setName({ value: text, error: '' })}
-        error={!!name.error}
-        errorText={name.error}
-      />
-      <TextInput
-        label="Phone"
-        returnKeyType="next"
-        value={phoneNumber.value}
-        onChangeText={(text: string) =>
-          setPhoneNumber({ value: text, error: '' })
-        }
-        error={!!phoneNumber.error}
-        errorText={phoneNumber.error}
-        autoCapitalize="none"
-      />
-      <Button
-        mode="contained"
-        onPress={onSignUpPressed}
-        style={{ marginTop: 24 }}
-      >
-        Sign Up
-      </Button>
-      <View style={RegisterStyle.row}>
-        <Text>Already have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.replace('Login', {})}>
-          <Text style={RegisterStyle.link}>Login</Text>
-        </TouchableOpacity>
+      <MenuBar showBackButton={true} showOnlyBackButton={true} />
+      <View style={RegisterStyle.container}>
+        {registerErr && (
+          <Text style={RegisterStyle.errorHeader}>
+            {getErrText(registerErr)}
+          </Text>
+        )}
+        <Logo />
+        <Text style={RegisterStyle.header}>Create Account</Text>
+        <TextInput
+          label="Name"
+          returnKeyType="next"
+          value={name.value}
+          onChangeText={(text: string) => setName({ value: text, error: '' })}
+          error={!!name.error}
+          errorText={name.error}
+        />
+        <TextInput
+          label="Phone"
+          returnKeyType="next"
+          value={phoneNumber.value}
+          onChangeText={(text: string) =>
+            setPhoneNumber({ value: text, error: '' })
+          }
+          error={!!phoneNumber.error}
+          errorText={phoneNumber.error}
+          autoCapitalize="none"
+        />
+        <Button
+          mode="contained"
+          onPress={onSignUpPressed}
+          style={{ marginTop: 24 }}
+        >
+          Sign Up
+        </Button>
+        <View style={RegisterStyle.row}>
+          <Text>Already have an account? </Text>
+          <TouchableOpacity onPress={() => navigation.replace('Login', {})}>
+            <Text style={RegisterStyle.link}>Login</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
 };
 
 const RegisterStyle = {
+  containerWrapper: css`
+    width: 100%;
+    flex: 1;
+    padding: 24px;
+    background: #fdf6e4;
+  `,
   container: css`
-    height: 100%;
-    display: flex;
+    margin-top: 50px;
     align-items: center;
-    background: white;
-    padding: 150px 30px 0 30px;
   `,
   header: css`
     width: 100%;

@@ -8,11 +8,11 @@ import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import Logo from '../components/Logo/Logo';
 import Button from '../components/Button/Button';
 import TextInput from '../components/TextInput/TextInput';
-import BackButton from '../components/BackButton/BackButton';
 import { theme } from '../core/theme';
 import { phoneNumberValidator } from '../helpers/validator';
 import { FirebaseApp, FirebaseAuth } from '../firebase/config';
 import { InvalidOtpError, UserExistsError } from '../errors/errors';
+import MenuBar from '../components/MenuBar/MenuBar';
 
 const getErrText = (loginErr: Error): string => {
   if (!loginErr) {
@@ -72,49 +72,54 @@ const Login = (props: any) => {
   };
 
   return (
-    <View style={LoginStyle.container}>
+    <View style={LoginStyle.containerWrapper}>
       <FirebaseRecaptchaVerifierModal
         ref={recaptchaVerifier}
         firebaseConfig={FirebaseApp.options}
         attemptInvisibleVerification={false}
       />
-      <BackButton />
-      {loginErr && (
-        <Text style={LoginStyle.errorHeader}>{getErrText(loginErr)}</Text>
-      )}
-      <Logo />
-      <Text style={LoginStyle.header}>Welcome Back</Text>
-      <TextInput
-        label="Phone"
-        returnKeyType="next"
-        value={phoneNumber.value}
-        onChangeText={(text: string) =>
-          setPhoneNumber({ value: text, error: '' })
-        }
-        error={!!phoneNumber.error}
-        errorText={phoneNumber.error}
-        autoCapitalize="none"
-      />
-      <Button mode="contained" onPress={onLoginPressed}>
-        Get OTP
-      </Button>
-      <View style={LoginStyle.row}>
-        <Text>Don’t have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.replace('Register', {})}>
-          <Text style={LoginStyle.link}>Sign up</Text>
-        </TouchableOpacity>
+      <MenuBar showBackButton={true} showOnlyBackButton={true} />
+      <View style={LoginStyle.container}>
+        {loginErr && (
+          <Text style={LoginStyle.errorHeader}>{getErrText(loginErr)}</Text>
+        )}
+        <Logo />
+        <Text style={LoginStyle.header}>Welcome Back</Text>
+        <TextInput
+          label="Phone"
+          returnKeyType="next"
+          value={phoneNumber.value}
+          onChangeText={(text: string) =>
+            setPhoneNumber({ value: text, error: '' })
+          }
+          error={!!phoneNumber.error}
+          errorText={phoneNumber.error}
+          autoCapitalize="none"
+        />
+        <Button mode="contained" onPress={onLoginPressed}>
+          Get OTP
+        </Button>
+        <View style={LoginStyle.row}>
+          <Text>Don’t have an account? </Text>
+          <TouchableOpacity onPress={() => navigation.replace('Register', {})}>
+            <Text style={LoginStyle.link}>Sign up</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
 };
 
 const LoginStyle = {
+  containerWrapper: css`
+    width: 100%;
+    flex: 1;
+    padding: 24px;
+    background: #fdf6e4;
+  `,
   container: css`
-    height: 100%;
-    display: flex;
+    margin-top: 50px;
     align-items: center;
-    background: white;
-    padding: 150px 30px 0 30px;
   `,
   header: css`
     width: 100%;

@@ -8,7 +8,7 @@ import BackButton from '../BackButton/BackButton';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
-const GroupList = ({ setShowGroupedList }: { setShowGroupedList: any }) => {
+const GroupList = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const Item = ({ item }: { item: CategoryType }) => (
@@ -25,7 +25,6 @@ const GroupList = ({ setShowGroupedList }: { setShowGroupedList: any }) => {
 
   return (
     <View style={styles.container}>
-      <BackButton setState={setShowGroupedList} styles={styles.backButton} />
       <SectionList
         showsVerticalScrollIndicator={false}
         sections={groupListData}
@@ -41,11 +40,8 @@ const GroupList = ({ setShowGroupedList }: { setShowGroupedList: any }) => {
 
 const styles = {
   container: css`
-    height: 73%;
-    position: relative;
-  `,
-  backButton: css`
-    position: relative;
+    height: 100%;
+    padding-bottom: 70px;
   `,
   itemContainer: css`
     flex-direction: row;

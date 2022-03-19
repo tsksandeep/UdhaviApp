@@ -41,7 +41,7 @@ const DashboardComponent = ({
           />
         }
       >
-        <MenuBar />
+        <MenuBar showBackButton={false} />
         <UserLocation setShowLocationSlider={setShowLocationSlider} />
         <CategoryList />
       </ScrollView>

@@ -37,8 +37,8 @@ export const assignVolunteersToRequest = async (
     });
   }
 
-  actions.updateRequests(requests);
-  actions.updateVolunteers(volunteers);
+  actions.updateRequestsMap(requests);
+  actions.updateVolunteersMap(volunteers);
 };
 
 export const releaseVolunteersFromRequest = async (
@@ -63,8 +63,8 @@ export const releaseVolunteersFromRequest = async (
     });
   }
 
-  actions.updateRequests(requests);
-  actions.updateVolunteers(volunteers);
+  actions.updateRequestsMap(requests);
+  actions.updateVolunteersMap(volunteers);
 };
 
 export const updateRequestData = async (

@@ -12,7 +12,7 @@ const Request = (props: any) => {
       backdropComponent={useCallback(() => {
         return (
           <>
-            <MenuBar />
+            <MenuBar showBackButton={true} />
             <Text style={RequestStyle.heading}>{name}</Text>
             <Text style={RequestStyle.description}>
               Lorem ipsum dolor sit amet cotetuhfdr adipisicing elit. Iste odit
