@@ -36,6 +36,7 @@ declare global {
       verificationId: string;
       name?: string;
       phoneNumber?: string;
+      expoToken: string;
     };
     Login: {
       error?: Error;

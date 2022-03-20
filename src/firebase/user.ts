@@ -1,4 +1,4 @@
-import { setDoc, getDoc, doc } from 'firebase/firestore';
+import { setDoc, getDoc, doc, updateDoc } from 'firebase/firestore';
 import { UserExistsError, UserNotExistsError } from '../errors/errors';
 
 import { UserData } from './model';
@@ -13,12 +13,15 @@ export const writeUserData = async (userData: UserData): Promise<any> => {
   await setDoc(doc(usersRef, userData.userId), {
     name: userData.name,
     phoneNumber: userData.phoneNumber,
+    expoToken: userData.expoToken,
   });
 
   return null;
 };
 
-export const readUserData = async (userId: string): Promise<any> => {
+export const readUserData = async (
+  userId: string,
+): Promise<UserData | UserNotExistsError> => {
   const docSnapshot = await getDoc(doc(usersRef, userId));
   const user = docSnapshot.data();
   if (!docSnapshot.exists() || !user?.name || !user?.phoneNumber) {
@@ -29,5 +32,13 @@ export const readUserData = async (userId: string): Promise<any> => {
     userId: userId,
     name: user.name,
     phoneNumber: user.phoneNumber,
+    expoToken: user.expoToken,
   };
+};
+
+export const updateUserData = async (
+  id: string,
+  data: { [key: string]: any },
+) => {
+  await updateDoc(doc(usersRef, id), data);
 };

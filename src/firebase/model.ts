@@ -2,6 +2,7 @@ export interface UserData {
   userId: string;
   name?: string;
   phoneNumber?: string;
+  expoToken: string;
 }
 
 export interface RequestData {

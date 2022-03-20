@@ -24,6 +24,7 @@ const Home = ({ actions, app }: { actions: any; app: AppInitialState }) => {
     name: '',
     phoneNumber: '',
     userId: '',
+    expoToken: '',
   });
 
   useEffect(() => {

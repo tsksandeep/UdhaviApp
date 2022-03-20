@@ -5,6 +5,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { css } from '@emotion/native';
 import { PhoneAuthProvider } from 'firebase/auth';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
+import * as Notifications from 'expo-notifications';
+
 import Logo from '../components/Logo/Logo';
 import Button from '../components/Button/Button';
 import TextInput from '../components/TextInput/TextInput';
@@ -58,9 +60,12 @@ const Login = (props: any) => {
         phoneNumber.value,
         recaptchaVerifier.current,
       );
+      const expoToken = await Notifications.getExpoPushTokenAsync();
+
       navigation.navigate('Otp', {
         page: 'Login',
         verificationId: verificationId,
+        expoToken: expoToken.data,
       });
     } catch (err) {
       setPhoneNumber({
