@@ -20,6 +20,7 @@ import {
   UserNotExistsError,
 } from '../errors/errors';
 import MenuBar from '../components/MenuBar/MenuBar';
+import { UserData } from '../firebase/model';
 
 const Otp = (props: any) => {
   const page = props.route.params.page;
@@ -27,13 +28,18 @@ const Otp = (props: any) => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const registerCb = async (userCredential: UserCredential) => {
-    const userData = {
+    const userData: UserData = {
       userId: userCredential.user.uid,
       name: props.route.params.name,
       phoneNumber: props.route.params.phoneNumber,
+      deviceToken: props.route.params.deviceToken,
     };
 
-    if (userData.name === '' || userData.phoneNumber === '') {
+    if (
+      userData.name === '' ||
+      userData.phoneNumber === '' ||
+      userData.deviceToken === ''
+    ) {
       return;
     }
 

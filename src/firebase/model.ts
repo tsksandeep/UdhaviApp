@@ -2,6 +2,7 @@ export interface UserData {
   userId: string;
   name?: string;
   phoneNumber?: string;
+  deviceToken: string;
 }
 
 export interface RequestData {

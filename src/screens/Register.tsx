@@ -5,13 +5,19 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { css } from '@emotion/native';
 import { PhoneAuthProvider } from 'firebase/auth';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
+import { getToken } from 'firebase/messaging';
+import Constants from 'expo-constants';
 
 import Logo from '../components/Logo/Logo';
 import Button from '../components/Button/Button';
 import TextInput from '../components/TextInput/TextInput';
 import { theme } from '../core/theme';
 import { phoneNumberValidator, nameValidator } from '../helpers/validator';
-import { FirebaseApp, FirebaseAuth } from '../firebase/config';
+import {
+  FirebaseApp,
+  FirebaseAuth,
+  FirebaseMessaging,
+} from '../firebase/config';
 import { InvalidOtpError, UserNotExistsError } from '../errors/errors';
 import MenuBar from '../components/MenuBar/MenuBar';
 
@@ -62,11 +68,16 @@ const Register = (props: any) => {
         phoneNumber.value,
         recaptchaVerifier.current,
       );
+      const deviceToken = await getToken(FirebaseMessaging, {
+        vapidKey: Constants.manifest?.extra?.FIREBASE_CLOUD_MESSAGING_KEY_PAIR,
+      });
+
       navigation.navigate('Otp', {
         page: 'Register',
         verificationId: verificationId,
         name: name.value,
         phoneNumber: phoneNumber.value,
+        deviceToken: deviceToken,
       });
     } catch (err) {
       setPhoneNumber({

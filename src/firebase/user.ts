@@ -13,12 +13,15 @@ export const writeUserData = async (userData: UserData): Promise<any> => {
   await setDoc(doc(usersRef, userData.userId), {
     name: userData.name,
     phoneNumber: userData.phoneNumber,
+    deviceToken: userData.deviceToken,
   });
 
   return null;
 };
 
-export const readUserData = async (userId: string): Promise<any> => {
+export const readUserData = async (
+  userId: string,
+): Promise<UserData | UserNotExistsError> => {
   const docSnapshot = await getDoc(doc(usersRef, userId));
   const user = docSnapshot.data();
   if (!docSnapshot.exists() || !user?.name || !user?.phoneNumber) {
@@ -29,5 +32,6 @@ export const readUserData = async (userId: string): Promise<any> => {
     userId: userId,
     name: user.name,
     phoneNumber: user.phoneNumber,
+    deviceToken: user.deviceToken,
   };
 };

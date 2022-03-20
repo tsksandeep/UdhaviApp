@@ -36,6 +36,7 @@ declare global {
       verificationId: string;
       name?: string;
       phoneNumber?: string;
+      deviceToken: string;
     };
     Login: {
       error?: Error;
