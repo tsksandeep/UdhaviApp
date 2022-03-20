@@ -11,7 +11,6 @@ import {
 } from 'firebase/auth';
 
 import Logo from '../components/Logo/Logo';
-import BackButton from '../components/BackButton/BackButton';
 import { FirebaseAuth } from '../firebase/config';
 import { readUserData, writeUserData } from '../firebase/user';
 import {
@@ -32,14 +31,9 @@ const Otp = (props: any) => {
       userId: userCredential.user.uid,
       name: props.route.params.name,
       phoneNumber: props.route.params.phoneNumber,
-      expoToken: props.route.params.expoToken,
     };
 
-    if (
-      userData.name === '' ||
-      userData.phoneNumber === '' ||
-      userData.expoToken === ''
-    ) {
+    if (userData.name === '' || userData.phoneNumber === '') {
       return;
     }
 

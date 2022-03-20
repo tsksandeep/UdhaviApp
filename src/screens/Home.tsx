@@ -14,6 +14,7 @@ import DashboardComponent from '../components/Dashboard/Dashboard';
 import { UserNotExistsError } from '../errors/errors';
 import bindDispatch from '../utils/actions';
 import { AppInitialState } from '../store/reducers/app';
+import { registerForPushNotificationsAsync } from '../expo/pushNotification';
 
 const Home = ({ actions, app }: { actions: any; app: AppInitialState }) => {
   let [fontsLoaded] = useFonts({
@@ -39,8 +40,15 @@ const Home = ({ actions, app }: { actions: any; app: AppInitialState }) => {
           setLoading(false);
           return;
         }
+
+        const expoToken = await registerForPushNotificationsAsync(user.uid);
+        if (expoToken !== '') {
+          resp.expoToken = expoToken;
+        }
+
         actions.updateUserData(resp);
         await actions.setInitialRequests(resp.phoneNumber);
+
         setUser(resp);
         setLoading(false);
       } else {
