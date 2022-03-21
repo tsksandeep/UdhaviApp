@@ -110,6 +110,10 @@ const MapScreenAutoComplete = React.forwardRef((props: Props, ref: any) => {
     if (inputRef.current) {
       inputRef.current.setAddressText(addressText);
     }
+    const requestForm = { ...props.app.requestForm };
+    requestForm.location.latitude = props.requestLocation.lat;
+    requestForm.location.longitude = props.requestLocation.lng;
+    props.actions.createRequestForm(requestForm);
   };
 
   async function setLocationByAutoCompleteResult(apiData: any) {
@@ -118,6 +122,9 @@ const MapScreenAutoComplete = React.forwardRef((props: Props, ref: any) => {
     requestForm.location.latitude = loc.lat;
     requestForm.location.longitude = loc.lng;
     props.setRequestLocation({ lat: loc.lat, lng: loc.lng });
+    requestForm.location.latitude = loc.lat;
+    requestForm.location.longitude = loc.lng;
+    props.actions.createRequestForm(requestForm);
   }
 
   const fetchCurrentLocation = async (): Promise<void> => {

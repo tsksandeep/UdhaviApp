@@ -18,6 +18,9 @@ import { AppInitialState } from '../../store/reducers/app';
 import MapScreenAutoComplete from '../MapScreenAutoComplete/MapScreenAutoComplete';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import MapScreen from '../MapScreen/MapScreen';
+import { generateHash } from '../../helpers/hash';
+import { LocationType, RequestData } from '../../firebase/model';
+import { writeRequestData } from '../../firebase/entity';
 
 const RequestFormComponent = ({
   actions,
@@ -74,18 +77,7 @@ const RequestFormComponent = ({
   };
 
   const onSubmit = async (data: any) => {
-    const requestData: RequestForm = {
-      name: data.name,
-      requestorPhoneNumber: data.phoneNumber,
-      info: data.info,
-      location: selectedCoordinates,
-      deliveryTime: date,
-      notes: data.notes,
-      status: 'New',
-      category: getCategory(data.info),
-    };
-    actions.createRequestForm(requestData);
-    navigation.navigate('GetLocation', {});
+    makeRequest(data);
   };
 
   const onDateChange = (event: any, selectedDate: any) => {
@@ -94,8 +86,35 @@ const RequestFormComponent = ({
     setShowTimePicker(false);
   };
 
+  const makeRequest = async (data: any) => {
+    const requestForm = app.requestForm;
+    const date = new Date().getTime();
+    const requestData = {
+      id: generateHash(
+        requestForm.name + app.user.phoneNumber + date.toString(),
+      ),
+      name: data.name,
+      phoneNumber: app.user.phoneNumber,
+      requestorPhoneNumber: data.phoneNumber,
+      info: data.info,
+      location: {
+        latitude: requestForm.location.latitude,
+        longitude: requestForm.location.longitude,
+      } as LocationType,
+      deliveryTime: requestForm.deliveryTime,
+      notes: data.notes,
+      date,
+      status: '',
+      category: '',
+      assignedVolunteerIds: [''],
+    } as RequestData;
+    await writeRequestData(requestData);
+    actions.createRequestForm({});
+    navigation.navigate('Home', {});
+  };
+
   return (
-    <ScrollView keyboardShouldPersistTaps="handled">
+    <BottomSheetScrollView keyboardShouldPersistTaps="handled">
       <View style={RequestFormStyle.container}>
         {showHeading && (
           <Text style={RequestFormStyle.header}>Submit your request</Text>
@@ -242,7 +261,7 @@ const RequestFormComponent = ({
           Submit
         </Button>
       </View>
-    </ScrollView>
+    </BottomSheetScrollView>
   );
 };
 

@@ -34,24 +34,28 @@ const Home = ({ actions, app }: { actions: any; app: AppInitialState }) => {
 
   useEffect(() => {
     FirebaseAuth.onAuthStateChanged(async (user) => {
-      if (user) {
-        const resp = await readUserData(user.uid);
-        if (resp instanceof UserNotExistsError) {
+      try {
+        if (user) {
+          const resp = await readUserData(user.uid);
+          actions.updateUserData(resp);
+          if (resp instanceof UserNotExistsError) {
+            setLoading(false);
+            return;
+          }
+
+          const expoToken = await registerForPushNotificationsAsync(user.uid);
+          if (expoToken !== '') {
+            resp.expoToken = expoToken;
+          }
+
+          await actions.setInitialRequests(resp.phoneNumber);
+
+          setUser(resp);
           setLoading(false);
-          return;
         }
-
-        const expoToken = await registerForPushNotificationsAsync(user.uid);
-        if (expoToken !== '') {
-          resp.expoToken = expoToken;
-        }
-
-        actions.updateUserData(resp);
-        await actions.setInitialRequests(resp.phoneNumber);
-
-        setUser(resp);
+      } catch (e) {
         setLoading(false);
-      } else {
+      } finally {
         setLoading(false);
       }
     });
