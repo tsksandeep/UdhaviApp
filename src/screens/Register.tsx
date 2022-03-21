@@ -68,16 +68,12 @@ const Register = (props: any) => {
         phoneNumber.value,
         recaptchaVerifier.current,
       );
-      const deviceToken = await getToken(FirebaseMessaging, {
-        vapidKey: Constants.manifest?.extra?.FIREBASE_CLOUD_MESSAGING_KEY_PAIR,
-      });
 
       navigation.navigate('Otp', {
         page: 'Register',
         verificationId: verificationId,
         name: name.value,
         phoneNumber: phoneNumber.value,
-        deviceToken: deviceToken,
       });
     } catch (err) {
       setPhoneNumber({

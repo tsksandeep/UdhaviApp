@@ -11,7 +11,6 @@ import {
 } from 'firebase/auth';
 
 import Logo from '../components/Logo/Logo';
-import BackButton from '../components/BackButton/BackButton';
 import { FirebaseAuth } from '../firebase/config';
 import { readUserData, writeUserData } from '../firebase/user';
 import {

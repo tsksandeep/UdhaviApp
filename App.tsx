@@ -6,6 +6,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NativeBaseProvider } from 'native-base';
 import { SSRProvider } from '@react-aria/ssr';
+import * as Notifications from 'expo-notifications';
 
 import Home from './src/screens/Home';
 import Otp from './src/screens/Otp';
@@ -22,6 +23,14 @@ import RequestCategory from './src/screens/RequestCategory';
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
+
 declare global {
   type RootStackParamList = {
     // undefined is used as we are not passing parameters
@@ -36,7 +45,6 @@ declare global {
       verificationId: string;
       name?: string;
       phoneNumber?: string;
-      deviceToken: string;
     };
     Login: {
       error?: Error;

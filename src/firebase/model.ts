@@ -2,7 +2,7 @@ export interface UserData {
   userId: string;
   name?: string;
   phoneNumber?: string;
-  deviceToken: string;
+  expoToken?: string;
 }
 
 export interface RequestData {

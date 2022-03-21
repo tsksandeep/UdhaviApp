@@ -5,8 +5,6 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { css } from '@emotion/native';
 import { PhoneAuthProvider } from 'firebase/auth';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
-import { getToken } from 'firebase/messaging';
-import Constants from 'expo-constants';
 
 import Logo from '../components/Logo/Logo';
 import Button from '../components/Button/Button';
@@ -65,14 +63,10 @@ const Login = (props: any) => {
         phoneNumber.value,
         recaptchaVerifier.current,
       );
-      const deviceToken = await getToken(FirebaseMessaging, {
-        vapidKey: Constants.manifest?.extra?.FIREBASE_CLOUD_MESSAGING_KEY_PAIR,
-      });
 
       navigation.navigate('Otp', {
         page: 'Login',
         verificationId: verificationId,
-        deviceToken: deviceToken,
       });
     } catch (err) {
       setPhoneNumber({
