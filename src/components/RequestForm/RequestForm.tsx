@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { css } from '@emotion/native';
-import { Text, View, Pressable } from 'react-native';
+import { Text, View, Pressable, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { createSelector } from 'reselect';
@@ -15,15 +15,20 @@ import moment from 'moment';
 import { RequestCategoryImageMap } from '../../constants/constants';
 import { RequestForm } from '../../store/reducers/modal/app.modal';
 import { AppInitialState } from '../../store/reducers/app';
+import MapScreenAutoComplete from '../MapScreenAutoComplete/MapScreenAutoComplete';
+import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import MapScreen from '../MapScreen/MapScreen';
 
 const RequestFormComponent = ({
   actions,
   app,
   showHeading,
+  mapRef,
 }: {
   actions: any;
   app: AppInitialState;
   showHeading: boolean;
+  mapRef: any;
 }) => {
   const [selectedCoordinates, setSelectedCoordinates] = useState({
     latitude: 0,
@@ -31,6 +36,7 @@ const RequestFormComponent = ({
   });
   const [date, setDate] = useState(new Date());
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [requestLocation, setRequestLocation] = useState({ lat: 0, lng: 0 });
 
   useEffect(() => {
     if (Object.values(app.requestForm).length) {
@@ -89,133 +95,150 @@ const RequestFormComponent = ({
   };
 
   return (
-    <View style={RequestFormStyle.container}>
-      {showHeading && (
-        <Text style={RequestFormStyle.header}>Submit your request</Text>
-      )}
-      <Controller
-        control={control}
-        name="name"
-        render={({ field: { onChange, value } }) => (
-          <TextInput
-            placeholder="Name"
-            returnKeyType="next"
-            value={value}
-            onChangeText={(text: string) => onChange(text)}
-            autoCapitalize="none"
-            error={!!errors?.name?.message}
-            errorText={errors?.name?.message}
-          />
+    <ScrollView keyboardShouldPersistTaps="handled">
+      <View style={RequestFormStyle.container}>
+        {showHeading && (
+          <Text style={RequestFormStyle.header}>Submit your request</Text>
         )}
-        rules={{
-          required: {
-            value: true,
-            message: 'Name is required!',
-          },
-        }}
-      />
-
-      <Controller
-        control={control}
-        name="phoneNumber"
-        render={({ field: { onChange, value } }) => (
-          <TextInput
-            placeholder="Phone"
-            returnKeyType="next"
-            value={value}
-            onChangeText={(text: string) => onChange(text)}
-            autoCapitalize="none"
-            error={!!errors?.phoneNumber?.message}
-            errorText={errors?.phoneNumber?.message}
-          />
-        )}
-        rules={{
-          required: {
-            value: true,
-            message: 'Phone Number is required!',
-          },
-          validate: (value: string) => phoneNumberValidator(value),
-        }}
-      />
-
-      <Controller
-        control={control}
-        name="info"
-        render={({ field: { onChange, value } }) => (
-          <TextInput
-            placeholder="What is needed?"
-            returnKeyType="next"
-            value={value}
-            onChangeText={(text: string) => onChange(text)}
-            autoCapitalize="none"
-            error={!!errors?.info?.message}
-            errorText={errors?.info?.message}
-          />
-        )}
-        rules={{
-          required: {
-            value: true,
-            message: 'Info is required!',
-          },
-        }}
-      />
-
-      <Pressable onPress={() => setShowTimePicker(true)}>
-        <View pointerEvents="none">
-          <TextInput
-            placeholder="Delivery Time"
-            returnKeyType="next"
-            autoCapitalize="none"
-            value={moment(app.requestForm.deliveryTime || date).format(
-              'DD:MM:YYYY HH:MM',
-            )}
-            editable={false}
-            pointerEvents="none"
-          />
-        </View>
-      </Pressable>
-
-      {showTimePicker && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          mode={'time'}
-          value={app.requestForm.deliveryTime || date}
-          display="default"
-          onChange={onDateChange}
+        <Controller
+          control={control}
+          name="name"
+          render={({ field: { onChange, value } }) => (
+            <TextInput
+              placeholder="Name"
+              returnKeyType="next"
+              value={value}
+              onChangeText={(text: string) => onChange(text)}
+              autoCapitalize="none"
+              error={!!errors?.name?.message}
+              errorText={errors?.name?.message}
+            />
+          )}
+          rules={{
+            required: {
+              value: true,
+              message: 'Name is required!',
+            },
+          }}
         />
-      )}
 
-      <Controller
-        control={control}
-        name="notes"
-        render={({ field: { onChange, value } }) => (
-          <TextInput
-            placeholder="Notes"
-            returnKeyType="next"
-            value={value}
-            onChangeText={(text: string) => onChange(text)}
-            autoCapitalize="none"
-            numberOfLines={150}
-            error={!!errors?.notes?.message}
-            errorText={errors?.notes?.message}
+        <Controller
+          control={control}
+          name="phoneNumber"
+          render={({ field: { onChange, value } }) => (
+            <TextInput
+              placeholder="Phone"
+              returnKeyType="next"
+              value={value}
+              onChangeText={(text: string) => onChange(text)}
+              autoCapitalize="none"
+              error={!!errors?.phoneNumber?.message}
+              errorText={errors?.phoneNumber?.message}
+            />
+          )}
+          rules={{
+            required: {
+              value: true,
+              message: 'Phone Number is required!',
+            },
+            validate: (value: string) => phoneNumberValidator(value),
+          }}
+        />
+
+        <Controller
+          control={control}
+          name="info"
+          render={({ field: { onChange, value } }) => (
+            <TextInput
+              placeholder="What is needed?"
+              returnKeyType="next"
+              value={value}
+              onChangeText={(text: string) => onChange(text)}
+              autoCapitalize="none"
+              error={!!errors?.info?.message}
+              errorText={errors?.info?.message}
+            />
+          )}
+          rules={{
+            required: {
+              value: true,
+              message: 'Info is required!',
+            },
+          }}
+        />
+
+        <Pressable onPress={() => setShowTimePicker(true)}>
+          <View pointerEvents="none">
+            <TextInput
+              placeholder="Delivery Time"
+              returnKeyType="next"
+              autoCapitalize="none"
+              value={moment(app.requestForm.deliveryTime || date).format(
+                'DD:MM:YYYY HH:MM',
+              )}
+              editable={false}
+              pointerEvents="none"
+            />
+          </View>
+        </Pressable>
+
+        {showTimePicker && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            mode={'time'}
+            value={app.requestForm.deliveryTime || date}
+            display="default"
+            onChange={onDateChange}
           />
         )}
-        rules={{
-          required: {
-            value: true,
-            message: 'Notes is required!',
-          },
-        }}
-      />
-      <Button
-        style={RequestFormStyle.submitButton}
-        mode="outlined"
-        disabled={!date}
-        onPress={handleSubmit(onSubmit)}
-      >
-        Submit
-      </Button>
-    </View>
+
+        <ScrollView keyboardShouldPersistTaps="handled">
+          <View>
+            <MapScreenAutoComplete
+              styles={RequestFormStyle.locationInput}
+              requestLocation={requestLocation}
+              setRequestLocation={setRequestLocation}
+            ></MapScreenAutoComplete>
+          </View>
+        </ScrollView>
+
+        <MapScreen
+          requestLocation={requestLocation}
+          setRequestLocation={setRequestLocation}
+        ></MapScreen>
+        <Controller
+          control={control}
+          name="notes"
+          render={({ field: { onChange, value } }) => (
+            <TextInput
+              placeholder="Notes"
+              returnKeyType="next"
+              value={value}
+              onChangeText={(text: string) => onChange(text)}
+              autoCapitalize="none"
+              numberOfLines={150}
+              error={!!errors?.notes?.message}
+              errorText={errors?.notes?.message}
+            />
+          )}
+          rules={{
+            required: {
+              value: true,
+              message: 'Notes is required!',
+            },
+          }}
+        />
+
+        <Button
+          style={RequestFormStyle.submitButton}
+          mode="outlined"
+          disabled={!date}
+          onPress={handleSubmit(onSubmit)}
+        >
+          Submit
+        </Button>
+      </View>
+    </ScrollView>
   );
 };
 
@@ -245,6 +268,12 @@ const RequestFormStyle = {
     margin-top: 20px;
     margin-bottom: 20px;
     border: 2px solid rgb(196, 34, 255);
+  `,
+  locationInput: css`
+    width: 100%;
+    background: white;
+    flex-direction: column;
+    position: relative;
   `,
 };
 

@@ -17,9 +17,9 @@ import { RequestForm } from '../../store/reducers/modal/app.modal';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { css } from '@emotion/native';
-import MapScreenAutoComplete from '../MapScreenAutoComplete/MapScreenAutoComplete';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import RequestDefaultMarker from '../../assets/marker/Request_default_marker.png';
+import { NativeViewGestureHandler } from 'react-native-gesture-handler';
 
 const totalStatusBarHeight = (10 + getStatusBarHeight()).toString();
 
@@ -36,11 +36,15 @@ const MapScreen = ({
   actions,
   route,
   fullscreen,
+  requestLocation,
+  setRequestLocation,
 }: {
   actions?: any;
   app?: any;
   route?: any;
-  fullscreen: boolean;
+  fullscreen?: boolean;
+  requestLocation?: any;
+  setRequestLocation?: any;
 }) => {
   const mapViewRef = useRef(null);
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -62,13 +66,13 @@ const MapScreen = ({
     longitude: null,
   });
 
-  useEffect(() => {
-    actions.setInitialRequests(app.user.phoneNumber);
-  }, [app.requestForm]);
+  // useEffect(() => {
+  //   actions.setInitialRequests(app.user.phoneNumber);
+  // }, [app.requestForm]);
 
   useEffect(() => {
     getInitialRegion();
-  }, [requesterLocation]);
+  }, [requestLocation]);
 
   const getLocation = async () => {
     Location.setGoogleApiKey(GOOGLE_PLACES_API_KEY);
@@ -79,20 +83,10 @@ const MapScreen = ({
   };
 
   const getInitialRegion = () => {
-    if (
-      !app?.requestForm?.location?.latitude &&
-      !app?.requestForm?.location?.longitude &&
-      !requesterLocation?.latitude &&
-      !requesterLocation?.longitude
-    ) {
-      getLocation();
-    }
-    if (app?.requestForm?.location?.latitude || requesterLocation?.latitude) {
+    if (requestLocation.lat && requestLocation.lng) {
       setInitialRegion({
-        latitude:
-          app?.requestForm?.location?.latitude || requesterLocation?.latitude,
-        longitude:
-          app?.requestForm?.location?.longitude || requesterLocation?.longitude,
+        latitude: requestLocation.lat,
+        longitude: requestLocation.lng,
         latitudeDelta: app?.requestForm?.location?.latitude ? 0.01 : latDelta,
         longitudeDelta: app?.requestForm?.location?.longitude ? 0.01 : lngDelta,
       });
@@ -101,18 +95,19 @@ const MapScreen = ({
 
   const handleDragEnd = async (event: any) => {
     const { latitude, longitude } = event.nativeEvent.coordinate;
-    const coordinates = event.nativeEvent.coordinate;
-    setSelectedCoordinates(coordinates);
-    let regionName = await Location.reverseGeocodeAsync({
-      longitude,
-      latitude,
-    });
-    const { city, district, region, country, subregion } = regionName[0];
-    actions.updateRequestAddress(
-      `${city || ''}, ${district || subregion || ''}, ${region || ''}, ${
-        country || ''
-      }`,
-    );
+    setRequestLocation({ lat: latitude, lng: longitude });
+    // const coordinates = event.nativeEvent.coordinate;
+    // setSelectedCoordinates(coordinates);
+    // let regionName = await Location.reverseGeocodeAsync({
+    //   longitude,
+    //   latitude,
+    // });
+    // const { city, district, region, country, subregion } = regionName[0];
+    // actions.updateRequestAddress(
+    //   `${city || ''}, ${district || subregion || ''}, ${region || ''}, ${
+    //     country || ''
+    //   }`,
+    // );
   };
 
   const onMapLayout = () => {
@@ -182,10 +177,7 @@ const MapScreen = ({
 
   const initialMarker = () => {
     const showMarker =
-      isMapReady &&
-      (!Object.values(app?.requestsMap).length ||
-        route?.params?.showConfirmButton) &&
-      (app?.requestForm?.location?.latitude > 0 || requesterLocation?.latitude);
+      isMapReady && requestLocation?.lat > 0 && requestLocation?.lng > 0;
 
     return (
       <>
@@ -193,12 +185,8 @@ const MapScreen = ({
           <Marker
             draggable
             coordinate={{
-              latitude:
-                app?.requestForm?.location.latitude ||
-                requesterLocation?.latitude,
-              longitude:
-                app?.requestForm?.location.longitude ||
-                requesterLocation?.longitude,
+              latitude: requestLocation?.lat,
+              longitude: requestLocation?.lng,
             }}
             onDragEnd={handleDragEnd}
           >
@@ -225,8 +213,8 @@ const MapScreen = ({
 
   const MapScreenStyle = {
     map: css`
-      height: ${getHeight()};
-      min-width: ${getMinWidth()};
+      height: 300px;
+      width: 100%;
     `,
     addressText: css`
       color: blue;
@@ -261,7 +249,6 @@ const MapScreen = ({
       {route?.params?.showConfirmButton && (
         <Text style={MapScreenStyle.addressText}>{app.requestAddress}</Text>
       )}
-      {isMapReady && <MapScreenAutoComplete ref={mapViewRef} />}
     </SafeAreaView>
   );
 };

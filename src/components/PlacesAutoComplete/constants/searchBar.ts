@@ -20,7 +20,6 @@ const searchBarStyles = (isRegisterForm?: boolean) => {
       width: 330,
       borderTopWidth: 1,
       borderColor: 'gray',
-      top: 80,
       zIndex: 999,
     },
     predefinedPlacesDescription: {
