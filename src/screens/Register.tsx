@@ -13,11 +13,7 @@ import Button from '../components/Button/Button';
 import TextInput from '../components/TextInput/TextInput';
 import { theme } from '../core/theme';
 import { phoneNumberValidator, nameValidator } from '../helpers/validator';
-import {
-  FirebaseApp,
-  FirebaseAuth,
-  FirebaseMessaging,
-} from '../firebase/config';
+import { FirebaseApp, FirebaseAuth } from '../firebase/config';
 import { InvalidOtpError, UserNotExistsError } from '../errors/errors';
 import MenuBar from '../components/MenuBar/MenuBar';
 

@@ -222,7 +222,7 @@ const MapScreen = ({
     `,
     container: css`
       background: white;
-      top: ${totalStatusBarHeight}px;
+      // top: ${totalStatusBarHeight}px;
     `,
   };
 

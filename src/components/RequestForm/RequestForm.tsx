@@ -192,20 +192,6 @@ const RequestFormComponent = ({
           />
         )}
 
-        <ScrollView keyboardShouldPersistTaps="handled">
-          <View>
-            <MapScreenAutoComplete
-              styles={RequestFormStyle.locationInput}
-              requestLocation={requestLocation}
-              setRequestLocation={setRequestLocation}
-            ></MapScreenAutoComplete>
-          </View>
-        </ScrollView>
-
-        <MapScreen
-          requestLocation={requestLocation}
-          setRequestLocation={setRequestLocation}
-        ></MapScreen>
         <Controller
           control={control}
           name="notes"
@@ -228,6 +214,24 @@ const RequestFormComponent = ({
             },
           }}
         />
+
+        <ScrollView
+          style={RequestFormStyle.autoCompleteContainer}
+          keyboardShouldPersistTaps="handled"
+        >
+          <MapScreenAutoComplete
+            styles={RequestFormStyle.locationInput}
+            requestLocation={requestLocation}
+            setRequestLocation={setRequestLocation}
+          ></MapScreenAutoComplete>
+        </ScrollView>
+
+        <View style={RequestFormStyle.mapViewContainer}>
+          <MapScreen
+            requestLocation={requestLocation}
+            setRequestLocation={setRequestLocation}
+          />
+        </View>
 
         <Button
           style={RequestFormStyle.submitButton}
@@ -274,6 +278,15 @@ const RequestFormStyle = {
     background: white;
     flex-direction: column;
     position: relative;
+  `,
+  autoCompleteContainer: css`
+    width: 100%;
+    overflow: visible;
+    margin: 10px 0;
+  `,
+  mapViewContainer: css`
+    border-radius: 10px;
+    overflow: hidden;
   `,
 };
 

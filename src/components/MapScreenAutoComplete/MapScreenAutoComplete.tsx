@@ -38,6 +38,30 @@ const GOOGLE_PLACES_API_KEY = Constants.manifest?.extra?.GOOGLE_PLACES_API_KEY;
 const latDelta = 0.3;
 const lngDelta = 0.2;
 
+const getAddressText = (
+  city: string | null,
+  district: string | null,
+  region: string | null,
+  subregion: string | null,
+  country: string | null,
+): string => {
+  var addressText = '';
+  if (city) {
+    addressText += city + ', ';
+  }
+  if (district) {
+    addressText += district + ', ';
+  } else if (subregion) {
+    addressText += subregion + ', ';
+  }
+  if (region) {
+    addressText += region;
+  } else if (country) {
+    addressText += country;
+  }
+  return addressText;
+};
+
 const MapScreenAutoComplete = React.forwardRef((props: Props, ref: any) => {
   let inputRef = useRef<GooglePlacesAutocompleteRef>();
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -59,7 +83,7 @@ const MapScreenAutoComplete = React.forwardRef((props: Props, ref: any) => {
     if (props.getUserLocation && inputRef) {
       getLocation(true, inputRef);
     }
-  }, [inputRef]);
+  }, [inputRef.current]);
 
   useEffect(() => {
     fetchCurrentLocation();
@@ -76,10 +100,16 @@ const MapScreenAutoComplete = React.forwardRef((props: Props, ref: any) => {
     });
 
     const { city, district, region, country, subregion } = regionName[0];
-    const addressText = `${city || ''}, ${district || subregion || ''}, ${
-      region || ''
-    }, ${country || ''}`;
-    inputRef?.setAddressText(addressText);
+    const addressText = getAddressText(
+      city,
+      district,
+      region,
+      subregion,
+      country,
+    );
+    if (inputRef.current) {
+      inputRef.current.setAddressText(addressText);
+    }
   };
 
   async function setLocationByAutoCompleteResult(apiData: any) {
@@ -100,11 +130,7 @@ const MapScreenAutoComplete = React.forwardRef((props: Props, ref: any) => {
         latitude,
       });
       const { city, district, region, country, subregion } = regionName[0];
-      setLocation(
-        `${city || ''}, ${district || subregion || ''}, ${region || ''}, ${
-          country || ''
-        }`,
-      );
+      setLocation(getAddressText(city, district, region, subregion, country));
     }
   };
 
@@ -127,9 +153,13 @@ const MapScreenAutoComplete = React.forwardRef((props: Props, ref: any) => {
           latitude,
         });
         const { city, district, region, country, subregion } = regionName[0];
-        const addressText = `${city || ''}, ${district || subregion || ''}, ${
-          region || ''
-        }, ${country || ''}`;
+        const addressText = getAddressText(
+          city,
+          district,
+          region,
+          subregion,
+          country,
+        );
 
         if (returnAddress) {
           return addressText;
@@ -167,7 +197,9 @@ const MapScreenAutoComplete = React.forwardRef((props: Props, ref: any) => {
           setLocationByAutoCompleteResult(data);
         }}
         ref={(autoCompleteRef) => {
-          inputRef = autoCompleteRef;
+          if (autoCompleteRef) {
+            inputRef.current = autoCompleteRef;
+          }
         }}
         query={{
           key: GOOGLE_PLACES_API_KEY,
