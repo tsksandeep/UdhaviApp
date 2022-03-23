@@ -13,6 +13,7 @@ import Otp from './src/screens/Otp';
 import Login from './src/screens/Login';
 import Register from './src/screens/Register';
 import Request from './src/screens/Request';
+import Chat from './src/screens/Chat';
 
 import configureStore from './src/store';
 import { theme } from './src/core/theme';
@@ -20,6 +21,7 @@ import MapScreen from './src/components/MapScreen/MapScreen';
 import GetLocation from './src/screens/GetLocation';
 import RequestCategory from './src/screens/RequestCategory';
 import Notification from './src/screens/Notification';
+import { UserData } from './src/firebase/model';
 
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
@@ -62,6 +64,10 @@ declare global {
     GetLocation: {};
     RequestCategory: undefined;
     notification: {};
+    Chat: {
+      groupId: string;
+      userData: UserData;
+    };
   };
 }
 
@@ -79,6 +85,7 @@ const linking = {
       GetLocation: '/getLocation',
       RequestCategory: '/requestCategory',
       notification: '/notification',
+      Chat: '/chat',
     },
   },
 };
@@ -102,6 +109,7 @@ const App = () => {
                 <Stack.Screen name="Register" component={Register} />
                 <Stack.Screen name="Request" component={Request} />
                 <Stack.Screen name="Map" component={MapScreen} />
+                <Stack.Screen name="Chat" component={Chat} />
                 <Stack.Screen name="GetLocation" component={GetLocation} />
                 <Stack.Screen name="notification" component={Notification} />
                 <Stack.Screen

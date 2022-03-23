@@ -31,14 +31,9 @@ const Otp = (props: any) => {
       userId: userCredential.user.uid,
       name: props.route.params.name,
       phoneNumber: props.route.params.phoneNumber,
-      deviceToken: props.route.params.deviceToken,
     };
 
-    if (
-      userData.name === '' ||
-      userData.phoneNumber === '' ||
-      userData.deviceToken === ''
-    ) {
+    if (userData.name === '' || userData.phoneNumber === '') {
       return;
     }
 
