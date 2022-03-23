@@ -6,6 +6,7 @@ import { getMessagesRef } from '../firebase/ref';
 const Chat = (props: any) => {
   const groupId = props.route.params.groupId;
   const userData = props.route.params.userData;
+
   if (!groupId || !userData) {
     return <></>;
   }
@@ -23,9 +24,9 @@ const Chat = (props: any) => {
     <GiftedChat
       messages={messages}
       showAvatarForEveryMessage={true}
-      onSend={(messages: IMessage[]) => {
-        onSend(messagesRef, messages, setMessages);
-      }}
+      onSend={(messages: IMessage[]) =>
+        onSend(messagesRef, messages, setMessages)
+      }
       user={{
         _id: userData.userId,
         name: userData.name,

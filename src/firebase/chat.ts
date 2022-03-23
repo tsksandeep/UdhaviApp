@@ -21,12 +21,15 @@ export const unsubscribeCallback = (
 
   const unsubscribe = onSnapshot(queryResponse, (querySnapshot: any) => {
     setMessages(
-      querySnapshot.docs.map((doc: any) => ({
-        _id: doc.data()._id,
-        createdAt: doc.data().createdAt.toDate(),
-        text: doc.data().text,
-        user: doc.data().user,
-      })),
+      querySnapshot.docs.map((doc: any) => {
+        const data = doc.data();
+        return {
+          _id: data._id,
+          createdAt: data.createdAt.toDate(),
+          text: data.text,
+          user: data.user,
+        };
+      }),
     );
   });
 
