@@ -19,6 +19,7 @@ import { theme } from './src/core/theme';
 import MapScreen from './src/components/MapScreen/MapScreen';
 import GetLocation from './src/screens/GetLocation';
 import RequestCategory from './src/screens/RequestCategory';
+import Notification from './src/screens/Notification';
 
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
@@ -60,6 +61,7 @@ declare global {
     };
     GetLocation: {};
     RequestCategory: undefined;
+    notification: {};
   };
 }
 
@@ -76,6 +78,7 @@ const linking = {
       Map: '/map',
       GetLocation: '/getLocation',
       RequestCategory: '/requestCategory',
+      notification: '/notification',
     },
   },
 };
@@ -100,6 +103,7 @@ const App = () => {
                 <Stack.Screen name="Request" component={Request} />
                 <Stack.Screen name="Map" component={MapScreen} />
                 <Stack.Screen name="GetLocation" component={GetLocation} />
+                <Stack.Screen name="notification" component={Notification} />
                 <Stack.Screen
                   name="RequestCategory"
                   component={RequestCategory}
