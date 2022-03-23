@@ -63,7 +63,7 @@ declare global {
     };
     GetLocation: {};
     RequestCategory: undefined;
-    notification: {};
+    Notification: undefined;
     Chat: {
       groupId: string;
       userData: UserData;
@@ -111,7 +111,7 @@ const App = () => {
                 <Stack.Screen name="Map" component={MapScreen} />
                 <Stack.Screen name="Chat" component={Chat} />
                 <Stack.Screen name="GetLocation" component={GetLocation} />
-                <Stack.Screen name="notification" component={Notification} />
+                <Stack.Screen name="Notification" component={Notification} />
                 <Stack.Screen
                   name="RequestCategory"
                   component={RequestCategory}

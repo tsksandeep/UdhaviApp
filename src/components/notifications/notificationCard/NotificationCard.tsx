@@ -33,9 +33,9 @@ const NotificationCard = ({ notification }: { notification: Notification }) => {
 
 const styles = {
   container: css`
-    border-bottom-color: rgba(165, 165, 165, 0.1);
-    border-bottom-width: 1px;
-    height: 100px;
+    background: #fff;
+    height: 80px;
+    margin: 5px 0;
     padding: 10px;
     flex-direction: row;
     align-items: center;
@@ -50,13 +50,19 @@ const styles = {
     color: #979797;
   `,
   requestNotiBorder: css`
-    border-left-color: #a914db;
-    border-left-width: 10px;
+    border-color: #a914db;
+    border-left-width: 15px;
+    border-right-width: 2px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
     border-radius: 10px;
   `,
   volunteerNotiBorder: css`
-    border-left-color: #4287f5;
-    border-left-width: 10px;
+    border-color: #4287f5;
+    border-left-width: 15px;
+    border-right-width: 2px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
     border-radius: 10px;
   `,
 };

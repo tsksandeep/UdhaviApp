@@ -23,42 +23,20 @@ const notificationMockData: Notification[] = [
 
 const NotificationList = () => {
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <BackButton />
-        <Text style={styles.headerText}>Notification</Text>
-      </View>
-      <FlatList
-        data={notificationMockData}
-        keyExtractor={(_, index) => index.toString()}
-        renderItem={({ item }) => {
-          return <NotificationCard notification={item}></NotificationCard>;
-        }}
-      />
-    </View>
+    <FlatList
+      style={NotificationListStyle.list}
+      data={notificationMockData}
+      keyExtractor={(_, index) => index.toString()}
+      renderItem={({ item }) => {
+        return <NotificationCard notification={item}></NotificationCard>;
+      }}
+    />
   );
 };
 
-const styles = {
-  container: css`
-    background: white;
-  `,
-  headerText: css`
-    font-family: 'Pacifico';
-    font-size: 30px;
-    color: #560cce;
-    text-transform: capitalize;
-    flex: 1;
-    text-align: center;
-  `,
-  header: css`
-    align-items: center;
-    flex-direction: row;
-    border-bottom-color: #91a0a6;
-    border-bottom-width: 1px;
-    padding-bottom: 12px;
-    justify-content: center;
-    margin-bottom: 4px;
+const NotificationListStyle = {
+  list: css`
+    margin: 15px 0;
   `,
 };
 
