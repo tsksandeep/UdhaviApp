@@ -4,15 +4,22 @@ import { css } from '@emotion/native';
 import moment from 'moment';
 import { Notification } from '../notificationTypes';
 import { VStack } from 'native-base';
+import SwipeRow from '../../SwipeRow/SwipeRow';
 
-const NotificationCard = ({ notification }: { notification: Notification }) => {
+const NotificationCard = ({
+  notification,
+  onAnimationComplete,
+}: {
+  notification: Notification;
+  onAnimationComplete: any;
+}) => {
   const formatTimeFromNow = (timeStamp: number) => {
     return moment(
       timeStamp.toString().length === 10 ? timeStamp * 1000 : timeStamp,
     ).fromNow();
   };
   return (
-    <View>
+    <SwipeRow onAnimationComplete={() => onAnimationComplete(notification)}>
       <View
         style={
           notification.category === 'request'
@@ -43,7 +50,7 @@ const NotificationCard = ({ notification }: { notification: Notification }) => {
           </Text>
         </VStack>
       </View>
-    </View>
+    </SwipeRow>
   );
 };
 

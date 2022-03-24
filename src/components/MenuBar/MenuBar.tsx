@@ -32,14 +32,22 @@ const MenuBar = ({
     <View style={MenuBarStyle.container}>
       <HStack alignItems="center" justifyContent="space-between">
         {showBackButton || showOnlyBackButton ? (
-          <BackButton />
+          <BackButton key={0} />
         ) : (
-          <MaterialIcons name="account-circle" size={40} color="#232323" />
+          <MaterialIcons
+            name="account-circle"
+            size={40}
+            color="#232323"
+            key={0}
+          />
         )}
         {!showOnlyBackButton ? (
           <>
-            <Text style={MenuBarStyle.header}>Udhavi</Text>
+            <Text key={1} style={MenuBarStyle.header}>
+              Udhavi
+            </Text>
             <HStack
+              key={2}
               alignItems="center"
               justifyContent="space-between"
               space={3}
