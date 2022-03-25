@@ -13,8 +13,8 @@ const NotificationCard = ({
   notification: NotificationData;
   onAnimationComplete: any;
 }) => {
-  const formatTimeFromNow = (timeStamp: number) => {
-    return moment(Math.floor(timeStamp * 1000)).fromNow();
+  const formatTimeFromNow = (timestamp: number) => {
+    return moment(timestamp * 1000).fromNow();
   };
   return (
     <SwipeRow onAnimationComplete={() => onAnimationComplete(notification)}>
@@ -44,7 +44,7 @@ const NotificationCard = ({
           <Text style={styles.title}>{notification.title}</Text>
           <Text>{notification.body}</Text>
           <Text style={styles.timeStamp}>
-            {formatTimeFromNow(notification.timeStamp)}
+            {formatTimeFromNow(notification.timestamp)}
           </Text>
         </VStack>
       </View>

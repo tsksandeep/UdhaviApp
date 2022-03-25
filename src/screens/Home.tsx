@@ -5,6 +5,8 @@ import { useFonts } from 'expo-font';
 import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
 import * as Notifications from 'expo-notifications';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 import Logo from '../components/Logo/Logo';
 import { FirebaseAuth } from '../firebase/config';
@@ -16,9 +18,10 @@ import { UserNotExistsError } from '../errors/errors';
 import bindDispatch from '../utils/actions';
 import { AppInitialState } from '../store/reducers/app';
 import { registerForPushNotificationsAsync } from '../expo/pushNotification';
-import { NotificationData } from '../store/reducers/modal/app.modal';
 
 const Home = ({ actions, app }: { actions: any; app: AppInitialState }) => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
   let [fontsLoaded] = useFonts({
     Pacifico: require('../assets/fonts/Pacifico.ttf'),
   });
@@ -64,43 +67,27 @@ const Home = ({ actions, app }: { actions: any; app: AppInitialState }) => {
   }, []);
 
   const responseListener = useRef<any>();
-  const notificationListener = useRef<any>();
-
   useEffect(() => {
-    notificationListener.current =
-      Notifications.addNotificationReceivedListener((notification) => {
-        const title = notification.request.content.title;
-        const body = notification.request.content.body;
-        const category = notification.request.content.data?.category;
-        if (!title || !body || !category || typeof category !== 'string') {
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        const category = response.notification.request.content.data?.category;
+        if (category === 'chat') {
+          navigation.navigate('Chat', {
+            groupId: 'AU7xdWTe0CBEnPoTGy1c',
+            userData: {
+              userId: 'sandeep',
+            },
+          });
           return;
         }
 
-        let notificationData: NotificationData = {
-          id: notification.request.identifier,
-          body: body,
-          title: title,
-          category: category,
-          timeStamp: notification.date,
-        };
-
-        let notifications = app.notifications;
-        notifications.unshift(notificationData);
-        actions.updateNotifications(notifications);
-      });
-
-    responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log(response);
+        navigation.navigate('Notification');
       });
 
     return () => {
-      Notifications.removeNotificationSubscription(
-        notificationListener.current,
-      );
       Notifications.removeNotificationSubscription(responseListener.current);
     };
-  }, [app.notifications]);
+  }, []);
 
   if (loading || !fontsLoaded) {
     return (

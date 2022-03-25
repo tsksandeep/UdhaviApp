@@ -39,11 +39,6 @@ const updateRequestAddress = (payload: string) => ({
   payload,
 });
 
-const updateNotifications = (payload: Notification[]) => ({
-  type: Types.UPDATE_NOTIFICATIONS,
-  payload,
-});
-
 export {
   changeAppLoading,
   createRequestForm,
@@ -52,5 +47,4 @@ export {
   updateRequestsMap,
   updateVolunteersMap,
   updateRequestAddress,
-  updateNotifications,
 };

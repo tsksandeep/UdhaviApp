@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, LayoutAnimation, UIManager } from 'react-native';
+import { FlatList, LayoutAnimation, UIManager, View } from 'react-native';
 import { css } from '@emotion/native';
 import NotificationCard from '../notificationCard/NotificationCard';
 import { createSelector } from 'reselect';
@@ -7,6 +7,11 @@ import { connect } from 'react-redux';
 import bindDispatch from '../../../utils/actions';
 import { AppInitialState } from '../../../store/reducers/app';
 import { NotificationData } from '../../../store/reducers/modal/app.modal';
+import {
+  deleteNotification,
+  getNotifications,
+} from '../../../firebase/notifications';
+import Logo from '../../Logo/Logo';
 
 const NotificationList = ({
   actions,
@@ -15,32 +20,52 @@ const NotificationList = ({
   actions: any;
   app: AppInitialState;
 }) => {
-  useEffect(() => {
-    setNotificationList(app.notifications);
-  }, [app.notifications]);
+  const [loading, setLoading] = useState(true);
+  const [notificationList, setNotificationList] = useState([]);
 
-  const [notificationList, setNotificationList] = useState(app.notifications);
+  useEffect(() => {
+    const setNotifications = async () => {
+      const notifications = await getNotifications(app.user.userId);
+      console.log(notifications);
+      setNotificationList(notifications);
+      setLoading(false);
+    };
+
+    setNotifications();
+  }, []);
 
   const onAnimationComplete = (notification: NotificationData) => {
-    let notifications = notificationList.filter(
-      (item) => item.id !== notification.id,
-    );
+    if (notificationList) {
+      let notifications = notificationList.filter(
+        (item: NotificationData) => item.id !== notification.id,
+      );
 
-    actions.updateNotifications(notifications);
+      setNotificationList(notifications);
+
+      deleteNotification(app.user.userId, notification.id);
+
+      LayoutAnimation.configureNext(
+        LayoutAnimation.create(
+          200,
+          LayoutAnimation.Types.easeInEaseOut,
+          'opacity',
+        ),
+      );
+    }
   };
 
   useEffect(() => {
-    LayoutAnimation.configureNext(
-      LayoutAnimation.create(
-        200,
-        LayoutAnimation.Types.easeInEaseOut,
-        'opacity',
-      ),
-    );
-
     UIManager.setLayoutAnimationEnabledExperimental &&
       UIManager.setLayoutAnimationEnabledExperimental(true);
   }, []);
+
+  if (loading) {
+    return (
+      <View style={NotificationListStyle.logoContainer}>
+        <Logo />
+      </View>
+    );
+  }
 
   return (
     <FlatList
@@ -63,6 +88,13 @@ const NotificationList = ({
 const NotificationListStyle = {
   list: css`
     margin: 15px 0;
+  `,
+  logoContainer: css`
+    height: 100%;
+    display: flex;
+    align-items: center;
+    background: white;
+    padding: 150px 30px 0 30px;
   `,
 };
 

@@ -21,7 +21,6 @@ export interface AppInitialState {
   requestsMap: RequestsMap;
   volunteersMap: VolunteersMap;
   requestAddress: string;
-  notifications: NotificationData[];
 }
 
 export const initialState: AppInitialState = {
@@ -39,7 +38,6 @@ export const initialState: AppInitialState = {
   requestsMap: {},
   volunteersMap: {},
   requestAddress: '',
-  notifications: [],
 };
 
 const reducer = (state = initialState, action: Action) => {
@@ -57,8 +55,6 @@ const reducer = (state = initialState, action: Action) => {
       return { ...state, volunteersMap: payload };
     case Types.UPDATE_REQUEST_ADDRESS:
       return { ...state, requestAddress: payload };
-    case Types.UPDATE_NOTIFICATIONS:
-      return { ...state, notifications: payload };
     default:
       return state;
   }

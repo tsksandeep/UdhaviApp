@@ -33,5 +33,5 @@ export interface NotificationData {
   body: string;
   title: string;
   category: string;
-  timeStamp: number;
+  timestamp: number;
 }
