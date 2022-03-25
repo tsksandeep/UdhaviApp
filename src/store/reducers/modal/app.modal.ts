@@ -27,3 +27,11 @@ export interface RequestForm {
   category?: string;
   id?: string;
 }
+
+export interface NotificationData {
+  id: string;
+  body: string;
+  title: string;
+  category: string;
+  timeStamp: number;
+}

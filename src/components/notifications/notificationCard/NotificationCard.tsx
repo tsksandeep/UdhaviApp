@@ -2,21 +2,19 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { css } from '@emotion/native';
 import moment from 'moment';
-import { Notification } from '../notificationTypes';
 import { VStack } from 'native-base';
 import SwipeRow from '../../SwipeRow/SwipeRow';
+import { NotificationData } from '../../../store/reducers/modal/app.modal';
 
 const NotificationCard = ({
   notification,
   onAnimationComplete,
 }: {
-  notification: Notification;
+  notification: NotificationData;
   onAnimationComplete: any;
 }) => {
   const formatTimeFromNow = (timeStamp: number) => {
-    return moment(
-      timeStamp.toString().length === 10 ? timeStamp * 1000 : timeStamp,
-    ).fromNow();
+    return moment(Math.floor(timeStamp * 1000)).fromNow();
   };
   return (
     <SwipeRow onAnimationComplete={() => onAnimationComplete(notification)}>

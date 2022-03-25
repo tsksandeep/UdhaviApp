@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { css } from '@emotion/native';
 import { View } from 'react-native';
 import { useFonts } from 'expo-font';
 import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
+import * as Notifications from 'expo-notifications';
 
 import Logo from '../components/Logo/Logo';
 import { FirebaseAuth } from '../firebase/config';
@@ -15,6 +16,7 @@ import { UserNotExistsError } from '../errors/errors';
 import bindDispatch from '../utils/actions';
 import { AppInitialState } from '../store/reducers/app';
 import { registerForPushNotificationsAsync } from '../expo/pushNotification';
+import { NotificationData } from '../store/reducers/modal/app.modal';
 
 const Home = ({ actions, app }: { actions: any; app: AppInitialState }) => {
   let [fontsLoaded] = useFonts({
@@ -60,6 +62,45 @@ const Home = ({ actions, app }: { actions: any; app: AppInitialState }) => {
       }
     });
   }, []);
+
+  const responseListener = useRef<any>();
+  const notificationListener = useRef<any>();
+
+  useEffect(() => {
+    notificationListener.current =
+      Notifications.addNotificationReceivedListener((notification) => {
+        const title = notification.request.content.title;
+        const body = notification.request.content.body;
+        const category = notification.request.content.data?.category;
+        if (!title || !body || !category || typeof category !== 'string') {
+          return;
+        }
+
+        let notificationData: NotificationData = {
+          id: notification.request.identifier,
+          body: body,
+          title: title,
+          category: category,
+          timeStamp: notification.date,
+        };
+
+        let notifications = app.notifications;
+        notifications.unshift(notificationData);
+        actions.updateNotifications(notifications);
+      });
+
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        console.log(response);
+      });
+
+    return () => {
+      Notifications.removeNotificationSubscription(
+        notificationListener.current,
+      );
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, [app.notifications]);
 
   if (loading || !fontsLoaded) {
     return (
