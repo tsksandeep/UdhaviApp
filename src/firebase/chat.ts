@@ -1,7 +1,7 @@
 import { addDoc, orderBy, query, onSnapshot } from 'firebase/firestore';
 import { GiftedChat, IMessage } from 'react-native-gifted-chat';
 
-export const onSendCallback = (
+export const onSendChatCallback = (
   messagesRef: any,
   messages: IMessage[],
   setMessages: Function,
@@ -13,7 +13,7 @@ export const onSendCallback = (
   addDoc(messagesRef, messages[0]);
 };
 
-export const unsubscribeCallback = (
+export const unsubscribeChatCallback = (
   messagesRef: any,
   setMessages: Function,
 ) => {

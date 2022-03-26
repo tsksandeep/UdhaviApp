@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, LayoutAnimation, UIManager, View } from 'react-native';
+import { FlatList, LayoutAnimation, UIManager } from 'react-native';
 import { css } from '@emotion/native';
 import NotificationCard from '../notificationCard/NotificationCard';
 import { createSelector } from 'reselect';
@@ -9,9 +9,8 @@ import { AppInitialState } from '../../../store/reducers/app';
 import { NotificationData } from '../../../store/reducers/modal/app.modal';
 import {
   deleteNotification,
-  getNotifications,
+  unsubscribeNotificationCallback,
 } from '../../../firebase/notifications';
-import Logo from '../../Logo/Logo';
 
 const NotificationList = ({
   actions,
@@ -20,18 +19,10 @@ const NotificationList = ({
   actions: any;
   app: AppInitialState;
 }) => {
-  const [loading, setLoading] = useState(true);
   const [notificationList, setNotificationList] = useState([]);
 
   useEffect(() => {
-    const setNotifications = async () => {
-      const notifications = await getNotifications(app.user.userId);
-      console.log(notifications);
-      setNotificationList(notifications);
-      setLoading(false);
-    };
-
-    setNotifications();
+    unsubscribeNotificationCallback(app.user.userId, setNotificationList);
   }, []);
 
   const onAnimationComplete = (notification: NotificationData) => {
@@ -58,14 +49,6 @@ const NotificationList = ({
     UIManager.setLayoutAnimationEnabledExperimental &&
       UIManager.setLayoutAnimationEnabledExperimental(true);
   }, []);
-
-  if (loading) {
-    return (
-      <View style={NotificationListStyle.logoContainer}>
-        <Logo />
-      </View>
-    );
-  }
 
   return (
     <FlatList

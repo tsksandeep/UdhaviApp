@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { GiftedChat, IMessage } from 'react-native-gifted-chat';
-import { onSendCallback, unsubscribeCallback } from '../firebase/chat';
+import { onSendChatCallback, unsubscribeChatCallback } from '../firebase/chat';
 import { getMessagesRef } from '../firebase/ref';
 
 const Chat = (props: any) => {
@@ -15,10 +15,10 @@ const Chat = (props: any) => {
   const messagesRef = getMessagesRef(groupId);
 
   useEffect(() => {
-    unsubscribeCallback(messagesRef, setMessages);
+    unsubscribeChatCallback(messagesRef, setMessages);
   }, []);
 
-  const onSend = useCallback(onSendCallback, []);
+  const onSend = useCallback(onSendChatCallback, []);
 
   return (
     <GiftedChat
