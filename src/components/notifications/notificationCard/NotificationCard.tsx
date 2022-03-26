@@ -42,7 +42,7 @@ const NotificationCard = ({
       >
         <VStack justifyContent={'space-between'} space={1}>
           <Text style={styles.title}>{notification.title}</Text>
-          <Text>{notification.body}</Text>
+          <Text style={styles.body}>{notification.body}</Text>
           <Text style={styles.timeStamp}>
             {formatTimeFromNow(notification.timestamp)}
           </Text>
@@ -61,10 +61,10 @@ const styles = {
     width: 100%;
     text-align: center;
     text-transform: uppercase;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 600;
     color: #fff;
-    padding: 3px 0;
+    padding: 2px 0;
   `,
   requestContainerHeaderBorder: css`
     background: #a914db;
@@ -75,15 +75,19 @@ const styles = {
   container: css`
     background: #fff;
     margin-bottom: 10px;
-    padding: 10px;
-    border: 1px;
+    padding: 5px 10px;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
+    shadow-offset: 3px;
+    shadow-color: #171717;
+    shadow-opacity: 0.15;
+    shadow-radius: 8px;
   `,
   title: css`
     font-size: 18px;
     font-weight: 500;
   `,
+  body: css``,
   timeStamp: css`
     color: #979797;
     font-size: 12px;
