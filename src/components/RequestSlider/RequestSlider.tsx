@@ -43,7 +43,7 @@ const RequestSlider = ({
           flatlistRef={flatlistRef}
           mode={'all'}
           volunteerSelected={volunteerSelection}
-          requestsMap={app?.requestsMap}
+          requestsMap={app.requestsMap}
         />
       </BottomSheet>
     </View>

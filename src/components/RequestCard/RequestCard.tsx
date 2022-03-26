@@ -154,13 +154,11 @@ const RequestCard = (props: {
               >
                 {request.message ? request.message : 'Help needed'}
               </Text>
-              <Text style={RequestCardStyle.requestId}>
-                Request ID: {request.id}
-              </Text>
+              <Text style={RequestCardStyle.requestId}>RID: {request.id}</Text>
             </VStack>
             <Spacer />
             <VStack justifyContent="center" alignItems="flex-end">
-              <HStack alignItems="center" justifyContent="space-between">
+              <HStack>
                 <RequestETA
                   actions={actions}
                   request={request}
@@ -173,12 +171,8 @@ const RequestCard = (props: {
                   volunteers={app.volunteersMap}
                 />
               </HStack>
-              <HStack alignItems="center" justifyContent="center">
-                <Text
-                  bold
-                  fontSize="xs"
-                  style={RequestCardStyle.volunteersCount}
-                >
+              <HStack>
+                <Text bold style={RequestCardStyle.volunteersCount}>
                   {servedByCount} Volunteers
                 </Text>
               </HStack>
@@ -200,10 +194,13 @@ const RequestCardStyle = {
     margin-top: 5px;
   `,
   box: css`
-    margin: 3px 0;
+    margin: 5px 0;
     padding: 10px;
     border-radius: 10px;
-    border: 1px solid #d3d3d3;
+    shadow-offset: 2px;
+    shadow-color: #171717;
+    shadow-opacity: 0.1;
+    shadow-radius: 8px;
   `,
   elapsedTime: css`
     width: 50px;

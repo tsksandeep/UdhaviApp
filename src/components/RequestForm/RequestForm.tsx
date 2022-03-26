@@ -108,8 +108,14 @@ const RequestFormComponent = ({
       category: '',
       assignedVolunteerIds: [''],
     } as RequestData;
+
     await writeRequestData(requestData);
-    actions.createRequestForm({});
+    actions.createRequestForm(requestData);
+
+    let requestsMap = app.requestsMap;
+    requestsMap[requestData.id] = requestData;
+    actions.updateRequestsMap(requestsMap);
+
     navigation.navigate('Home', {});
   };
 
