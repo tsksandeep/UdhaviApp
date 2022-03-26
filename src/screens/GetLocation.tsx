@@ -4,13 +4,14 @@ import { css } from '@emotion/native';
 import PlacesAutoComplete from '../components/PlacesAutoComplete/PlacesAutoComplete';
 import {} from 'react-native-gesture-handler';
 
-const GetLocation = () => {
+const GetLocation = ({ handleClose }: { handleClose: Function }) => {
   return (
     <View style={getLocationStyles.container}>
       <ScrollView keyboardShouldPersistTaps="always">
         <PlacesAutoComplete
           styles={getLocationStyles.locationInput}
-        ></PlacesAutoComplete>
+          handleClose={handleClose}
+        />
       </ScrollView>
     </View>
   );
@@ -20,6 +21,7 @@ const getLocationStyles = {
   container: css`
     background: white;
     padding: 10px;
+    height: 100%;
   `,
   header: css`
     width: 100%;
@@ -35,7 +37,7 @@ const getLocationStyles = {
     background: white;
     flex-direction: column;
     position: relative;
-    height: 500px;
+    margin-top: 10px;
   `,
 };
 

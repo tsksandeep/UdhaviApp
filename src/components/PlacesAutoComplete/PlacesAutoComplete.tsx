@@ -1,221 +1,143 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { searchBarStyles, searchBarErrorStyles } from './constants/searchBar';
+import React, { useRef } from 'react';
 import { HStack } from 'native-base';
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  Image,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Dimensions, Text, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import {
   GooglePlacesAutocomplete,
   GooglePlacesAutocompleteRef,
 } from 'react-native-google-places-autocomplete';
 import Constants from 'expo-constants';
-import { ReactNativeStyle } from '@emotion/native';
+import { css, ReactNativeStyle } from '@emotion/native';
 import * as Location from 'expo-location';
 import { createSelector } from 'reselect';
+import { MaterialIcons } from '@expo/vector-icons';
+
+import Button from '../Button/Button';
 import { AppInitialState } from '../../store/reducers/app';
 import bindDispatch from '../../utils/actions';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { searchBarStyles } from './constants/searchBar';
 
-type Props = {
-  onSelectCoordinates?: any;
-  styles?: ReactNativeStyle;
-  error?: boolean;
-  errorText?: string;
-  onChangeText?: any;
-  app: AppInitialState;
+type PlacesAutoCompleteProps = {
   actions: any;
-  getUserLocation?: boolean;
+  app: AppInitialState;
+  styles: ReactNativeStyle;
+  handleClose: Function;
 };
 
-const screenWidth = Dimensions.get('window').width;
+const screenWidth = Dimensions.get('window').width - 3;
 const GOOGLE_PLACES_API_KEY = Constants.manifest?.extra?.GOOGLE_PLACES_API_KEY;
-const latDelta = 0.3;
-const lngDelta = 0.2;
+Location.setGoogleApiKey(GOOGLE_PLACES_API_KEY);
 
-const PlacesAutoComplete = React.forwardRef((props: Props, ref: any) => {
-  let inputRef = useRef<GooglePlacesAutocompleteRef>();
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+const PlacesAutoComplete = React.forwardRef(
+  (props: PlacesAutoCompleteProps) => {
+    const { actions, styles, handleClose } = props;
 
-  const [location, setLocation] = useState('');
-  const [errorMsg, setErrorMsg] = useState('');
-  const [address, setAddress] = useState();
+    let inputRef = useRef<GooglePlacesAutocompleteRef>(null);
 
-  async function getLatLongFromAutoComplete(apiData: any) {
-    const placeCode = apiData.place_id;
-    const reqUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeCode}&key=${GOOGLE_PLACES_API_KEY}`;
-    const response = await fetch(reqUrl);
-    const json = await response.json();
-    // props.onSelectCoordinates(json.result.geometry.location);
-    return json.result.geometry.location;
-  }
-
-  useEffect(() => {
-    if (props.getUserLocation && inputRef) {
-      getLocation(true, inputRef);
-    }
-  }, [inputRef]);
-
-  useEffect(() => {
-    fetchCurrentLocation();
-  }, []);
-
-  async function setLocationByAutoCompleteResult(apiData: any) {
-    const loc = await getLatLongFromAutoComplete(apiData);
-    const newRegion = {
-      latitude: loc.lat,
-      longitude: loc.lng,
-      latitudeDelta: latDelta,
-      longitudeDelta: lngDelta,
+    const setLocationByAutoCompleteResult = (apiData: any) => {
+      actions.updateRequestAddress(apiData.description);
     };
-    const requestForm = { ...props.app.requestForm };
-    requestForm.location.latitude = loc.lat;
-    requestForm.location.longitude = loc.lng;
-    props.actions.updateRequestAddress(apiData.description);
-    props.actions.createRequestForm(requestForm);
-    // navigation.navigate('Map', { showConfirmButton: true });
-    // if (ref) {
-    //   ref.current.animateToRegion(newRegion, 500);
-    // }
-  }
 
-  const fetchCurrentLocation = async (): Promise<void> => {
-    Location.setGoogleApiKey(GOOGLE_PLACES_API_KEY);
-    let { coords } = await Location.getCurrentPositionAsync();
-    if (coords) {
+    const fetchCurrentLocation = async (): Promise<string> => {
+      let { coords } = await Location.getCurrentPositionAsync();
+      if (!coords) {
+        return 'unable to detect location...';
+      }
+
       let { longitude, latitude } = coords;
       let regionName = await Location.reverseGeocodeAsync({
         longitude,
         latitude,
       });
       const { city, district, region, country, subregion } = regionName[0];
-      setLocation(
-        `${city || ''}, ${district || subregion || ''}, ${region || ''}, ${
-          country || ''
-        }`,
-      );
-    }
-  };
+      return `${city || ''}, ${district || subregion || ''}, ${region || ''}, ${
+        country || ''
+      }`;
+    };
 
-  const getLocation = (
-    setUserRequest?: boolean,
-    autoCompleteRef?: any,
-    returnAddress?: boolean,
-  ) => {
-    (async () => {
-      let { status } = await Location.requestPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
+    const setLocationCallback = async () => {
+      if (!inputRef || !inputRef.current) {
+        return;
       }
-      Location.setGoogleApiKey(GOOGLE_PLACES_API_KEY);
-      let { coords } = await Location.getCurrentPositionAsync();
-      if (coords) {
-        let { longitude, latitude } = coords;
-        let regionName = await Location.reverseGeocodeAsync({
-          longitude,
-          latitude,
-        });
-        const { city, district, region, country, subregion } = regionName[0];
-        const addressText = `${city || ''}, ${district || subregion || ''}, ${
-          region || ''
-        }, ${country || ''}`;
 
-        if (returnAddress) {
-          return addressText;
-        }
-        props.actions.updateRequestAddress(addressText);
-        if (setUserRequest) {
-          autoCompleteRef?.setAddressText(addressText);
-        }
-      }
-      if (!setUserRequest) {
-        const requestForm = { ...props.app.requestForm };
-        requestForm.location.latitude = coords.latitude;
-        requestForm.location.longitude = coords.longitude;
-        props.actions.createRequestForm(requestForm);
-        navigation.navigate('Map', { showConfirmButton: true });
-      }
-    })();
-  };
+      inputRef.current.setAddressText('Detecting location...');
+      const addressText = await fetchCurrentLocation();
+      actions.updateRequestAddress(addressText);
+      inputRef.current.setAddressText(addressText);
+    };
 
-  return (
-    <HStack space={1} style={props.styles || styles.search}>
-      <View style={styles.currentAddressContainer}>
-        <TouchableOpacity
-          style={styles.image}
-          onPress={() => getLocation(true, inputRef)}
-        >
-          <Image source={require('../../assets/images/gps.png')} />
-          <Text style={styles.text}>Use Current Location</Text>
+    return (
+      <>
+        <HStack space={1} style={styles || PlacesAutoCompleteStyle.search}>
+          <GooglePlacesAutocomplete
+            styles={searchBarStyles(!!styles)}
+            placeholder="Search address"
+            onPress={(data) => {
+              setLocationByAutoCompleteResult(data);
+            }}
+            ref={inputRef}
+            query={{
+              key: GOOGLE_PLACES_API_KEY,
+              language: 'en',
+              components: 'country:in',
+            }}
+            enablePoweredByContainer={false}
+          />
+        </HStack>
+        <TouchableOpacity onPress={() => setLocationCallback()}>
+          <HStack style={PlacesAutoCompleteStyle.currentAddressContainer}>
+            <MaterialIcons
+              style={PlacesAutoCompleteStyle.image}
+              name="my-location"
+              size={24}
+              color="black"
+            />
+            <Text style={PlacesAutoCompleteStyle.text}>
+              Use Current Location
+            </Text>
+          </HStack>
         </TouchableOpacity>
-        <Text style={styles.currentAddressText}>{location}</Text>
-      </View>
-      <GooglePlacesAutocomplete
-        styles={
-          props.error ? searchBarErrorStyles : searchBarStyles(!!props.styles)
-        }
-        placeholder="Search with address/pincode/anything"
-        textInputProps={
-          props?.error
-            ? {
-                placeholderTextColor: '#FF0000',
-              }
-            : {}
-        }
-        onPress={(data) => {
-          setLocationByAutoCompleteResult(data);
-        }}
-        ref={(autoCompleteRef) => {
-          inputRef = autoCompleteRef;
-        }}
-        query={{
-          key: GOOGLE_PLACES_API_KEY,
-          language: 'en',
-          components: 'country:in',
-        }}
-      />
+        <Button
+          mode="outlined"
+          onPress={() => handleClose()}
+          style={PlacesAutoCompleteStyle.closeButton}
+        >
+          Close
+        </Button>
+      </>
+    );
+  },
+);
 
-      {props.error && <Text style={{ color: 'red' }}>{props.errorText}</Text>}
-    </HStack>
-  );
-});
-
-const styles = StyleSheet.create({
-  search: {
-    position: 'absolute',
-    alignItems: 'center',
-    top: 3,
-    left: 2,
-    width: screenWidth - 3,
-    backgroundColor: 'white',
-  },
-  RegisterFormField: {
-    height: '56px',
-  },
-  image: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  text: {
-    paddingLeft: 10,
-    color: '#560cce',
-  },
-  currentAddressContainer: {
-    marginTop: 30,
-    position: 'absolute',
-    top: 50,
-    zIndex: 999,
-  },
-  currentAddressText: {
-    marginLeft: 33,
-  },
-});
+const PlacesAutoCompleteStyle = {
+  search: css`
+    position: absolute;
+    align-items: center;
+    top: 3px;
+    left: 2px;
+    width: ${screenWidth}px;
+    background-color: white;
+  `,
+  image: css`
+    margin-right: 5px;
+  `,
+  text: css`
+    color: #560cce;
+    font-size: 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    position: relative;
+    top: 3px;
+  `,
+  currentAddressContainer: css`
+    margin-top: 20px;
+  `,
+  closeButton: css`
+    margin-top: 30px;
+    margin-bottom: 20px;
+    border: 2px solid rgb(196, 34, 255);
+  `,
+};
 
 const selector = createSelector(
   (state: any) => state.app,

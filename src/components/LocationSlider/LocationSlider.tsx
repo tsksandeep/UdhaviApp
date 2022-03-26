@@ -1,12 +1,11 @@
 import React, { useMemo, useRef } from 'react';
-import { TouchableOpacity, View, Image } from 'react-native';
+import { View } from 'react-native';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { css } from '@emotion/native';
 import { AppInitialState } from '../../store/reducers/app';
 import { VolunteerSelectionInitialState } from '../../store/reducers/volunteerSelection';
 import SliderHandle from '../SliderHandle/SliderHandle';
 import GetLocation from '../../screens/GetLocation';
-import clearIcon from '../../assets/images/clear.png';
 
 const LocationSlider = ({
   backdropComponent,
@@ -20,9 +19,9 @@ const LocationSlider = ({
   showLocationSlider: boolean;
 }) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['70%'], []);
+  const snapPoints = useMemo(() => ['85%'], []);
 
-  const handleClosePress = () => {
+  const handleClose = () => {
     bottomSheetRef.current?.close();
     if (setShowLocationSlider) {
       setShowLocationSlider(false);
@@ -40,12 +39,7 @@ const LocationSlider = ({
         handleComponent={SliderHandle}
         handleStyle={RequestFormSliderStyles.handleStyle}
       >
-        <View style={RequestFormSliderStyles.clearButton}>
-          <TouchableOpacity onPress={handleClosePress}>
-            <Image source={clearIcon} style={{ height: 32, width: 32 }} />
-          </TouchableOpacity>
-        </View>
-        <GetLocation />
+        <GetLocation handleClose={handleClose} />
       </BottomSheet>
     </View>
   );

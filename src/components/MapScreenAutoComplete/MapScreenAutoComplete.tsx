@@ -192,7 +192,7 @@ const MapScreenAutoComplete = React.forwardRef((props: Props, ref: any) => {
         styles={
           props.error ? searchBarErrorStyles : searchBarStyles(!!props.styles)
         }
-        placeholder="Search with address/pincode/anything"
+        placeholder="Search address"
         textInputProps={
           props?.error
             ? {
@@ -213,8 +213,8 @@ const MapScreenAutoComplete = React.forwardRef((props: Props, ref: any) => {
           language: 'en',
           components: 'country:in',
         }}
+        enablePoweredByContainer={false}
       />
-
       {props.error && <Text style={{ color: 'red' }}>{props.errorText}</Text>}
     </HStack>
   );
