@@ -7,11 +7,11 @@ import {} from 'react-native-gesture-handler';
 const GetLocation = ({ handleClose }: { handleClose: Function }) => {
   return (
     <View style={getLocationStyles.container}>
-      <ScrollView keyboardShouldPersistTaps="always">
-        <PlacesAutoComplete
-          styles={getLocationStyles.locationInput}
-          handleClose={handleClose}
-        />
+      <ScrollView
+        keyboardShouldPersistTaps="always"
+        style={getLocationStyles.view}
+      >
+        <PlacesAutoComplete handleClose={handleClose} />
       </ScrollView>
     </View>
   );
@@ -22,6 +22,11 @@ const getLocationStyles = {
     background: white;
     padding: 10px;
     height: 100%;
+    width: 100%;
+  `,
+  view: css`
+    width: 100%;
+    overflow: visible;
   `,
   header: css`
     width: 100%;
@@ -31,13 +36,6 @@ const getLocationStyles = {
     margin-bottom: 20px;
     padding: 0 10px;
     color: #560cce;
-  `,
-  locationInput: css`
-    width: 100%;
-    background: white;
-    flex-direction: column;
-    position: relative;
-    margin-top: 10px;
   `,
 };
 

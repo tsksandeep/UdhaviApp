@@ -13,23 +13,30 @@ import { connect } from 'react-redux';
 import bindDispatch from '../../utils/actions';
 import { AppInitialState } from '../../store/reducers/app';
 
-const totalStatusBarHeight = (getStatusBarHeight() - 30).toString();
+const totalStatusBarHeight = (getStatusBarHeight() - 10).toString();
 
 const MenuBar = ({
   actions,
   app,
   showBackButton,
   showOnlyBackButton,
+  showContainerShadow,
 }: {
   actions: any;
   app: AppInitialState;
   showBackButton: boolean;
   showOnlyBackButton?: boolean;
+  showContainerShadow?: boolean;
 }) => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
+  var containerStyles = [MenuBarStyle.container];
+  if (showContainerShadow) {
+    containerStyles.push(MenuBarStyle.containerShadow);
+  }
+
   return (
-    <View style={MenuBarStyle.container}>
+    <View style={containerStyles}>
       <HStack alignItems="center" justifyContent="space-between">
         {showBackButton || showOnlyBackButton ? (
           <BackButton key={0} />
@@ -81,7 +88,16 @@ const MenuBar = ({
 
 const MenuBarStyle = {
   container: css`
-    top: ${totalStatusBarHeight}px;
+    padding: ${totalStatusBarHeight}px 10px 5px 10px;
+    margin-bottom: 5px;
+    z-index: 999;
+    background: #fdf6e4;
+  `,
+  containerShadow: css`
+    shadow-offset: 1px;
+    shadow-color: #171717;
+    shadow-opacity: 0.2;
+    shadow-radius: 3px;
   `,
   header: css`
     font-family: 'Pacifico';

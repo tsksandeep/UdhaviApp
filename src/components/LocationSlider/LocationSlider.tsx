@@ -53,7 +53,6 @@ const LocationSlider = ({
 const RequestFormSliderStyles = {
   container: css`
     flex: 1;
-    padding: 24px;
     background: #fdf6e4;
   `,
   handleStyle: css`

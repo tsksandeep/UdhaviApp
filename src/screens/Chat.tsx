@@ -67,7 +67,7 @@ const Chat = (props: any) => {
 
   return (
     <View style={ChatStyle.container}>
-      <MenuBar showBackButton={true} />
+      <MenuBar showBackButton={true} showContainerShadow />
       <GiftedChat
         scrollToBottom
         messages={messages}
@@ -93,10 +93,11 @@ const ChatStyle = {
   container: css`
     width: 100%;
     flex: 1;
-    padding: 24px 10px;
     background: #fdf6e4;
   `,
-  messageContainer: css``,
+  messageContainer: css`
+    padding: 0 10px;
+  `,
   textContainer: css`
     border-top-color: white;
     border-radius: 10px;

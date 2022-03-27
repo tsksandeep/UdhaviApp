@@ -10,7 +10,7 @@ const screenHeight = Dimensions.get('window').height;
 const Notification = () => {
   return (
     <View style={styles.container}>
-      <MenuBar showBackButton={true} />
+      <MenuBar showBackButton={true} showContainerShadow />
       <NotificationList />
     </View>
   );
@@ -23,7 +23,6 @@ const styles = {
     min-height: ${screenHeight}px;
     width: 100%;
     flex: 1;
-    padding: 24px;
     background: #fdf6e4;
   `,
 };

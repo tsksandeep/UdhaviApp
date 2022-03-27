@@ -2,7 +2,7 @@ export const phoneNumberValidator = (phoneNumber: string) => {
   phoneNumber = phoneNumber.replace(/\s/g, '').replace('+91', '');
   const re = RegExp('^[6-9]\\d{9}$');
   if (!re.test(phoneNumber)) {
-    return 'Ooops! We need a valid phone number';
+    return false;
   }
 
   return true;
@@ -12,11 +12,6 @@ export const emailValidator = (email: string) => {
   const re = /\S+@\S+\.\S+/;
   if (!email) return "Email can't be empty.";
   if (!re.test(email)) return 'Ooops! We need a valid email address.';
-  return true;
-};
-
-export const nameValidator = (name: string) => {
-  if (!name) return "Name can't be empty.";
   return true;
 };
 

@@ -13,7 +13,7 @@ export const writeUserData = async (userData: UserData): Promise<any> => {
   await setDoc(doc(usersRef, userData.userId), {
     name: userData.name,
     phoneNumber: userData.phoneNumber,
-    expoToken: userData.expoToken,
+    expoToken: userData.expoToken ? userData.expoToken : '',
   });
 
   return null;

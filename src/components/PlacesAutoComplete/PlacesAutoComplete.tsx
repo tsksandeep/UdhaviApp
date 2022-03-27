@@ -1,13 +1,13 @@
 import React, { useRef } from 'react';
 import { HStack } from 'native-base';
-import { Dimensions, Text, TouchableOpacity } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
 import {
   GooglePlacesAutocomplete,
   GooglePlacesAutocompleteRef,
 } from 'react-native-google-places-autocomplete';
 import Constants from 'expo-constants';
-import { css, ReactNativeStyle } from '@emotion/native';
+import { css } from '@emotion/native';
 import * as Location from 'expo-location';
 import { createSelector } from 'reselect';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -15,62 +15,80 @@ import { MaterialIcons } from '@expo/vector-icons';
 import Button from '../Button/Button';
 import { AppInitialState } from '../../store/reducers/app';
 import bindDispatch from '../../utils/actions';
-import { searchBarStyles } from './constants/searchBar';
 
 type PlacesAutoCompleteProps = {
   actions: any;
   app: AppInitialState;
-  styles: ReactNativeStyle;
   handleClose: Function;
 };
 
-const screenWidth = Dimensions.get('window').width - 3;
 const GOOGLE_PLACES_API_KEY = Constants.manifest?.extra?.GOOGLE_PLACES_API_KEY;
 Location.setGoogleApiKey(GOOGLE_PLACES_API_KEY);
 
-const PlacesAutoComplete = React.forwardRef(
-  (props: PlacesAutoCompleteProps) => {
-    const { actions, styles, handleClose } = props;
+const getAddressText = (
+  city: string | null,
+  district: string | null,
+  region: string | null,
+  subregion: string | null,
+  country: string | null,
+): string => {
+  var addressText = '';
+  if (city) {
+    addressText += city + ', ';
+  }
+  if (district) {
+    addressText += district + ', ';
+  } else if (subregion) {
+    addressText += subregion + ', ';
+  }
+  if (region) {
+    addressText += region;
+  } else if (country) {
+    addressText += country;
+  }
+  return addressText;
+};
 
-    let inputRef = useRef<GooglePlacesAutocompleteRef>(null);
+const PlacesAutoComplete = (props: PlacesAutoCompleteProps) => {
+  const { actions, handleClose } = props;
 
-    const setLocationByAutoCompleteResult = (apiData: any) => {
-      actions.updateRequestAddress(apiData.description);
-    };
+  let inputRef = useRef<GooglePlacesAutocompleteRef>(null);
 
-    const fetchCurrentLocation = async (): Promise<string> => {
-      let { coords } = await Location.getCurrentPositionAsync();
-      if (!coords) {
-        return 'unable to detect location...';
-      }
+  const setLocationByAutoCompleteResult = (apiData: any) => {
+    actions.updateRequestAddress(apiData.description);
+  };
 
-      let { longitude, latitude } = coords;
-      let regionName = await Location.reverseGeocodeAsync({
-        longitude,
-        latitude,
-      });
-      const { city, district, region, country, subregion } = regionName[0];
-      return `${city || ''}, ${district || subregion || ''}, ${region || ''}, ${
-        country || ''
-      }`;
-    };
+  const fetchCurrentLocation = async (): Promise<string> => {
+    let { coords } = await Location.getCurrentPositionAsync();
+    if (!coords) {
+      return 'unable to detect location...';
+    }
 
-    const setLocationCallback = async () => {
-      if (!inputRef || !inputRef.current) {
-        return;
-      }
+    let { longitude, latitude } = coords;
+    let regionName = await Location.reverseGeocodeAsync({
+      longitude,
+      latitude,
+    });
+    const { city, district, region, country, subregion } = regionName[0];
+    return getAddressText(city, district, region, subregion, country);
+  };
 
-      inputRef.current.setAddressText('Detecting location...');
-      const addressText = await fetchCurrentLocation();
-      actions.updateRequestAddress(addressText);
-      inputRef.current.setAddressText(addressText);
-    };
+  const setLocationCallback = async () => {
+    if (!inputRef || !inputRef.current) {
+      return;
+    }
 
-    return (
-      <>
-        <HStack space={1} style={styles || PlacesAutoCompleteStyle.search}>
+    inputRef.current.setAddressText('Detecting current location...');
+    const addressText = await fetchCurrentLocation();
+    actions.updateRequestAddress(addressText);
+    inputRef.current.setAddressText(addressText);
+  };
+
+  return (
+    <>
+      <HStack space={1}>
+        <View style={PlacesAutoCompleteStyle.input}>
           <GooglePlacesAutocomplete
-            styles={searchBarStyles(!!styles)}
             placeholder="Search address"
             onPress={(data) => {
               setLocationByAutoCompleteResult(data);
@@ -83,40 +101,37 @@ const PlacesAutoComplete = React.forwardRef(
             }}
             enablePoweredByContainer={false}
           />
+        </View>
+      </HStack>
+      <TouchableOpacity onPress={() => setLocationCallback()}>
+        <HStack style={PlacesAutoCompleteStyle.currentAddressContainer}>
+          <MaterialIcons
+            style={PlacesAutoCompleteStyle.image}
+            name="my-location"
+            size={24}
+            color="black"
+          />
+          <Text style={PlacesAutoCompleteStyle.text}>Use Current Location</Text>
         </HStack>
-        <TouchableOpacity onPress={() => setLocationCallback()}>
-          <HStack style={PlacesAutoCompleteStyle.currentAddressContainer}>
-            <MaterialIcons
-              style={PlacesAutoCompleteStyle.image}
-              name="my-location"
-              size={24}
-              color="black"
-            />
-            <Text style={PlacesAutoCompleteStyle.text}>
-              Use Current Location
-            </Text>
-          </HStack>
-        </TouchableOpacity>
-        <Button
-          mode="outlined"
-          onPress={() => handleClose()}
-          style={PlacesAutoCompleteStyle.closeButton}
-        >
-          Close
-        </Button>
-      </>
-    );
-  },
-);
+      </TouchableOpacity>
+      <Button
+        mode="outlined"
+        onPress={() => handleClose()}
+        style={PlacesAutoCompleteStyle.closeButton}
+      >
+        Close
+      </Button>
+    </>
+  );
+};
 
 const PlacesAutoCompleteStyle = {
-  search: css`
-    position: absolute;
-    align-items: center;
-    top: 3px;
-    left: 2px;
-    width: ${screenWidth}px;
-    background-color: white;
+  input: css`
+    width: 100%;
+    shadow-offset: 2px;
+    shadow-color: #171717;
+    shadow-opacity: 0.1;
+    shadow-radius: 8px;
   `,
   image: css`
     margin-right: 5px;

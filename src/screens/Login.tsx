@@ -88,7 +88,6 @@ const Login = (props: any) => {
         <Logo />
         <Text style={LoginStyle.header}>Welcome Back</Text>
         <TextInput
-          label="Phone"
           returnKeyType="next"
           value={phoneNumber.value}
           onChangeText={(text: string) =>
@@ -97,8 +96,9 @@ const Login = (props: any) => {
           error={!!phoneNumber.error}
           errorText={phoneNumber.error}
           autoCapitalize="none"
+          placeholder="Phone Number"
         />
-        <Button mode="contained" onPress={onLoginPressed}>
+        <Button style={LoginStyle.button} onPress={onLoginPressed}>
           Get OTP
         </Button>
         <View style={LoginStyle.row}>
@@ -116,12 +116,12 @@ const LoginStyle = {
   containerWrapper: css`
     width: 100%;
     flex: 1;
-    padding: 24px;
     background: #fdf6e4;
   `,
   container: css`
     margin-top: 50px;
     align-items: center;
+    padding: 0 10px;
   `,
   header: css`
     width: 100%;
@@ -157,6 +157,12 @@ const LoginStyle = {
   link: css`
     font-weight: bold;
     color: ${theme.colors.primary};
+  `,
+  button: css`
+    margin: 30px auto 20px auto;
+    background: #560cce;
+    border: none;
+    width: 200px;
   `,
 };
 

@@ -5,14 +5,12 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { css } from '@emotion/native';
 import { PhoneAuthProvider } from 'firebase/auth';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
-import { getToken } from 'firebase/messaging';
-import Constants from 'expo-constants';
 
 import Logo from '../components/Logo/Logo';
 import Button from '../components/Button/Button';
 import TextInput from '../components/TextInput/TextInput';
 import { theme } from '../core/theme';
-import { phoneNumberValidator, nameValidator } from '../helpers/validator';
+import { phoneNumberValidator } from '../helpers/validator';
 import { FirebaseApp, FirebaseAuth } from '../firebase/config';
 import { InvalidOtpError, UserNotExistsError } from '../errors/errors';
 import MenuBar from '../components/MenuBar/MenuBar';
@@ -42,10 +40,13 @@ const Register = (props: any) => {
   const [phoneNumber, setPhoneNumber] = useState({ value: '+91 ', error: '' });
 
   const onSignUpPressed = async () => {
-    const nameError = nameValidator(name.value);
+    if (!name.value) {
+      setName({ ...name, error: 'Please enter a valid name' });
+      return;
+    }
+
     const phoneNumberError = phoneNumberValidator(phoneNumber.value);
-    if (nameError || !phoneNumberError) {
-      setName({ ...name, error: nameError });
+    if (!phoneNumberError) {
       setPhoneNumber({ ...phoneNumber, error: 'Invalid phone number format' });
       return;
     }
@@ -97,15 +98,14 @@ const Register = (props: any) => {
         <Logo />
         <Text style={RegisterStyle.header}>Create Account</Text>
         <TextInput
-          label="Name"
           returnKeyType="next"
           value={name.value}
           onChangeText={(text: string) => setName({ value: text, error: '' })}
           error={!!name.error}
           errorText={name.error}
+          placeholder="Name"
         />
         <TextInput
-          label="Phone"
           returnKeyType="next"
           value={phoneNumber.value}
           onChangeText={(text: string) =>
@@ -114,12 +114,9 @@ const Register = (props: any) => {
           error={!!phoneNumber.error}
           errorText={phoneNumber.error}
           autoCapitalize="none"
+          placeholder="Phone Number"
         />
-        <Button
-          mode="contained"
-          onPress={onSignUpPressed}
-          style={{ marginTop: 24 }}
-        >
+        <Button style={RegisterStyle.button} onPress={onSignUpPressed}>
           Sign Up
         </Button>
         <View style={RegisterStyle.row}>
@@ -137,12 +134,12 @@ const RegisterStyle = {
   containerWrapper: css`
     width: 100%;
     flex: 1;
-    padding: 24px;
     background: #fdf6e4;
   `,
   container: css`
     margin-top: 50px;
     align-items: center;
+    padding: 0 10px;
   `,
   header: css`
     width: 100%;
@@ -169,6 +166,12 @@ const RegisterStyle = {
   link: css`
     font-weight: bold;
     color: ${theme.colors.primary};
+  `,
+  button: css`
+    margin: 30px auto 20px auto;
+    background: #560cce;
+    border: none;
+    width: 200px;
   `,
 };
 

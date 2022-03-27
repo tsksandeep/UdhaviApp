@@ -72,6 +72,7 @@ const NotificationListStyle = {
   list: css`
     margin: 15px 0;
     overflow: visible;
+    padding: 0 10px;
   `,
   logoContainer: css`
     height: 100%;

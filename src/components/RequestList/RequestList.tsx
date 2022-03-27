@@ -73,7 +73,7 @@ const RequestList = ({
 
 const RequestListStyle = {
   container: css`
-    padding: 20px 20px 40px 20px;
+    padding: 10px 10px 40px 10px;
   `,
   notFound: css`
     margin-top: 20px;

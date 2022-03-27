@@ -110,7 +110,6 @@ const OtpStyleComponent = {
   containerWrapper: css`
     width: 100%;
     flex: 1;
-    padding: 24px;
     background: #fdf6e4;
   `,
   container: css`

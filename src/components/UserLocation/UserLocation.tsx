@@ -71,18 +71,17 @@ const UserLocation = (props: Props) => {
 const UserLocationStyles = {
   container: css`
     padding: 10px 0;
-    margin-top: 10px;
   `,
   addressText: css`
     font-size: 16px;
     color: #560cce;
     position: relative;
-    left: -5px;
+    left: -10px;
   `,
   locationPin: css`
     color: #232323;
     position: relative;
-    left: -5px;
+    left: -10px;
     top: -8px;
   `,
 };

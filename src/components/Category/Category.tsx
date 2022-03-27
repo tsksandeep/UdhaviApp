@@ -20,7 +20,7 @@ const Category = ({ categoryData }: { categoryData: CategoryType }) => {
         navigation.navigate('Request', { name: categoryData.name });
       }}
     >
-      <MaterialIcons name="account-circle" size={40} color="black" />
+      <MaterialIcons name="account-circle" size={30} color="black" />
       <Text>{categoryData.name}</Text>
     </Pressable>
   );
@@ -28,6 +28,7 @@ const Category = ({ categoryData }: { categoryData: CategoryType }) => {
 
 const styles = {
   container: css`
+    max-width: 100px;
     width: 27%;
     margin: 10px;
     padding: 10px 0;

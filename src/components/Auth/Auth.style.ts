@@ -19,6 +19,12 @@ const AuthStyleComponent = {
     padding: 0 10px;
     color: #560cce;
   `,
+  button: css`
+    margin: 30px auto 20px auto;
+    background: #560cce;
+    border: none;
+    width: 200px;
+  `,
 };
 
 export default AuthStyleComponent;

@@ -11,6 +11,7 @@ import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
 import bindDispatch from '../../utils/actions';
 import { AppInitialState } from '../../store/reducers/app';
+import { View } from 'native-base';
 
 const DashboardComponent = ({
   actions,
@@ -31,20 +32,24 @@ const DashboardComponent = ({
 
   const requestSliderBackdropComponent = useCallback(() => {
     return (
-      <ScrollView
-        contentContainerStyle={DashboardComponentStyle.scrollView}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            title="Pulling latest updates..."
-          />
-        }
-      >
-        <MenuBar showBackButton={false} />
-        <UserLocation setShowLocationSlider={setShowLocationSlider} />
-        <CategoryList />
-      </ScrollView>
+      <>
+        <MenuBar showBackButton={false} showContainerShadow />
+        <ScrollView
+          contentContainerStyle={DashboardComponentStyle.scrollView}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              title="Pulling latest updates..."
+            />
+          }
+        >
+          <View style={DashboardComponentStyle.container}>
+            <UserLocation setShowLocationSlider={setShowLocationSlider} />
+            <CategoryList />
+          </View>
+        </ScrollView>
+      </>
     );
   }, []);
 
@@ -66,6 +71,9 @@ const DashboardComponent = ({
 const DashboardComponentStyle = {
   scrollView: css`
     flex: 1;
+  `,
+  container: css`
+    padding: 0 15px;
   `,
 };
 

@@ -13,12 +13,15 @@ const AuthComponent = () => {
   return (
     <View style={AuthStyleComponent.container}>
       <Logo />
-      <Text style={AuthStyleComponent.header}>Thagaval</Text>
-      <Button mode="contained" onPress={() => navigation.navigate('Login', {})}>
+      <Text style={AuthStyleComponent.header}>Udhavi</Text>
+      <Button
+        style={AuthStyleComponent.button}
+        onPress={() => navigation.navigate('Login', {})}
+      >
         Login
       </Button>
       <Button
-        mode="outlined"
+        style={AuthStyleComponent.button}
         onPress={() => navigation.navigate('Register', {})}
       >
         Sign Up

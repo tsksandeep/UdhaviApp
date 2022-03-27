@@ -7,7 +7,7 @@ import GroupList from '../components/GroupList/GroupList';
 const RequestCategory = (props: any) => {
   return (
     <View style={RequestStyle.container}>
-      <MenuBar showBackButton={true} />
+      <MenuBar showBackButton={true} showContainerShadow />
       <GroupList />
     </View>
   );
@@ -17,7 +17,6 @@ const RequestStyle = {
   container: css`
     width: 100%;
     flex: 1;
-    padding: 24px;
     background: #fdf6e4;
   `,
 };

@@ -4,7 +4,6 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { css } from '@emotion/native';
 import { CategoryType } from '../CategoryList/CategoryList.modal';
 import { groupListData } from './constants/groupListData';
-import BackButton from '../BackButton/BackButton';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
@@ -41,7 +40,7 @@ const GroupList = () => {
 const styles = {
   container: css`
     height: 100%;
-    padding-bottom: 70px;
+    padding: 0px 10px 130px 10px;
   `,
   itemContainer: css`
     flex-direction: row;

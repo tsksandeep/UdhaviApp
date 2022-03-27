@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import RequestFormSlider from '../components/RequestFormSlider/RequestFormSlider';
 import MenuBar from '../components/MenuBar/MenuBar';
 import { css } from '@emotion/native';
@@ -12,14 +12,16 @@ const Request = (props: any) => {
       backdropComponent={useCallback(() => {
         return (
           <>
-            <MenuBar showBackButton={true} />
-            <Text style={RequestStyle.heading}>{category}</Text>
-            <Text style={RequestStyle.description}>
-              Lorem ipsum dolor sit amet cotetuhfdr adipisicing elit. Iste odit
-              consequatur quisquam consectetur qufyfos. Minus reprehenderit
-              nobis, quos rerum, nulla facilis iusto maiores eveniet placeat
-              harum officiis adipisci cupiditate quaerat
-            </Text>
+            <MenuBar showBackButton={true} showContainerShadow />
+            <View style={RequestStyle.container}>
+              <Text style={RequestStyle.heading}>{category}</Text>
+              <Text style={RequestStyle.description}>
+                Lorem ipsum dolor sit amet cotetuhfdr adipisicing elit. Iste
+                odit consequatur quisquam consectetur qufyfos. Minus
+                reprehenderit nobis, quos rerum, nulla facilis iusto maiores
+                eveniet placeat harum officiis adipisci cupiditate quaerat
+              </Text>
+            </View>
           </>
         );
       }, [])}
@@ -30,6 +32,9 @@ const Request = (props: any) => {
 };
 
 const RequestStyle = {
+  container: css`
+    padding: 0 15px;
+  `,
   heading: css`
     font-family: 'Pacifico';
     font-size: 35px;
