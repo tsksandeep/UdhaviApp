@@ -1,8 +1,7 @@
 import * as Types from '../types/app';
 import { getExistingRequests } from '../shared/shared';
 import { RequestForm } from '../reducers/modal/app.modal';
-import { UserData } from '../../firebase/model';
-import { RequestsMap, VolunteersMap } from '../reducers/app';
+import { RequestData, UserData, VolunteerData } from '../../firebase/model';
 
 const changeAppLoading = (payload: boolean) => ({
   type: Types.IS_APP_LOADING,
@@ -14,7 +13,7 @@ const createRequestForm = (payload: RequestForm) => ({
   payload,
 });
 
-const updateRequestsMap = (payload: RequestsMap) => ({
+const updateRequestsMap = (payload: Map<string, RequestData>) => ({
   type: Types.UPDATE_REQUESTS_MAP,
   payload,
 });
@@ -24,7 +23,7 @@ const setInitialRequests = (phoneNumber: string) => async (dispatch: any) => {
   dispatch(updateRequestsMap(existingRequests));
 };
 
-const updateVolunteersMap = (payload: VolunteersMap) => ({
+const updateVolunteersMap = (payload: Map<string, VolunteerData>) => ({
   type: Types.UPDATE_VOLUNTEERS_MAP,
   payload,
 });

@@ -1,8 +1,4 @@
 export const phoneNumberValidator = (phoneNumber: string) => {
-  if (!phoneNumber.startsWith('+91')) {
-    return 'Phone number should start with +91';
-  }
-
   phoneNumber = phoneNumber.replace(/\s/g, '').replace('+91', '');
   const re = RegExp('^[6-9]\\d{9}$');
   if (!re.test(phoneNumber)) {

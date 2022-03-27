@@ -8,9 +8,11 @@ import SliderHandle from '../SliderHandle/SliderHandle';
 const RequestFormSlider = ({
   backdropComponent,
   snapPoints,
+  category,
 }: {
   backdropComponent: any;
   snapPoints: Array<string>;
+  category: string;
 }) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPointsMemo = useMemo(() => snapPoints, []);
@@ -33,7 +35,7 @@ const RequestFormSlider = ({
           handleComponent={SliderHandle}
           handleStyle={RequestFormSliderStyles.handleStyle}
         >
-          <RequestForm showHeading={true} />
+          <RequestForm category={category} />
         </BottomSheet>
       </View>
     </KeyboardAvoidingView>

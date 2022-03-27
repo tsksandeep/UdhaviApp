@@ -1,80 +1,47 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { css } from '@emotion/native';
 import { Text, View, Pressable, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
+import { useForm, Controller } from 'react-hook-form';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import moment from 'moment';
+import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+
 import TextInput from '../TextInput/TextInput';
 import Button from '../Button/Button';
 import bindDispatch from '../../utils/actions';
 import { phoneNumberValidator } from '../../helpers/validator';
-import { useForm, Controller } from 'react-hook-form';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import moment from 'moment';
-import { RequestCategoryImageMap } from '../../constants/constants';
-import { RequestForm } from '../../store/reducers/modal/app.modal';
 import { AppInitialState } from '../../store/reducers/app';
 import MapScreenAutoComplete from '../MapScreenAutoComplete/MapScreenAutoComplete';
-import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import MapScreen from '../MapScreen/MapScreen';
 import { generateHash } from '../../helpers/hash';
 import { LocationType, RequestData } from '../../firebase/model';
 import { writeRequestData } from '../../firebase/entity';
+import { RequestStatesMap } from '../../constants/constants';
 
 const RequestFormComponent = ({
   actions,
   app,
-  showHeading,
-  mapRef,
+  category,
 }: {
   actions: any;
   app: AppInitialState;
-  showHeading: boolean;
-  mapRef: any;
+  category: string;
 }) => {
-  const [selectedCoordinates, setSelectedCoordinates] = useState({
-    latitude: 0,
-    longitude: 0,
-  });
   const [date, setDate] = useState(new Date());
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [requestLocation, setRequestLocation] = useState({ lat: 0, lng: 0 });
-
-  useEffect(() => {
-    if (Object.values(app.requestForm).length) {
-      const { name, info, notes, requestorPhoneNumber } = app.requestForm;
-      setValue('name', name);
-      setValue('phoneNumber', requestorPhoneNumber);
-      setValue('info', info);
-      setValue('notes', notes);
-    }
-  }, []);
-
-  if (showHeading === undefined) {
-    showHeading = true;
-  }
 
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const {
     control,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm();
-
-  const getCategory = (info: string): string => {
-    const splitWords = info.split(' ');
-
-    for (let i = 0; i < splitWords.length; i++) {
-      var word = splitWords[i];
-      if (RequestCategoryImageMap[word.toLowerCase()])
-        return word.toLowerCase();
-    }
-
-    return 'Misc';
-  };
 
   const onSubmit = async (data: any) => {
     makeRequest(data);
@@ -103,9 +70,9 @@ const RequestFormComponent = ({
       } as LocationType,
       deliveryTime: requestForm.deliveryTime,
       notes: data.notes,
-      date,
-      status: '',
-      category: '',
+      date: date,
+      status: RequestStatesMap.New,
+      category: category,
       assignedVolunteerIds: [''],
     } as RequestData;
 
@@ -113,7 +80,7 @@ const RequestFormComponent = ({
     actions.createRequestForm(requestData);
 
     let requestsMap = app.requestsMap;
-    requestsMap[requestData.id] = requestData;
+    requestsMap.set(requestData.id, requestData);
     actions.updateRequestsMap(requestsMap);
 
     navigation.navigate('Home', {});
@@ -122,9 +89,7 @@ const RequestFormComponent = ({
   return (
     <BottomSheetScrollView keyboardShouldPersistTaps="handled">
       <View style={RequestFormStyle.container}>
-        {showHeading && (
-          <Text style={RequestFormStyle.header}>Submit your request</Text>
-        )}
+        <Text style={RequestFormStyle.header}>Submit your request</Text>
         <Controller
           control={control}
           name="name"
@@ -146,13 +111,12 @@ const RequestFormComponent = ({
             },
           }}
         />
-
         <Controller
           control={control}
           name="phoneNumber"
           render={({ field: { onChange, value } }) => (
             <TextInput
-              placeholder="Phone"
+              placeholder="Phone (10 digits)"
               returnKeyType="next"
               value={value}
               onChangeText={(text: string) => onChange(text)}
@@ -169,7 +133,6 @@ const RequestFormComponent = ({
             validate: (value: string) => phoneNumberValidator(value),
           }}
         />
-
         <Controller
           control={control}
           name="info"
@@ -191,7 +154,6 @@ const RequestFormComponent = ({
             },
           }}
         />
-
         <Pressable onPress={() => setShowTimePicker(true)}>
           <View pointerEvents="none">
             <TextInput
@@ -206,7 +168,6 @@ const RequestFormComponent = ({
             />
           </View>
         </Pressable>
-
         {showTimePicker && (
           <DateTimePicker
             testID="dateTimePicker"
@@ -216,7 +177,6 @@ const RequestFormComponent = ({
             onChange={onDateChange}
           />
         )}
-
         <Controller
           control={control}
           name="notes"
@@ -239,7 +199,6 @@ const RequestFormComponent = ({
             },
           }}
         />
-
         <ScrollView
           style={RequestFormStyle.autoCompleteContainer}
           keyboardShouldPersistTaps="handled"
@@ -257,7 +216,6 @@ const RequestFormComponent = ({
             setRequestLocation={setRequestLocation}
           />
         </View>
-
         <Button
           style={RequestFormStyle.submitButton}
           mode="outlined"
@@ -294,9 +252,10 @@ const RequestFormStyle = {
     line-height: 24px;
   `,
   submitButton: css`
-    margin-top: 20px;
-    margin-bottom: 20px;
-    border: 2px solid rgb(196, 34, 255);
+    margin: 30px 0px 50px 0;
+    background: #560cce;
+    border: none;
+    width: 100%;
   `,
   locationInput: css`
     width: 100%;

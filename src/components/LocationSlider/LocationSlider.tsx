@@ -1,5 +1,5 @@
 import React, { useMemo, useRef } from 'react';
-import { View } from 'react-native';
+import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { css } from '@emotion/native';
 import { AppInitialState } from '../../store/reducers/app';
@@ -19,7 +19,7 @@ const LocationSlider = ({
   showLocationSlider: boolean;
 }) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['85%'], []);
+  const snapPoints = useMemo(() => ['70%'], []);
 
   const handleClose = () => {
     bottomSheetRef.current?.close();
@@ -29,19 +29,24 @@ const LocationSlider = ({
   };
 
   return (
-    <View style={RequestFormSliderStyles.container}>
-      <BottomSheet
-        ref={bottomSheetRef}
-        index={0}
-        snapPoints={snapPoints}
-        animateOnMount={true}
-        backdropComponent={backdropComponent}
-        handleComponent={SliderHandle}
-        handleStyle={RequestFormSliderStyles.handleStyle}
-      >
-        <GetLocation handleClose={handleClose} />
-      </BottomSheet>
-    </View>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={RequestFormSliderStyles.keyboardContainer}
+    >
+      <View style={RequestFormSliderStyles.container}>
+        <BottomSheet
+          ref={bottomSheetRef}
+          index={0}
+          snapPoints={snapPoints}
+          animateOnMount={true}
+          backdropComponent={backdropComponent}
+          handleComponent={SliderHandle}
+          handleStyle={RequestFormSliderStyles.handleStyle}
+        >
+          <GetLocation handleClose={handleClose} />
+        </BottomSheet>
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -56,6 +61,9 @@ const RequestFormSliderStyles = {
   `,
   clearButton: css`
     align-items: center;
+  `,
+  keyboardContainer: css`
+    flex: 1;
   `,
 };
 

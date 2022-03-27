@@ -133,9 +133,10 @@ const PlacesAutoCompleteStyle = {
     margin-top: 20px;
   `,
   closeButton: css`
-    margin-top: 30px;
-    margin-bottom: 20px;
-    border: 2px solid rgb(196, 34, 255);
+    margin: 30px auto 20px auto;
+    background: #560cce;
+    border: none;
+    width: 200px;
   `,
 };
 

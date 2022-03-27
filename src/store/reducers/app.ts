@@ -1,25 +1,13 @@
 import { RequestData, VolunteerData } from '../../firebase/model';
 import * as Types from '../types/app';
-import {
-  RequestForm,
-  UserData,
-  Action,
-  NotificationData,
-} from './modal/app.modal';
+import { RequestForm, UserData, Action } from './modal/app.modal';
 
-export interface RequestsMap {
-  [id: string]: RequestData;
-}
-
-export interface VolunteersMap {
-  [id: string]: VolunteerData;
-}
 export interface AppInitialState {
   isAppLoading: boolean;
   requestForm: RequestForm;
   user: UserData;
-  requestsMap: RequestsMap;
-  volunteersMap: VolunteersMap;
+  requestsMap: Map<string, RequestData>;
+  volunteersMap: Map<string, VolunteerData>;
   requestAddress: string;
 }
 
@@ -35,8 +23,8 @@ export const initialState: AppInitialState = {
     requestorPhoneNumber: '',
   },
   user: { name: '', phoneNumber: '', userId: '' },
-  requestsMap: {},
-  volunteersMap: {},
+  requestsMap: new Map<string, RequestData>(),
+  volunteersMap: new Map<string, VolunteerData>(),
   requestAddress: '',
 };
 

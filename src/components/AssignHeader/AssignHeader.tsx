@@ -1,14 +1,12 @@
 import React from 'react';
 import { Pressable, Badge } from 'native-base';
-
-import { RequestsMap } from '../../store/reducers/updateRequests';
-import { VolunteersMap } from '../../store/reducers/updateVolunteers';
 import { PendingSelection } from '../../store/reducers/pendingSelection';
+import { RequestData, VolunteerData } from '../../firebase/model';
 
 interface AssignHeaderProps {
   actions: any;
-  requests: RequestsMap;
-  volunteers: VolunteersMap;
+  requests: Map<string, RequestData>;
+  volunteers: Map<string, VolunteerData>;
   pendingSelection: PendingSelection;
   entityId: string;
   assignCallback: Function;

@@ -2,9 +2,8 @@ import React from 'react';
 import { Menu, Pressable, Badge } from 'native-base';
 
 import { releaseAllVolunteersFromRequest } from '../../store/shared/shared';
-import { RequestData } from '../../firebase/model';
+import { RequestData, VolunteerData } from '../../firebase/model';
 import { RequestStates } from '../../constants/constants';
-import { RequestsMap, VolunteersMap } from '../../store/reducers/app';
 
 const getRequestStatusColor = (status: string) => {
   var colorScheme = 'warning';
@@ -61,8 +60,8 @@ const MenuItemWithAction = (props: {
 const RequestStatus = (props: {
   actions: any;
   request: RequestData;
-  requests: RequestsMap;
-  volunteers: VolunteersMap;
+  requests: Map<string, RequestData>;
+  volunteers: Map<string, VolunteerData>;
 }) => {
   const { actions, request, requests, volunteers } = props;
 

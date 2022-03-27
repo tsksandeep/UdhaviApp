@@ -2,12 +2,12 @@ import React from 'react';
 import { Pressable, Badge, HStack } from 'native-base';
 
 import { PendingSelection } from '../../store/reducers/pendingSelection';
-import { RequestsMap, VolunteersMap } from '../../store/reducers/app';
+import { RequestData, VolunteerData } from '../../firebase/model';
 
 interface ReleaseHeaderProps {
   actions: any;
-  requests: RequestsMap;
-  volunteers: VolunteersMap;
+  requests: Map<string, RequestData>;
+  volunteers: Map<string, VolunteerData>;
   pendingSelection: PendingSelection;
   entityId: string;
   releaseCallback: Function;

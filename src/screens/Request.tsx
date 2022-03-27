@@ -5,7 +5,7 @@ import MenuBar from '../components/MenuBar/MenuBar';
 import { css } from '@emotion/native';
 
 const Request = (props: any) => {
-  const name = props.route.params.name;
+  const category = props.route.params.name;
 
   return (
     <RequestFormSlider
@@ -13,7 +13,7 @@ const Request = (props: any) => {
         return (
           <>
             <MenuBar showBackButton={true} />
-            <Text style={RequestStyle.heading}>{name}</Text>
+            <Text style={RequestStyle.heading}>{category}</Text>
             <Text style={RequestStyle.description}>
               Lorem ipsum dolor sit amet cotetuhfdr adipisicing elit. Iste odit
               consequatur quisquam consectetur qufyfos. Minus reprehenderit
@@ -24,6 +24,7 @@ const Request = (props: any) => {
         );
       }, [])}
       snapPoints={['50%', '85%']}
+      category={category}
     />
   );
 };

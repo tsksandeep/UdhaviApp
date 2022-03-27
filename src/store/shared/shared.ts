@@ -13,7 +13,6 @@ import {
   assignRequestsToVolunteer,
   releaseRequestsFromVolunteer,
 } from '../../firebase/volunteers';
-import { RequestsMap, VolunteersMap } from '../reducers/app';
 import {
   initialPendingSelection,
   PendingSelection,
@@ -21,13 +20,13 @@ import {
 
 export const getExistingRequests = async (
   phoneNumber: string,
-): Promise<RequestsMap> => {
-  var requestsMap: RequestsMap = {};
+): Promise<Map<string, RequestData>> => {
+  var requestsMap: Map<string, RequestData> = new Map();
 
   const requests = await getRequestsByPhoneNumber(phoneNumber);
   requests.map((request: any) => {
     const requestData = request.data();
-    requestsMap[requestData.id] = requestData;
+    requestsMap.set(requestData.id, requestData);
   });
 
   return requestsMap;
@@ -177,8 +176,8 @@ export const getAllRequestsAssignPendingSelections = (
 
 export const assignSelectedVolunteersToRequest = async (
   actions: any,
-  requests: RequestsMap,
-  volunteers: VolunteersMap,
+  requests: Map<string, RequestData>,
+  volunteers: Map<string, VolunteerData>,
   pendingSelection: PendingSelection,
   requestId: string,
 ) => {
@@ -195,8 +194,8 @@ export const assignSelectedVolunteersToRequest = async (
 
 export const releaseSelectedVolunteersFromRequest = async (
   actions: any,
-  requests: RequestsMap,
-  volunteers: VolunteersMap,
+  requests: Map<string, RequestData>,
+  volunteers: Map<string, VolunteerData>,
   pendingSelection: PendingSelection,
   requestId: string,
 ) => {
@@ -213,8 +212,8 @@ export const releaseSelectedVolunteersFromRequest = async (
 
 export const releaseAllVolunteersFromRequest = async (
   actions: any,
-  requests: RequestsMap,
-  volunteers: VolunteersMap,
+  requests: Map<string, RequestData>,
+  volunteers: Map<string, VolunteerData>,
   requestId: string,
 ) => {
   var request = await getRequestByID(requestId);
@@ -233,8 +232,8 @@ export const releaseAllVolunteersFromRequest = async (
 
 export const assignSelectedRequestsToVolunteer = (
   actions: any,
-  requests: RequestsMap,
-  volunteers: VolunteersMap,
+  requests: Map<string, RequestData>,
+  volunteers: Map<string, VolunteerData>,
   pendingSelection: PendingSelection,
   volunteerId: string,
 ) => {
@@ -251,8 +250,8 @@ export const assignSelectedRequestsToVolunteer = (
 
 export const releaseSelectedRequestsFromVolunteer = (
   actions: any,
-  requests: RequestsMap,
-  volunteers: VolunteersMap,
+  requests: Map<string, RequestData>,
+  volunteers: Map<string, VolunteerData>,
   pendingSelection: PendingSelection,
   volunteerId: string,
 ) => {
@@ -269,8 +268,8 @@ export const releaseSelectedRequestsFromVolunteer = (
 
 export const releaseAllRequestsFromVolunteer = async (
   actions: any,
-  requests: RequestsMap,
-  volunteers: VolunteersMap,
+  requests: Map<string, RequestData>,
+  volunteers: Map<string, VolunteerData>,
   volunteerId: string,
 ) => {
   var volunteer = await getVolunteerByID(volunteerId);

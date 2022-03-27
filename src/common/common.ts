@@ -1,6 +1,5 @@
 import { Alert, Linking, Platform } from 'react-native';
 import { RequestData, VolunteerData } from '../firebase/model';
-import { RequestsMap, VolunteersMap } from '../store/reducers/app';
 import { PendingSelection } from '../store/reducers/pendingSelection';
 import { getPendingSelection } from '../store/shared/shared';
 
@@ -18,7 +17,7 @@ export const callNumber = async (phone: string) => {
 };
 
 export const getHeaderCountInfo = async (
-  entityMap: RequestsMap | VolunteersMap,
+  entityMap: Map<string, RequestData> | Map<string, RequestData>,
   entityId: string,
   getEntityByIdCallback: Function,
 ) => {

@@ -1,20 +1,13 @@
-import React from "react";
-import { Button as PaperButton } from "react-native-paper";
-import { theme } from "../../core/theme";
-
-import ButtonStyleComponent from "./Button.style";
+import React from 'react';
+import { Button as PaperButton } from 'react-native-paper';
 
 const Button = (props: any) => {
   return (
     <PaperButton
-      style={[
-        ButtonStyleComponent.button,
-        props.mode === "outlined" && { backgroundColor: theme.colors.surface },
-        props.style,
-      ]}
-      labelStyle={ButtonStyleComponent.text}
+      style={props.style}
       mode={props.mode}
       {...props}
+      color={'white'}
     />
   );
 };

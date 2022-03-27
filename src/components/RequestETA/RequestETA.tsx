@@ -9,13 +9,12 @@ import {
   View,
 } from 'native-base';
 import { RequestData } from '../../firebase/model';
-import { RequestsMap } from '../../store/reducers/app';
 import { css } from '@emotion/native';
 
 const RequestETA = (props: {
   actions: any;
   request: RequestData;
-  requests: RequestsMap;
+  requests: Map<string, RequestData>;
 }) => {
   const { actions, request, requests } = props;
   const [showModal, setShowModal] = useState(false);
@@ -51,7 +50,7 @@ const RequestETA = (props: {
               <Button
                 onPress={() => {
                   request.eta = etaText;
-                  requests[request.id] = request;
+                  requests.set(request.id, request);
                   actions.updateRequestsMap(requests);
                   setShowModal(false);
                 }}

@@ -8,7 +8,6 @@ import {
 } from 'firebase/firestore';
 
 import { RequestNotExistsError } from '../errors/errors';
-import { RequestsMap, VolunteersMap } from '../store/reducers/app';
 import { RequestData, VolunteerData } from './model';
 import { requestsRef } from './ref';
 import {
@@ -20,20 +19,20 @@ import {
 
 export const assignVolunteersToRequest = async (
   actions: any,
-  requests: RequestsMap,
-  volunteers: VolunteersMap,
+  requests: Map<string, RequestData>,
+  volunteers: Map<string, VolunteerData>,
   requestId: string,
   volunteerIds: Array<string>,
 ) => {
   const newRequest = await addVolunteersToRequest(requestId, volunteerIds);
   if (newRequest !== null) {
-    requests[newRequest.id] = newRequest;
+    requests.set(newRequest.id, newRequest);
   }
 
   const newVolunteers = await addRequestToVolunteers(requestId, volunteerIds);
   if (newVolunteers.length > 0) {
     newVolunteers.forEach((newVolunteer: VolunteerData) => {
-      volunteers[newVolunteer.id] = newVolunteer;
+      volunteers.set(newVolunteer.id, newVolunteer);
     });
   }
 
@@ -43,14 +42,14 @@ export const assignVolunteersToRequest = async (
 
 export const releaseVolunteersFromRequest = async (
   actions: any,
-  requests: RequestsMap,
-  volunteers: VolunteersMap,
+  requests: Map<string, RequestData>,
+  volunteers: Map<string, VolunteerData>,
   requestId: string,
   volunteerIds: Array<string>,
 ) => {
   const newRequest = await removeVolunteersFromRequest(requestId, volunteerIds);
   if (newRequest !== null) {
-    requests[newRequest.id] = newRequest;
+    requests.set(newRequest.id, newRequest);
   }
 
   const newVolunteers = await removeRequestFromVolunteers(
@@ -59,7 +58,7 @@ export const releaseVolunteersFromRequest = async (
   );
   if (newVolunteers.length > 0) {
     newVolunteers.forEach((newVolunteer: VolunteerData) => {
-      volunteers[newVolunteer.id] = newVolunteer;
+      volunteers.set(newVolunteer.id, newVolunteer);
     });
   }
 
