@@ -152,7 +152,7 @@ const RequestCard = (props: {
                   color: 'warmGray.200',
                 }}
               >
-                {request.message ? request.message : 'Help needed'}
+                {request.category}
               </Text>
               <Text style={RequestCardStyle.requestId}>RID: {request.id}</Text>
             </VStack>
