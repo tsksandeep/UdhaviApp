@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+// Work in progress
+
+import React, { useState, useEffect } from 'react';
 import {
   GiftedChat,
   IMessage,
@@ -12,6 +14,16 @@ import MenuBar from '../components/MenuBar/MenuBar';
 import { View } from 'react-native';
 import { css } from '@emotion/native';
 import { Ionicons } from '@expo/vector-icons';
+import {
+  getLocationAsync,
+  pickImageAsync,
+  takePictureAsync,
+} from '../common/mediaUtils';
+
+const user = {
+  _id: 1,
+  name: 'Developer',
+};
 
 const Chat = (props: any) => {
   const groupId = props.route.params.groupId;
@@ -28,10 +40,23 @@ const Chat = (props: any) => {
     unsubscribeChatCallback(messagesRef, setMessages);
   }, []);
 
-  const onSend = useCallback(onSendChatCallback, []);
+  const onSend = (messages: IMessage[]) => {
+    onSendChatCallback(messagesRef, messages, setMessages);
+  };
 
   const renderSend = (props: any) => {
     return <Send {...props} containerStyle={ChatStyle.sendButton} />;
+  };
+
+  const onSendFromUser = (messages: IMessage[] = []) => {
+    const createdAt = new Date();
+    const messagesToUpload = messages.map((message) => ({
+      ...message,
+      user,
+      createdAt,
+      _id: Math.round(Math.random() * 1000000),
+    }));
+    onSend(messagesToUpload);
   };
 
   const renderActions = (props: any) => {
@@ -43,12 +68,10 @@ const Chat = (props: any) => {
           return <Ionicons name="add-circle" size={30} color="black" />;
         }}
         options={{
-          'Choose From Library': () => {
-            console.log('Choose From Library');
-          },
-          Cancel: () => {
-            console.log('Cancel');
-          },
+          Camera: () => takePictureAsync(onSendFromUser),
+          Location: () => getLocationAsync(onSendFromUser),
+          Library: () => pickImageAsync(onSendFromUser),
+          Cancel: () => {},
         }}
         optionTintColor="#222B45"
       />
@@ -72,9 +95,7 @@ const Chat = (props: any) => {
         scrollToBottom
         messages={messages}
         showAvatarForEveryMessage={true}
-        onSend={(messages: IMessage[]) =>
-          onSend(messagesRef, messages, setMessages)
-        }
+        onSend={onSend}
         user={{
           _id: userData.userId,
           name: userData.name,
