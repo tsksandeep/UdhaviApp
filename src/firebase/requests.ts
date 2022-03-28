@@ -1,12 +1,3 @@
-import {
-  getDocs,
-  query,
-  doc,
-  where,
-  orderBy,
-  updateDoc,
-} from 'firebase/firestore';
-
 import { RequestNotExistsError } from '../errors/errors';
 import { RequestData, VolunteerData } from './model';
 import { requestsRef } from './ref';
@@ -70,24 +61,21 @@ export const updateRequestData = async (
   id: string,
   data: { [key: string]: any },
 ) => {
-  updateDoc(doc(requestsRef, id), data);
+  requestsRef.doc(id).update(data);
 };
 
 export const getAllRequests = async (): Promise<any> => {
-  return (await getDocs(query(requestsRef, orderBy('date')))).docs;
+  return (await requestsRef.orderBy('date').get()).docs;
 };
 
 export const getRequestsByPhoneNumber = async (
   phoneNumber: string,
 ): Promise<any> => {
   return (
-    await getDocs(
-      query(
-        requestsRef,
-        where('phoneNumber', '==', phoneNumber),
-        orderBy('date'),
-      ),
-    )
+    await requestsRef
+      .where('phoneNumber', '==', phoneNumber)
+      .orderBy('date')
+      .get()
   ).docs;
 };
 

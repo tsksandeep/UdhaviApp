@@ -1,18 +1,10 @@
-import {
-  getDocs,
-  orderBy,
-  query,
-  deleteDoc,
-  doc,
-  onSnapshot,
-} from 'firebase/firestore';
 import { NotificationData } from '../store/reducers/modal/app.modal';
 import { getNotificationsRef } from './ref';
 
 export const getNotifications = async (userId: string): Promise<any> => {
   const notificationsRef = getNotificationsRef(userId);
   const notificationDocs = (
-    await getDocs(query(notificationsRef, orderBy('Timestamp', 'desc')))
+    await notificationsRef.orderBy('Timestamp', 'desc').get()
   ).docs;
 
   let notifications: NotificationData[] = [];
@@ -32,7 +24,7 @@ export const getNotifications = async (userId: string): Promise<any> => {
 
 export const deleteNotification = (userId: string, notificationId: string) => {
   const notificationsRef = getNotificationsRef(userId);
-  deleteDoc(doc(notificationsRef, notificationId));
+  notificationsRef.doc(notificationId).delete();
 };
 
 export const unsubscribeNotificationCallback = (
@@ -40,10 +32,9 @@ export const unsubscribeNotificationCallback = (
   setNotificationsList: Function,
 ) => {
   const notificationsRef = getNotificationsRef(userId);
+  const queryResponse = notificationsRef.orderBy('Timestamp', 'desc');
 
-  const queryResponse = query(notificationsRef, orderBy('Timestamp', 'desc'));
-
-  const unsubscribe = onSnapshot(queryResponse, (querySnapshot: any) => {
+  const unsubscribe = queryResponse.onSnapshot((querySnapshot: any) => {
     setNotificationsList(
       querySnapshot.docs.map((doc: any) => {
         const data = doc.data();

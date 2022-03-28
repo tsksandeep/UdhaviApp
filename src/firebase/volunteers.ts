@@ -1,12 +1,3 @@
-import {
-  getDocs,
-  query,
-  doc,
-  where,
-  orderBy,
-  updateDoc,
-} from 'firebase/firestore';
-
 import { VolunteerNotExistsError } from '../errors/errors';
 import { RequestData, VolunteerData } from './model';
 import { volunteersRef } from './ref';
@@ -69,22 +60,20 @@ export const releaseRequestsFromVolunteer = async (
   actions.updateVolunteersMap(volunteers);
 };
 
-export const updateRequestData = async (
+export const updateVolunteerData = async (
   id: string,
   data: { [key: string]: any },
 ) => {
-  updateDoc(doc(volunteersRef, id), data);
+  volunteersRef.doc(id).update(data);
 };
 
 export const getAllVolunteers = async (): Promise<any> => {
-  return (await getDocs(query(volunteersRef, orderBy('lastActive')))).docs;
+  return (await volunteersRef.orderBy('lastActive').get()).docs;
 };
 
 export const getVolunteersByZone = async (zone: string): Promise<any> => {
   return (
-    await getDocs(
-      query(volunteersRef, where('zone', '==', zone), orderBy('lastActive')),
-    )
+    await volunteersRef.where('zone', '==', zone).orderBy('lastActive').get()
   ).docs;
 };
 

@@ -1,16 +1,15 @@
-import { setDoc, getDoc, doc, updateDoc } from 'firebase/firestore';
 import { UserExistsError, UserNotExistsError } from '../errors/errors';
 
 import { UserData } from './model';
 import { usersRef } from './ref';
 
 export const writeUserData = async (userData: UserData): Promise<any> => {
-  const docSnapshot = await getDoc(doc(usersRef, userData.userId));
-  if (docSnapshot.exists()) {
+  const docSnapshot = await usersRef.doc(userData.userId).get();
+  if (docSnapshot.exists) {
     return new UserExistsError(`user ${userData.userId} already exists`);
   }
 
-  await setDoc(doc(usersRef, userData.userId), {
+  await usersRef.doc(userData.userId).set({
     name: userData.name,
     phoneNumber: userData.phoneNumber,
     expoToken: userData.expoToken ? userData.expoToken : '',
@@ -22,9 +21,9 @@ export const writeUserData = async (userData: UserData): Promise<any> => {
 export const readUserData = async (
   userId: string,
 ): Promise<UserData | UserNotExistsError> => {
-  const docSnapshot = await getDoc(doc(usersRef, userId));
+  const docSnapshot = await usersRef.doc(userId).get();
   const user = docSnapshot.data();
-  if (!docSnapshot.exists() || !user?.name || !user?.phoneNumber) {
+  if (!docSnapshot.exists || !user?.name || !user?.phoneNumber) {
     return new UserNotExistsError(`user ${userId} does not exists`);
   }
 
@@ -40,5 +39,5 @@ export const updateUserData = async (
   id: string,
   data: { [key: string]: any },
 ) => {
-  await updateDoc(doc(usersRef, id), data);
+  await usersRef.doc(id).update(data);
 };

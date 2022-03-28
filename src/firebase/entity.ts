@@ -1,7 +1,6 @@
 // This file contains common functions between requests and volunteers
 // to avoid cyclic dependencies
 
-import { doc, getDoc, setDoc } from 'firebase/firestore';
 import {
   VolunteerNotExistsError,
   RequestNotExistsError,
@@ -10,9 +9,9 @@ import { RequestData, VolunteerData } from './model';
 import { requestsRef, volunteersRef } from './ref';
 
 export const getRequestByID = async (id: string): Promise<any> => {
-  const docSnapshot = await getDoc(doc(requestsRef, id));
+  const docSnapshot = await requestsRef.doc(id).get();
   const request = docSnapshot.data();
-  if (!docSnapshot.exists() || !request?.name || !request?.phoneNumber) {
+  if (!docSnapshot.exists || !request?.name || !request?.phoneNumber) {
     return new RequestNotExistsError(`request ${id} does not exists`);
   }
   return request as RequestData;
@@ -23,9 +22,9 @@ export const getVolunteerByID = async (id: string): Promise<any> => {
     return {};
   }
 
-  const docSnapshot = await getDoc(doc(volunteersRef, id));
+  const docSnapshot = await volunteersRef.doc(id).get();
   const volunteer = docSnapshot.data();
-  if (!docSnapshot.exists() || !volunteer?.name || !volunteer?.phoneNumber) {
+  if (!docSnapshot.exists || !volunteer?.name || !volunteer?.phoneNumber) {
     return new VolunteerNotExistsError(`volunteer ${id} does not exists`);
   }
 
@@ -42,11 +41,11 @@ export const getVolunteerByID = async (id: string): Promise<any> => {
 };
 
 export const writeRequestData = async (requestData: RequestData) => {
-  await setDoc(doc(requestsRef, requestData.id), requestData);
+  await requestsRef.doc(requestData.id).set(requestData);
 };
 
 export const writeVolunteerData = async (volunteerData: VolunteerData) => {
-  await setDoc(doc(volunteersRef, volunteerData.id), {
+  await requestsRef.doc(volunteerData.id).set({
     id: volunteerData.id,
     name: volunteerData.name,
     phoneNumber: volunteerData.phoneNumber,

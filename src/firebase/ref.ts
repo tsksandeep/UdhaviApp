@@ -1,15 +1,18 @@
-import { collection } from 'firebase/firestore';
-import { FirebaseDB } from './config';
+import { FirebaseDB, FirebaseStorage } from './config';
 
-export const usersRef = collection(FirebaseDB, 'users');
-export const chatsRef = collection(FirebaseDB, 'chats');
-export const requestsRef = collection(FirebaseDB, 'requests');
-export const volunteersRef = collection(FirebaseDB, 'volunteers');
+export const usersRef = FirebaseDB.collection('user');
+export const chatsRef = FirebaseDB.collection('chats');
+export const requestsRef = FirebaseDB.collection('requests');
+export const volunteersRef = FirebaseDB.collection('volunteers');
 
 export const getNotificationsRef = (userId: string) => {
-  return collection(FirebaseDB, `notifications/${userId}/list`);
+  return FirebaseDB.collection(`notifications/${userId}/list`);
 };
 
 export const getMessagesRef = (groupId: string) => {
-  return collection(FirebaseDB, `chats/${groupId}/messages`);
+  return FirebaseDB.collection(`chats/${groupId}/messages`);
+};
+
+export const getChatStorageRef = (groupId: string, filename: string) => {
+  return FirebaseStorage.ref(`chat/${groupId}/${filename}`);
 };
