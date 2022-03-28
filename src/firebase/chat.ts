@@ -29,8 +29,9 @@ export const unsubscribeChatCallback = (
         };
 
         if (data.text) info['text'] = data.text;
-        if (data.location) info['location'] = data.location;
+        if (data.file) info['file'] = data.file;
         if (data.image) info['image'] = data.image;
+        if (data.location) info['location'] = data.location;
 
         return info;
       }),

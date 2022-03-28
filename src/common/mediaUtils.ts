@@ -1,4 +1,5 @@
 import * as Location from 'expo-location';
+import * as Contacts from 'expo-contacts';
 import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
 
@@ -16,6 +17,43 @@ export const getLocationAsync = async (onSend: any) => {
   }
 };
 
+export const getAllContacts = async () => {
+  const response = await Contacts.requestPermissionsAsync();
+  if (!response.granted) {
+    return;
+  }
+
+  var data = (await Contacts.getContactsAsync()).data;
+  data = data.sort((a: Contacts.Contact, b: Contacts.Contact) => {
+    if (!a.firstName || !b.firstName) {
+      return 0;
+    }
+    if (a.firstName < b.firstName) {
+      return -1;
+    }
+    if (a.firstName > b.firstName) {
+      return 1;
+    }
+    return 0;
+  });
+
+  return data;
+};
+
+// export const pickContactAsync = async (onSend: Function) => {
+//   const response = await Contacts.requestPermissionsAsync();
+//   if (!response.granted) {
+//     return;
+//   }
+
+//   const contacts = await Contacts.getContactsAsync();
+//   if (location) {
+//     onSend([{ location: location.coords }]);
+//   }
+
+//   onSend([{ contact: contact }]);
+// };
+
 export const pickFileAsync = async (
   onSend: Function,
   setTransferring: Function,
@@ -32,7 +70,7 @@ export const pickFileAsync = async (
     setTransferring,
     setTransferred,
   );
-  onSend([{ image: result.uri }]);
+  onSend([{ file: result.uri }]);
 };
 
 export const pickImageAsync = async (

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Text } from 'react-native';
 import { Modal } from 'native-base';
 import { RequestData } from '../../firebase/model';

@@ -1,5 +1,3 @@
-// Work in progress
-
 import React, { useState, useEffect } from 'react';
 import {
   GiftedChat,
@@ -13,7 +11,15 @@ import {
 import { onSendChatCallback, unsubscribeChatCallback } from '../firebase/chat';
 import { getMessagesRef } from '../firebase/ref';
 import MenuBar from '../components/MenuBar/MenuBar';
-import { Platform, TouchableOpacity, View, Image } from 'react-native';
+import {
+  Platform,
+  TouchableOpacity,
+  View,
+  Image,
+  Text,
+  FlatList,
+} from 'react-native';
+import { Modal, Divider } from 'native-base';
 import { css } from '@emotion/native';
 import { Ionicons } from '@expo/vector-icons';
 import {
@@ -21,21 +27,19 @@ import {
   pickFileAsync,
   pickImageAsync,
   takePictureAsync,
+  // pickContactAsync,
+  getAllContacts,
 } from '../common/mediaUtils';
 import MapView, { Marker } from 'react-native-maps';
 import * as Linking from 'expo-linking';
 import RequestDefaultMarker from '../assets/marker/Request_default_marker.png';
+import { Contact, PhoneNumber } from 'expo-contacts';
 
-const CustomView = (props: any) => {
-  const { currentMessage } = props;
-  if (!currentMessage.location) {
-    return null;
-  }
-
+const LocationCustomView = (props: any) => {
   const openMaps = () => {
     const url = Platform.select({
-      ios: `http://maps.apple.com/?ll=${currentMessage.location.latitude},${currentMessage.location.longitude}`,
-      android: `http://maps.google.com/?q=${currentMessage.location.latitude},${currentMessage.location.longitude}`,
+      ios: `http://maps.apple.com/?ll=${latitude},${longitude}`,
+      android: `http://maps.google.com/?q=${latitude},${longitude}`,
     });
 
     Linking.canOpenURL(url!)
@@ -48,14 +52,15 @@ const CustomView = (props: any) => {
         console.error('An error occurred', err);
       });
   };
+
   return (
     <TouchableOpacity onPress={openMaps} style={ChatStyle.mapViewContainer}>
       <View style={ChatStyle.mapViewWrapper}>
         <MapView
           style={ChatStyle.mapView}
           region={{
-            latitude: currentMessage.location.latitude,
-            longitude: currentMessage.location.longitude,
+            latitude: props.latitude,
+            longitude: props.longitude,
             latitudeDelta: 0.02,
             longitudeDelta: 0.02,
           }}
@@ -64,8 +69,8 @@ const CustomView = (props: any) => {
         >
           <Marker
             coordinate={{
-              latitude: currentMessage.location.latitude,
-              longitude: currentMessage.location.longitude,
+              latitude: props.latitude,
+              longitude: props.longitude,
             }}
           >
             <Image
@@ -77,6 +82,36 @@ const CustomView = (props: any) => {
       </View>
     </TouchableOpacity>
   );
+};
+
+const FileCustomView = (props: any) => {
+  return (
+    <View style={ChatStyle.fileView}>
+      <Text style={ChatStyle.fileText}>{props.filename}</Text>
+    </View>
+  );
+};
+
+const CustomView = (props: any) => {
+  const { currentMessage } = props;
+
+  if (currentMessage.location) {
+    return (
+      <LocationCustomView
+        latitude={currentMessage.location.latitude}
+        longitude={currentMessage.location.longitude}
+      />
+    );
+  }
+
+  if (currentMessage.file) {
+    let filename: string = currentMessage.file.substring(
+      currentMessage.file.lastIndexOf('/') + 1,
+    );
+    return <FileCustomView filename={filename} />;
+  }
+
+  return null;
 };
 
 const Chat = (props: any) => {
@@ -93,6 +128,9 @@ const Chat = (props: any) => {
     avatar: 'https://i.pravatar.cc/300',
   };
 
+  const [contactSelected, setContactSelected] = useState(0);
+  const [contacts, setContacts] = useState<Contact[]>([]);
+  const [showContactModal, setShowContactModal] = useState(false);
   const [transferred, setTransferred] = useState(0.0);
   const [transferring, setTransferring] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -127,11 +165,20 @@ const Chat = (props: any) => {
         {...props}
         containerStyle={ChatStyle.actionButton}
         icon={() => {
-          return <Ionicons name="add-circle" size={30} color="black" />;
+          return <Ionicons name="add-circle" size={30} color="#1A66D2" />;
         }}
         options={{
           Camera: () => {
             takePictureAsync(onSendFromUser, setTransferring, setTransferred);
+          },
+          Contact: async () => {
+            const contacts = await getAllContacts();
+            if (!contacts) {
+              return;
+            }
+            setContacts(contacts);
+            setShowContactModal(true);
+            pickContactAsync(onSendFromUser);
           },
           Document: () => {
             pickFileAsync(onSendFromUser, setTransferring, setTransferred);
@@ -172,6 +219,54 @@ const Chat = (props: any) => {
   return (
     <View style={ChatStyle.container}>
       <MenuBar showBackButton={true} showContainerShadow />
+      <Modal
+        isOpen={showContactModal}
+        onClose={() => {
+          setShowContactModal(false);
+        }}
+      >
+        <Modal.Content style={{ width: '90%' }}>
+          <Modal.CloseButton />
+          <Modal.Header>
+            <Text style={ChatStyle.modalHeading}>
+              {`Select Contacts (${contactSelected})`}
+            </Text>
+          </Modal.Header>
+          <Modal.Body>
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              data={contacts}
+              keyExtractor={(_, index) => index.toString()}
+              renderItem={({ item }) => {
+                let name = item.firstName;
+                if (item.lastName) {
+                  name += ' ' + item.lastName;
+                }
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      // TODO: Add contact send functionality
+                      setContactSelected(contactSelected + 1);
+                    }}
+                  >
+                    <View style={ChatStyle.modalTextWrapper}>
+                      <Text key={0} style={ChatStyle.modalText}>
+                        {name}
+                      </Text>
+                      {item.phoneNumbers?.map(
+                        (value: PhoneNumber, index: number) => (
+                          <Text key={index + 1}>{value.number}</Text>
+                        ),
+                      )}
+                    </View>
+                    <Divider />
+                  </TouchableOpacity>
+                );
+              }}
+            />
+          </Modal.Body>
+        </Modal.Content>
+      </Modal>
       <GiftedChat
         scrollToBottom
         messages={messages}
@@ -231,6 +326,33 @@ const ChatStyle = {
   mapView: css`
     width: 100%;
     height: 100%;
+  `,
+  fileView: css`
+    width: 200px;
+    margin: 2px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
+    border-top-left-radius: 13px;
+    padding: 10px 8px;
+  `,
+  fileText: css`
+    color: #fff;
+    font-weight: 500;
+  `,
+  modalHeading: css`
+    text-align: center;
+    font-weight: 600;
+    font-size: 18px;
+    position: relative;
+    right: 10px;
+  `,
+  modalTextWrapper: css`
+    width: 100%;
+    margin: 10px 0;
+  `,
+  modalText: css`
+    font-size: 17px;
+    font-weight: 600;
   `,
 };
 
