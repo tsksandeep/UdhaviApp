@@ -4,11 +4,7 @@ import OTPInputView from '@twotalltotems/react-native-otp-input';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { css } from '@emotion/native';
-import {
-  PhoneAuthProvider,
-  signInWithCredential,
-  UserCredential,
-} from 'firebase/auth';
+import firebase from 'firebase';
 
 import Logo from '../components/Logo/Logo';
 import { FirebaseAuth } from '../firebase/config';
@@ -26,9 +22,9 @@ const Otp = (props: any) => {
   const verificationId = props.route.params.verificationId;
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
-  const registerCb = async (userCredential: UserCredential) => {
+  const registerCb = async (userCredential: firebase.auth.UserCredential) => {
     const userData: UserData = {
-      userId: userCredential.user.uid,
+      userId: userCredential.user?.uid!,
       name: props.route.params.name,
       phoneNumber: props.route.params.phoneNumber,
     };
@@ -50,8 +46,8 @@ const Otp = (props: any) => {
     });
   };
 
-  const loginCb = async (userCredential: UserCredential) => {
-    const resp = await readUserData(userCredential.user.uid);
+  const loginCb = async (userCredential: firebase.auth.UserCredential) => {
+    const resp = await readUserData(userCredential.user?.uid!);
     if (resp instanceof UserNotExistsError) {
       navigation.navigate('Register', {
         error: resp,
@@ -66,9 +62,8 @@ const Otp = (props: any) => {
 
   const onCodeFilled = async (code: string) => {
     try {
-      const userCredential = await signInWithCredential(
-        FirebaseAuth,
-        PhoneAuthProvider.credential(verificationId, code),
+      const userCredential = await FirebaseAuth.signInWithCredential(
+        firebase.auth.PhoneAuthProvider.credential(verificationId, code),
       );
       if (page === 'Register') registerCb(userCredential);
       if (page === 'Login') loginCb(userCredential);

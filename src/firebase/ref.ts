@@ -1,6 +1,6 @@
 import { FirebaseDB, FirebaseStorage } from './config';
 
-export const usersRef = FirebaseDB.collection('user');
+export const usersRef = FirebaseDB.collection('users');
 export const chatsRef = FirebaseDB.collection('chats');
 export const requestsRef = FirebaseDB.collection('requests');
 export const volunteersRef = FirebaseDB.collection('volunteers');

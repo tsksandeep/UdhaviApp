@@ -3,7 +3,7 @@ import { TouchableOpacity, View, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { css } from '@emotion/native';
-import { PhoneAuthProvider } from 'firebase/auth';
+import firebase from 'firebase';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 
 import Logo from '../components/Logo/Logo';
@@ -54,7 +54,7 @@ const Login = (props: any) => {
     }
 
     try {
-      const phoneProvider = new PhoneAuthProvider(FirebaseAuth);
+      const phoneProvider = new firebase.auth.PhoneAuthProvider(FirebaseAuth);
       const verificationId = await phoneProvider.verifyPhoneNumber(
         phoneNumber.value,
         recaptchaVerifier.current,
