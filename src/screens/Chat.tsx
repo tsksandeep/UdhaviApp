@@ -346,6 +346,7 @@ const Chat = (props: any) => {
                 });
                 setContactSelected({});
                 setContactSelectedCount(0);
+                setShowContactModal(false);
               }}
             >
               Send
@@ -385,7 +386,7 @@ const ChatStyle = {
     background: #fdf6e4;
   `,
   messageContainer: css`
-    padding: 0 10px;
+    padding: 0 5px;
   `,
   textContainer: css`
     border-top-color: white;
