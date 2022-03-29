@@ -1,9 +1,9 @@
-import { GiftedChat, IMessage } from 'react-native-gifted-chat';
+import { GiftedChat } from 'react-native-gifted-chat';
 import { getChatStorageRef } from './ref';
 
 export const onSendChatCallback = (
   messagesRef: any,
-  messages: IMessage[],
+  messages: any,
   setMessages: Function,
 ): any => {
   setMessages((previousMessages: any) =>
@@ -32,6 +32,7 @@ export const unsubscribeChatCallback = (
         if (data.file) info['file'] = data.file;
         if (data.image) info['image'] = data.image;
         if (data.location) info['location'] = data.location;
+        if (data.sharedContact) info['sharedContact'] = data.sharedContact;
 
         return info;
       }),

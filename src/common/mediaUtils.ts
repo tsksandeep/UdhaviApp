@@ -40,20 +40,6 @@ export const getAllContacts = async () => {
   return data;
 };
 
-// export const pickContactAsync = async (onSend: Function) => {
-//   const response = await Contacts.requestPermissionsAsync();
-//   if (!response.granted) {
-//     return;
-//   }
-
-//   const contacts = await Contacts.getContactsAsync();
-//   if (location) {
-//     onSend([{ location: location.coords }]);
-//   }
-
-//   onSend([{ contact: contact }]);
-// };
-
 export const pickFileAsync = async (
   onSend: Function,
   setTransferring: Function,

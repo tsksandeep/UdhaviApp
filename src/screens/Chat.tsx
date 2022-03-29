@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
   GiftedChat,
-  IMessage,
   InputToolbar,
   Send,
   Actions,
@@ -27,13 +26,14 @@ import {
   pickFileAsync,
   pickImageAsync,
   takePictureAsync,
-  // pickContactAsync,
   getAllContacts,
 } from '../common/mediaUtils';
 import MapView, { Marker } from 'react-native-maps';
 import * as Linking from 'expo-linking';
 import RequestDefaultMarker from '../assets/marker/Request_default_marker.png';
 import { Contact, PhoneNumber } from 'expo-contacts';
+import structuredClone from '@ungap/structured-clone';
+import Button from '../components/Button/Button';
 
 const LocationCustomView = (props: any) => {
   const openMaps = () => {
@@ -92,6 +92,24 @@ const FileCustomView = (props: any) => {
   );
 };
 
+const ContactCustomView = (props: any) => {
+  console.log(props);
+  return (
+    <View style={ChatStyle.contactView}>
+      <Text key={0} style={ChatStyle.contactText}>
+        {props.name}
+      </Text>
+      {props.phoneNumbers.map((number: string, index: number) => {
+        return (
+          <Text key={index + 1} style={ChatStyle.contactText}>
+            {number}
+          </Text>
+        );
+      })}
+    </View>
+  );
+};
+
 const CustomView = (props: any) => {
   const { currentMessage } = props;
 
@@ -111,6 +129,20 @@ const CustomView = (props: any) => {
     return <FileCustomView filename={filename} />;
   }
 
+  if (currentMessage.sharedContact) {
+    let name = currentMessage.sharedContact.firstName;
+    if (currentMessage.sharedContact.lastName) {
+      name += ' ' + currentMessage.sharedContact.lastName;
+    }
+
+    let phoneNumbers: any = [];
+    currentMessage.sharedContact.phoneNumbers.forEach((phoneNumber: any) => {
+      phoneNumbers.push(phoneNumber.number);
+    });
+
+    return <ContactCustomView name={name} phoneNumbers={phoneNumbers} />;
+  }
+
   return null;
 };
 
@@ -128,7 +160,8 @@ const Chat = (props: any) => {
     avatar: 'https://i.pravatar.cc/300',
   };
 
-  const [contactSelected, setContactSelected] = useState(0);
+  const [contactSelected, setContactSelected] = useState<any>({});
+  const [contactSelectedCount, setContactSelectedCount] = useState(0);
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [showContactModal, setShowContactModal] = useState(false);
   const [transferred, setTransferred] = useState(0.0);
@@ -140,7 +173,7 @@ const Chat = (props: any) => {
     unsubscribeChatCallback(messagesRef, setMessages);
   }, []);
 
-  const onSend = (messages: IMessage[]) => {
+  const onSend = (messages: any) => {
     onSendChatCallback(messagesRef, messages, setMessages);
   };
 
@@ -148,9 +181,9 @@ const Chat = (props: any) => {
     return <Send {...props} containerStyle={ChatStyle.sendButton} />;
   };
 
-  const onSendFromUser = (messages: IMessage[] = []) => {
+  const onSendFromUser = (messages: any = []) => {
     const createdAt = new Date();
-    const messagesToUpload = messages.map((message) => ({
+    const messagesToUpload = messages.map((message: any) => ({
       ...message,
       user,
       createdAt,
@@ -178,7 +211,6 @@ const Chat = (props: any) => {
             }
             setContacts(contacts);
             setShowContactModal(true);
-            pickContactAsync(onSendFromUser);
           },
           Document: () => {
             pickFileAsync(onSendFromUser, setTransferring, setTransferred);
@@ -216,6 +248,79 @@ const Chat = (props: any) => {
     );
   };
 
+  const getNumber = (item: any) => {
+    let phoneNumbers = item.phoneNumbers;
+    if (!phoneNumbers || phoneNumbers.length === 0) {
+      return null;
+    }
+
+    let number = phoneNumbers[0].number;
+    if (!number) {
+      return null;
+    }
+
+    return number;
+  };
+
+  const onPressContactCallback = (item: any) => {
+    let number = getNumber(item);
+    if (!number) {
+      return;
+    }
+
+    if (number in contactSelected) {
+      let contactsSelectedTemp = structuredClone(contactSelected);
+      delete contactsSelectedTemp[number];
+      setContactSelected(contactsSelectedTemp);
+      setContactSelectedCount(contactSelectedCount - 1);
+      return;
+    }
+
+    let contactsSelectedTemp = structuredClone(contactSelected);
+    contactsSelectedTemp[number] = item;
+    setContactSelected(contactsSelectedTemp);
+    setContactSelectedCount(contactSelectedCount + 1);
+  };
+
+  const renderContactListItem = ({ item }: { item: any }) => {
+    let name = item.firstName;
+    if (item.lastName) {
+      name += ' ' + item.lastName;
+    }
+
+    let textColor = '#000';
+    let bgColor = 'rgba(0,0,0,0)';
+
+    let number = getNumber(item);
+    if (number && number in contactSelected) {
+      textColor = '#fff';
+      bgColor = '#1A66D2';
+    }
+
+    return (
+      <TouchableOpacity onPress={() => onPressContactCallback(item)}>
+        <View
+          style={[
+            ChatStyle.modalTextWrapper,
+            {
+              backgroundColor: bgColor,
+            },
+          ]}
+        >
+          <Text key={0} style={[ChatStyle.modalText, { color: textColor }]}>
+            {name}
+          </Text>
+          {item.phoneNumbers?.map((value: PhoneNumber, index: number) => (
+            <Text style={{ color: textColor }} key={index + 1}>
+              {value.number}
+            </Text>
+          ))}
+        </View>
+        <Divider />
+      </TouchableOpacity>
+    );
+  };
+
   return (
     <View style={ChatStyle.container}>
       <MenuBar showBackButton={true} showContainerShadow />
@@ -223,46 +328,35 @@ const Chat = (props: any) => {
         isOpen={showContactModal}
         onClose={() => {
           setShowContactModal(false);
+          setContactSelected({});
+          setContactSelectedCount(0);
         }}
       >
         <Modal.Content style={{ width: '90%' }}>
           <Modal.CloseButton />
           <Modal.Header>
             <Text style={ChatStyle.modalHeading}>
-              {`Select Contacts (${contactSelected})`}
+              {`Select Contacts (${contactSelectedCount})`}
             </Text>
+            <Button
+              style={ChatStyle.contactSendButton}
+              onPress={() => {
+                Object.values(contactSelected).forEach((contact: any) => {
+                  onSendFromUser([{ sharedContact: contact }]);
+                });
+                setContactSelected({});
+                setContactSelectedCount(0);
+              }}
+            >
+              Send
+            </Button>
           </Modal.Header>
           <Modal.Body>
             <FlatList
               showsVerticalScrollIndicator={false}
               data={contacts}
               keyExtractor={(_, index) => index.toString()}
-              renderItem={({ item }) => {
-                let name = item.firstName;
-                if (item.lastName) {
-                  name += ' ' + item.lastName;
-                }
-                return (
-                  <TouchableOpacity
-                    onPress={() => {
-                      // TODO: Add contact send functionality
-                      setContactSelected(contactSelected + 1);
-                    }}
-                  >
-                    <View style={ChatStyle.modalTextWrapper}>
-                      <Text key={0} style={ChatStyle.modalText}>
-                        {name}
-                      </Text>
-                      {item.phoneNumbers?.map(
-                        (value: PhoneNumber, index: number) => (
-                          <Text key={index + 1}>{value.number}</Text>
-                        ),
-                      )}
-                    </View>
-                    <Divider />
-                  </TouchableOpacity>
-                );
-              }}
+              renderItem={renderContactListItem}
             />
           </Modal.Body>
         </Modal.Content>
@@ -339,6 +433,19 @@ const ChatStyle = {
     color: #fff;
     font-weight: 500;
   `,
+  contactView: css`
+    width: 200px;
+    margin: 2px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
+    border-top-left-radius: 13px;
+    padding: 10px 8px;
+  `,
+  contactText: css`
+    color: #fff;
+    font-weight: 500;
+    margin: 2px 0;
+  `,
   modalHeading: css`
     text-align: center;
     font-weight: 600;
@@ -348,11 +455,18 @@ const ChatStyle = {
   `,
   modalTextWrapper: css`
     width: 100%;
-    margin: 10px 0;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 10px;
   `,
   modalText: css`
     font-size: 17px;
     font-weight: 600;
+  `,
+  contactSendButton: css`
+    margin: 10px auto;
+    background: #1a66d2;
+    border: none;
   `,
 };
 
