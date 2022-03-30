@@ -64,6 +64,10 @@ export const updateRequestData = async (
   requestsRef.doc(id).update(data);
 };
 
+export const deleteRequestData = async (id: string) => {
+  requestsRef.doc(id).delete();
+};
+
 export const getAllRequests = async (): Promise<any> => {
   return (await requestsRef.orderBy('date').get()).docs;
 };
