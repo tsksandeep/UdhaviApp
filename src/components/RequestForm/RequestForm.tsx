@@ -114,17 +114,22 @@ const RequestFormComponent = ({
         <Controller
           control={control}
           name="phoneNumber"
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              placeholder="Phone (10 digits)"
-              returnKeyType="next"
-              value={value}
-              onChangeText={(text: string) => onChange(text)}
-              autoCapitalize="none"
-              error={!!errors?.phoneNumber?.message}
-              errorText={errors?.phoneNumber?.message}
-            />
-          )}
+          render={({ field: { onChange, value } }) => {
+            if (value === undefined) {
+              value = '+91 ';
+            }
+            return (
+              <TextInput
+                placeholder="Phone Number"
+                returnKeyType="next"
+                value={value}
+                onChangeText={(text: string) => onChange(text)}
+                autoCapitalize="none"
+                error={!!errors?.phoneNumber?.message}
+                errorText={errors?.phoneNumber?.message}
+              />
+            );
+          }}
           rules={{
             required: {
               value: true,

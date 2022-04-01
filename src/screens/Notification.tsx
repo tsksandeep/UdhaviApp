@@ -1,7 +1,7 @@
 import { css } from '@emotion/native';
 import React from 'react';
 import { Dimensions, View } from 'react-native';
-import NotificationList from '../components/notifications/notificationList/NotificationList';
+import NotificationList from '../components/Notifications/NotificationList/NotificationList';
 import MenuBar from '../components/MenuBar/MenuBar';
 
 const screenWidth = Dimensions.get('window').width;

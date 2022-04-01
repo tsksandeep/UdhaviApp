@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, LayoutAnimation, UIManager } from 'react-native';
 import { css } from '@emotion/native';
-import NotificationCard from '../notificationCard/NotificationCard';
+import NotificationCard from '../NotificationCard/NotificationCard';
 import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
 import bindDispatch from '../../../utils/actions';

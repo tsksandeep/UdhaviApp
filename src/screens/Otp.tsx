@@ -16,6 +16,7 @@ import {
 } from '../errors/errors';
 import MenuBar from '../components/MenuBar/MenuBar';
 import { UserData } from '../firebase/model';
+import Button from '../components/Button/Button';
 
 const Otp = (props: any) => {
   const page = props.route.params.page;
@@ -88,14 +89,15 @@ const Otp = (props: any) => {
           autoFocusOnLoad
           onCodeFilled={onCodeFilled}
         />
-        <TouchableOpacity
-          style={OtpStyleComponent.resendOtpWrapper}
+
+        <Button
+          style={OtpStyleComponent.button}
           onPress={() => {
             navigation.navigate(page, {});
           }}
         >
-          <Text style={OtpStyleComponent.resendOtp}>Resend otp</Text>
-        </TouchableOpacity>
+          Resend OTP
+        </Button>
       </View>
     </View>
   );
@@ -149,6 +151,12 @@ const OtpStyleComponent = {
   `,
   codeInputFieldHighLight: css`
     border: 2px solid #c422ff;
+  `,
+  button: css`
+    margin: 30px auto 20px auto;
+    background: #560cce;
+    border: none;
+    width: 200px;
   `,
 };
 

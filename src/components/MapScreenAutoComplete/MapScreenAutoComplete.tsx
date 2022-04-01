@@ -22,6 +22,7 @@ type Props = {
 
 const GOOGLE_PLACES_API_KEY = Constants.manifest?.extra?.GOOGLE_PLACES_API_KEY;
 Location.setGoogleApiKey(GOOGLE_PLACES_API_KEY);
+Location.requestForegroundPermissionsAsync();
 
 const getAddressText = (
   city: string | null,
