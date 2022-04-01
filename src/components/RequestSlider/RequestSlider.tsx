@@ -5,6 +5,7 @@ import { css } from '@emotion/native';
 
 import RequestList from '../RequestList/RequestList';
 import SliderHandle from '../SliderHandle/SliderHandle';
+import RequestFilter from '../RequestFilter/RequestFilter';
 
 const RequestSlider = ({ backdropComponent }: { backdropComponent: any }) => {
   const flatlistRef = useRef<BottomSheetFlatListMethods>(null);
@@ -27,6 +28,7 @@ const RequestSlider = ({ backdropComponent }: { backdropComponent: any }) => {
         handleComponent={SliderHandle}
         handleStyle={RequestFormSliderStyles.handleStyle}
       >
+        <RequestFilter />
         <RequestList flatlistRef={flatlistRef} mode={'all'} />
       </BottomSheet>
     </View>

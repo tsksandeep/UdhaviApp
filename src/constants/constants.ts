@@ -23,6 +23,15 @@ export const RequestCategoryImageMap: any = {
   accident: Accident,
 };
 
+export const RequestCategoryList = [
+  'Milk',
+  'Medical',
+  'Food',
+  'Transport',
+  'Misc',
+  'Accident',
+];
+
 export const RequestStatesMap = {
   New: 'New',
   UnderReview: 'Under Review',

@@ -12,6 +12,7 @@ import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
 import bindDispatch from '../../utils/actions';
 import { AppInitialState } from '../../store/reducers/app';
+import { TouchableOpacity } from 'react-native';
 
 const totalStatusBarHeight = (getStatusBarHeight() - 10).toString();
 
@@ -35,52 +36,54 @@ const MenuBar = ({
     containerStyles.push(MenuBarStyle.containerShadow);
   }
 
+  const HeaderEntity = () => {
+    return (
+      <>
+        <Text key={1} style={MenuBarStyle.header}>
+          Udhavi
+        </Text>
+        <HStack
+          key={2}
+          alignItems="center"
+          justifyContent="space-between"
+          space={3}
+        >
+          <Ionicons
+            name="notifications"
+            size={32}
+            color="#232323"
+            onPress={() => navigation.navigate('Notification')}
+          />
+          <Entypo
+            name="chat"
+            size={32}
+            color="#232323"
+            onPress={() =>
+              navigation.navigate('Chat', {
+                groupId: 'AU7xdWTe0CBEnPoTGy1c', // temporary
+                userData: app.user,
+              })
+            }
+          />
+        </HStack>
+      </>
+    );
+  };
+
   return (
     <View style={containerStyles}>
       <HStack alignItems="center" justifyContent="space-between">
         {showBackButton || showOnlyBackButton ? (
           <BackButton key={0} />
         ) : (
-          <MaterialIcons
-            name="account-circle"
-            size={40}
-            color="#232323"
+          <TouchableOpacity
             key={0}
-          />
+            onPress={() => navigation.navigate('Profile')}
+          >
+            <MaterialIcons name="account-circle" size={40} color="#232323" />
+          </TouchableOpacity>
         )}
-        {!showOnlyBackButton ? (
-          <>
-            <Text key={1} style={MenuBarStyle.header}>
-              Udhavi
-            </Text>
-            <HStack
-              key={2}
-              alignItems="center"
-              justifyContent="space-between"
-              space={3}
-            >
-              <Ionicons
-                name="notifications"
-                size={32}
-                color="#232323"
-                onPress={() => navigation.navigate('Notification')}
-              />
-              <Entypo
-                name="chat"
-                size={32}
-                color="#232323"
-                onPress={() =>
-                  navigation.navigate('Chat', {
-                    groupId: 'AU7xdWTe0CBEnPoTGy1c', // temporary
-                    userData: app.user,
-                  })
-                }
-              />
-            </HStack>
-          </>
-        ) : (
-          <></>
-        )}
+        {showOnlyBackButton ? <></> : <HeaderEntity />}
       </HStack>
     </View>
   );
@@ -104,7 +107,7 @@ const MenuBarStyle = {
     font-size: 35px;
     color: #560cce;
     position: relative;
-    left: 16px;
+    left: -10px;
   `,
 };
 

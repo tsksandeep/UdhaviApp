@@ -1,14 +1,14 @@
 import React from 'react';
 import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
+import { Feather } from '@expo/vector-icons';
+import { View } from 'react-native';
+import { css } from '@emotion/native';
 
 import bindDispatch from '../../utils/actions';
 import { RequestFilterInitialState } from '../../store/reducers/requestFilter';
 import ItemFilter from '../ItemFilter/ItemFilter';
-import {
-  RequestStates,
-  RequestsAssignedFilterOption,
-} from '../../constants/constants';
+import { RequestStates, RequestCategoryList } from '../../constants/constants';
 
 const RequestFilter = ({
   actions,
@@ -18,13 +18,45 @@ const RequestFilter = ({
   requestFilter: RequestFilterInitialState;
 }) => {
   return (
-    <ItemFilter
-      filter={requestFilter.requestFilter}
-      setFilterCallback={actions.updateRequestFilterInfo}
-      states={RequestStates}
-      filterOption={RequestsAssignedFilterOption}
-    />
+    <View style={RequestFilterStyle.container}>
+      <Feather
+        name="filter"
+        size={34}
+        color="#560cce"
+        style={RequestFilterStyle.icon}
+      />
+      <ItemFilter
+        name="status"
+        filter={requestFilter.requestFilter}
+        setFilterCallback={actions.updateRequestFilterInfo}
+        states={RequestStates}
+      />
+      <ItemFilter
+        name="category"
+        filter={requestFilter.requestFilter}
+        setFilterCallback={actions.updateRequestFilterInfo}
+        states={RequestCategoryList}
+      />
+      <ItemFilter
+        name="name"
+        filter={requestFilter.requestFilter}
+        setFilterCallback={actions.updateRequestFilterInfo}
+        states={[]}
+      />
+    </View>
   );
+};
+
+const RequestFilterStyle = {
+  container: css`
+    margin: 10px;
+    display: flex;
+    flex-direction: row;
+  `,
+  icon: css`
+    position: relative;
+    top: -4px;
+  `,
 };
 
 const selector = createSelector(

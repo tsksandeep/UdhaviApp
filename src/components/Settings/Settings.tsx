@@ -75,13 +75,6 @@ const Settings = ({
         {...settingsData[0]}
         defaultValue={settingsInfo.view}
       />
-      {/* Use Requestor flow logic */}
-      {/* <Divider mt="3" w="100%" />
-          <MenuOptionGroup
-            key={1}
-            {...settingsData[1]}
-            defaultValue={settingsInfo.type}
-          /> */}
     </Menu>
   );
 };

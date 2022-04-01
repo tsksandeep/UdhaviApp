@@ -1,5 +1,5 @@
 import React from 'react';
-import { Badge, VStack } from 'native-base';
+import { Text, VStack, View } from 'native-base';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { css } from '@emotion/native';
@@ -58,15 +58,10 @@ const RequestList = ({
   }
 
   return (
-    <VStack
-      style={RequestListStyle.notFound}
-      flex={1}
-      justifyContent="center"
-      alignItems="center"
-    >
-      <Badge variant="subtle" colorScheme="danger" alignSelf="center">
-        {msg}
-      </Badge>
+    <VStack style={RequestListStyle.notFound} flex={1} alignItems="center">
+      <View style={RequestListStyle.notFoundTextWrapper}>
+        <Text style={RequestListStyle.notFoundText}>{msg}</Text>
+      </View>
     </VStack>
   );
 };
@@ -77,6 +72,18 @@ const RequestListStyle = {
   `,
   notFound: css`
     margin-top: 20px;
+  `,
+  notFoundTextWrapper: css`
+    background: #d91e18;
+    border-radius: 10px;
+  `,
+  notFoundText: css`
+    font-size: 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #fff;
+    padding: 5px 10px;
+    text-align: center;
   `,
 };
 

@@ -5,10 +5,7 @@ import { connect } from 'react-redux';
 import bindDispatch from '../../utils/actions';
 import { VolunteerFilterInitialState } from '../../store/reducers/volunteerFilter';
 import ItemFilter from '../ItemFilter/ItemFilter';
-import {
-  VolunteerStates,
-  VolunteersAssignedFilterOption,
-} from '../../constants/constants';
+import { VolunteerStates } from '../../constants/constants';
 
 const VolunteerFilter = ({
   actions,
@@ -19,10 +16,10 @@ const VolunteerFilter = ({
 }) => {
   return (
     <ItemFilter
+      name="status"
       filter={volunteerFilter.volunteerFilter}
       setFilterCallback={actions.updateVolunteerFilterInfo}
       states={VolunteerStates}
-      filterOption={VolunteersAssignedFilterOption}
     />
   );
 };
