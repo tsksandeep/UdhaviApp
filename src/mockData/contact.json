@@ -1,0 +1,28 @@
+{
+  "name": "Sandeep Kumar",
+  "username": "sandeep_kumar",
+  "address": {
+    "streetA": "Abbott Shoals",
+    "streetB": "505 Winona Place",
+    "streetC": "4306 Hudson Street Suite 875",
+    "streetD": "Suite 489",
+    "city": "Ginatown",
+    "state": "Massachusetts",
+    "country": "Nepal",
+    "zipcode": "41428-0189",
+    "geo": {
+      "lat": "-75.8513",
+      "lng": "81.3262"
+    }
+  },
+  "avatar": "https://i.imgur.com/GfkNpVG.jpg",
+  "avatarBackground": "https://i.imgur.com/rXVcgTZ.jpg",
+  "tels": [
+    { "id": 1, "name": "Mobile", "number": "+91 8870785472" },
+    { "id": 2, "name": "Work", "number": "+91 8870785272" }
+  ],
+  "emails": [
+    { "id": 1, "name": "Personal", "email": "tester1@gmail.com" },
+    { "id": 2, "name": "Work", "email": "tester2@work.com" }
+  ]
+}
