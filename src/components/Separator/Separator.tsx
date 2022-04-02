@@ -1,6 +1,13 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
+const Separator = () => (
+  <View style={styles.container}>
+    <View style={styles.separatorOffset} />
+    <View style={styles.separator} />
+  </View>
+);
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
@@ -16,12 +23,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
 });
-
-const Separator = () => (
-  <View style={styles.container}>
-    <View style={styles.separatorOffset} />
-    <View style={styles.separator} />
-  </View>
-);
 
 export default Separator;

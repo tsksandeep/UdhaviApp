@@ -1,53 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { Icon } from 'react-native-elements';
-import PropTypes from 'prop-types';
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    marginBottom: 25,
-  },
-  iconRow: {
-    flex: 2,
-    justifyContent: 'center',
-  },
-  smsIcon: {
-    color: 'darkgray',
-    fontSize: 30,
-  },
-  smsRow: {
-    flex: 2,
-    justifyContent: 'flex-start',
-  },
-  telIcon: {
-    color: 'gray',
-    fontSize: 30,
-  },
-  telNameColumn: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-  },
-  telNameText: {
-    color: 'gray',
-    fontSize: 14,
-    fontWeight: '200',
-  },
-  telNumberColumn: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    marginBottom: 5,
-  },
-  telNumberText: {
-    fontSize: 16,
-  },
-  telRow: {
-    flex: 6,
-    flexDirection: 'column',
-    justifyContent: 'center',
-  },
-});
+import TelStyles from './Tel.style';
 
 const Tel = ({
   containerStyle,
@@ -56,55 +10,48 @@ const Tel = ({
   number,
   onPressSms,
   onPressTel,
+}: {
+  containerStyle: any;
+  index: number;
+  name: string;
+  number: string;
+  onPressSms: Function;
+  onPressTel: Function;
 }) => {
   return (
     <TouchableOpacity onPress={() => onPressTel(number)}>
-      <View style={[styles.container, containerStyle]}>
-        <View style={styles.iconRow}>
+      <View style={[TelStyles.container, containerStyle]}>
+        <View style={TelStyles.iconRow}>
           {index === 0 && (
             <Icon
               name="call"
               underlayColor="transparent"
-              iconStyle={styles.telIcon}
+              iconStyle={TelStyles.telIcon}
               onPress={() => onPressTel(number)}
             />
           )}
         </View>
-        <View style={styles.telRow}>
-          <View style={styles.telNumberColumn}>
-            <Text style={styles.telNumberText}>{number}</Text>
+        <View style={TelStyles.telRow}>
+          <View style={TelStyles.telNumberColumn}>
+            <Text style={TelStyles.telNumberText}>{number}</Text>
           </View>
-          <View style={styles.telNameColumn}>
+          <View style={TelStyles.telNameColumn}>
             {name.length !== 0 && (
-              <Text style={styles.telNameText}>{name}</Text>
+              <Text style={TelStyles.telNameText}>{name}</Text>
             )}
           </View>
         </View>
-        <View style={styles.smsRow}>
+        <View style={TelStyles.smsRow}>
           <Icon
             name="textsms"
             underlayColor="transparent"
-            iconStyle={styles.smsIcon}
+            iconStyle={TelStyles.smsIcon}
             onPress={() => onPressSms()}
           />
         </View>
       </View>
     </TouchableOpacity>
   );
-};
-
-Tel.propTypes = {
-  containerStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
-  index: PropTypes.number.isRequired,
-  name: PropTypes.string,
-  number: PropTypes.string.isRequired,
-  onPressSms: PropTypes.func.isRequired,
-  onPressTel: PropTypes.func.isRequired,
-};
-
-Tel.defaultProps = {
-  containerStyle: {},
-  name: null,
 };
 
 export default Tel;
