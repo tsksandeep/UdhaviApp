@@ -3,14 +3,16 @@ import { Card, Icon } from 'react-native-elements';
 import {
   FlatList,
   Image,
-  ImageBackground,
-  Linking,
   ScrollView,
   Text,
   View,
+  Platform,
+  TouchableOpacity,
 } from 'react-native';
+import * as Linking from 'expo-linking';
+
+import Button from '../../components/Button/Button';
 import Email from '../Email/Email';
-import Separator from '../Separator/Separator';
 import Tel from '../Tel/Tel';
 import ProfileMainStyles from './ProfileMain.style';
 
@@ -23,109 +25,148 @@ type profileMainProps = {
   tels: { id: number; name: string; number: string };
 };
 
-const Contact = (props: profileMainProps) => {
-  const onPressPlace = () => {
-    console.log('place');
+const ProfileMain = (props: profileMainProps) => {
+  const onPressPlace = async (location: string) => {
+    const url = Platform.select({
+      ios: `http://maps.google.com/?q=${location}`,
+      android: `http://maps.google.com/?q=${location}`,
+    });
+
+    const supported = await Linking.canOpenURL(url!);
+    if (supported) {
+      return null;
+    }
+
+    return Linking.openURL(url!);
   };
 
-  const onPressTel = (number: string) => {
-    Linking.openURL(`tel://${number}`).catch((err) =>
-      console.log('Error:', err),
+  const onPressTel = async (number: string) => {
+    const supported = await Linking.canOpenURL(`tel://${number}`);
+    if (supported) {
+      return null;
+    }
+
+    return Linking.openURL(`tel://${number}`);
+  };
+
+  const onPressSms = async (number: string) => {
+    const supported = await Linking.canOpenURL(`sms://${number}`);
+    if (supported) {
+      return null;
+    }
+
+    return Linking.openURL(`sms://${number}`);
+  };
+
+  const onPressEmail = async (email: string) => {
+    const supported = await Linking.canOpenURL(
+      `mailto://${email}?subject=subject&body=body`,
     );
-  };
+    if (supported) {
+      return null;
+    }
 
-  const onPressSms = () => {
-    console.log('sms');
-  };
-
-  const onPressEmail = (email: string) => {
-    Linking.openURL(`mailto://${email}?subject=subject&body=body`).catch(
-      (err) => console.log('Error:', err),
-    );
+    return Linking.openURL(`mailto://${email}?subject=subject&body=body`);
   };
 
   const renderHeader = () => {
     const {
       avatar,
-      avatarBackground,
       name,
       address: { city, country },
     } = props;
 
     return (
       <View style={ProfileMainStyles.headerContainer}>
-        <ImageBackground
-          style={ProfileMainStyles.headerBackgroundImage}
-          blurRadius={10}
-          source={{ uri: avatarBackground }}
-        >
+        <View style={ProfileMainStyles.headerBackgroundImage}>
           <View style={ProfileMainStyles.headerColumn}>
             <Image
               style={ProfileMainStyles.userImage}
               source={{ uri: avatar }}
             />
             <Text style={ProfileMainStyles.userNameText}>{name}</Text>
-            <View style={ProfileMainStyles.userAddressRow}>
-              <View>
-                <Icon
-                  name="place"
-                  underlayColor="transparent"
-                  iconStyle={ProfileMainStyles.placeIcon}
-                  onPress={onPressPlace}
-                />
+            <TouchableOpacity
+              onPress={() => onPressPlace(city + ',' + country)}
+            >
+              <View style={ProfileMainStyles.userAddressRow}>
+                <View>
+                  <Icon
+                    name="place"
+                    underlayColor="transparent"
+                    iconStyle={ProfileMainStyles.placeIcon}
+                  />
+                </View>
+                <View style={ProfileMainStyles.userCityRow}>
+                  <Text style={ProfileMainStyles.userCityText}>
+                    {city}, {country}
+                  </Text>
+                </View>
               </View>
-              <View style={ProfileMainStyles.userCityRow}>
-                <Text style={ProfileMainStyles.userCityText}>
-                  {city}, {country}
-                </Text>
-              </View>
-            </View>
+            </TouchableOpacity>
           </View>
-        </ImageBackground>
+        </View>
       </View>
     );
   };
 
   const renderTel = () => (
-    <FlatList
-      contentContainerStyle={ProfileMainStyles.telContainer}
-      data={props.tels}
-      renderItem={(list) => {
-        const { id, name, number } = list.item;
+    <>
+      <View style={ProfileMainStyles.cardHeading}>
+        <Text style={ProfileMainStyles.cardHeadingText}>Contact</Text>
+      </View>
+      <FlatList
+        contentContainerStyle={ProfileMainStyles.telContainer}
+        data={props.tels}
+        renderItem={(list) => {
+          const { id, name, number } = list.item;
 
-        return (
-          <Tel
-            key={`tel-${id}`}
-            index={list.index}
-            name={name}
-            number={number}
-            onPressSms={onPressSms}
-            onPressTel={onPressTel}
-          />
-        );
-      }}
-    />
+          return (
+            <Tel
+              key={`tel-${id}`}
+              index={list.index}
+              name={name}
+              number={number}
+              onPressSms={onPressSms}
+              onPressTel={onPressTel}
+            />
+          );
+        }}
+      />
+    </>
   );
 
   const renderEmail = () => (
-    <FlatList
-      contentContainerStyle={ProfileMainStyles.emailContainer}
-      data={props.emails}
-      renderItem={(list) => {
-        const { email, id, name } = list.item;
+    <>
+      <View style={ProfileMainStyles.cardHeading}>
+        <Text style={ProfileMainStyles.cardHeadingText}>Email</Text>
+      </View>
+      <FlatList
+        contentContainerStyle={ProfileMainStyles.emailContainer}
+        data={props.emails}
+        renderItem={(list) => {
+          const { email, id, name } = list.item;
 
-        return (
-          <Email
-            key={`email-${id}`}
-            index={list.index}
-            name={name}
-            email={email}
-            onPressEmail={onPressEmail}
-          />
-        );
-      }}
-    />
+          return (
+            <Email
+              key={`email-${id}`}
+              index={list.index}
+              name={name}
+              email={email}
+              onPressEmail={onPressEmail}
+            />
+          );
+        }}
+      />
+    </>
   );
+
+  const renderLogout = () => {
+    return (
+      <Button style={ProfileMainStyles.logoutButton} onPress={() => {}}>
+        Logout
+      </Button>
+    );
+  };
 
   return (
     <ScrollView
@@ -136,12 +177,12 @@ const Contact = (props: profileMainProps) => {
         <Card containerStyle={ProfileMainStyles.cardContainer}>
           {renderHeader()}
           {renderTel()}
-          {Separator()}
           {renderEmail()}
+          {renderLogout()}
         </Card>
       </View>
     </ScrollView>
   );
 };
 
-export default Contact;
+export default ProfileMain;

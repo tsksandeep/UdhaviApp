@@ -22,6 +22,7 @@ const profileMainStyles = StyleSheet.create({
   headerBackgroundImage: {
     paddingBottom: 20,
     paddingTop: 45,
+    backgroundColor: '#fdf6e4',
   },
   headerContainer: {},
   headerColumn: {
@@ -38,7 +39,7 @@ const profileMainStyles = StyleSheet.create({
     }),
   },
   placeIcon: {
-    color: 'white',
+    color: '#560cce',
     fontSize: 26,
   },
   scroll: {
@@ -57,24 +58,44 @@ const profileMainStyles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   userCityText: {
-    color: '#A5A5A5',
+    color: '#560cce',
     fontSize: 15,
     fontWeight: '600',
     textAlign: 'center',
   },
   userImage: {
-    borderColor: '#FFF',
+    borderColor: '#560cce',
     borderRadius: 85,
-    borderWidth: 3,
+    borderWidth: 5,
     height: 170,
     marginBottom: 15,
     width: 170,
   },
   userNameText: {
-    color: '#FFF',
+    color: '#560cce',
     fontSize: 22,
     fontWeight: 'bold',
     paddingBottom: 8,
+    textAlign: 'center',
+  },
+  logoutButton: {
+    backgroundColor: '#560cce',
+    borderWidth: 0,
+    borderRadius: 0,
+  },
+  cardHeading: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    width: '80%',
+    paddingTop: 10,
+    paddingBottom: 10,
+    borderColor: 'rgba(0,0,0,0.15)',
+    borderBottomWidth: 1,
+  },
+  cardHeadingText: {
+    fontSize: 18,
+    fontWeight: '600',
+    textTransform: 'uppercase',
     textAlign: 'center',
   },
 });

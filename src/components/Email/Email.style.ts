@@ -14,6 +14,7 @@ const EmailStyles = StyleSheet.create({
   emailIcon: {
     color: 'gray',
     fontSize: 30,
+    marginRight: 15,
   },
   emailNameColumn: {
     flexDirection: 'row',
@@ -25,15 +26,15 @@ const EmailStyles = StyleSheet.create({
     fontWeight: '200',
   },
   emailRow: {
-    flex: 8,
+    flex: 6,
     flexDirection: 'column',
     justifyContent: 'center',
+    marginLeft: 20,
   },
   emailText: {
     fontSize: 16,
   },
   iconRow: {
-    flex: 2,
     justifyContent: 'center',
   },
 });

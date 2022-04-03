@@ -21,16 +21,6 @@ const Tel = ({
   return (
     <TouchableOpacity onPress={() => onPressTel(number)}>
       <View style={[TelStyles.container, containerStyle]}>
-        <View style={TelStyles.iconRow}>
-          {index === 0 && (
-            <Icon
-              name="call"
-              underlayColor="transparent"
-              iconStyle={TelStyles.telIcon}
-              onPress={() => onPressTel(number)}
-            />
-          )}
-        </View>
         <View style={TelStyles.telRow}>
           <View style={TelStyles.telNumberColumn}>
             <Text style={TelStyles.telNumberText}>{number}</Text>
@@ -41,12 +31,18 @@ const Tel = ({
             )}
           </View>
         </View>
-        <View style={TelStyles.smsRow}>
+        <View style={TelStyles.iconRow}>
+          <Icon
+            name="call"
+            underlayColor="transparent"
+            iconStyle={TelStyles.telIcon}
+            onPress={() => onPressTel(number)}
+          />
           <Icon
             name="textsms"
             underlayColor="transparent"
             iconStyle={TelStyles.smsIcon}
-            onPress={() => onPressSms()}
+            onPress={() => onPressSms(number)}
           />
         </View>
       </View>

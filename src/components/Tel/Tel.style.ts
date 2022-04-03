@@ -7,20 +7,18 @@ const TelStyles = StyleSheet.create({
     marginBottom: 25,
   },
   iconRow: {
-    flex: 2,
+    flexDirection: 'row',
     justifyContent: 'center',
   },
   smsIcon: {
     color: 'darkgray',
     fontSize: 30,
-  },
-  smsRow: {
-    flex: 2,
-    justifyContent: 'flex-start',
+    marginRight: 15,
   },
   telIcon: {
     color: 'gray',
     fontSize: 30,
+    marginRight: 15,
   },
   telNameColumn: {
     flexDirection: 'row',
@@ -43,6 +41,7 @@ const TelStyles = StyleSheet.create({
     flex: 6,
     flexDirection: 'column',
     justifyContent: 'center',
+    marginLeft: 20,
   },
 });
 

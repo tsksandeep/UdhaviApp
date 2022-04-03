@@ -18,16 +18,6 @@ const Email = ({
 }) => (
   <TouchableOpacity onPress={() => onPressEmail(email)}>
     <View style={[EmailStyles.container, containerStyle]}>
-      <View style={EmailStyles.iconRow}>
-        {index === 0 && (
-          <Icon
-            name="email"
-            underlayColor="transparent"
-            iconStyle={EmailStyles.emailIcon}
-            onPress={() => onPressEmail()}
-          />
-        )}
-      </View>
       <View style={EmailStyles.emailRow}>
         <View style={EmailStyles.emailColumn}>
           <Text style={EmailStyles.emailText}>{email}</Text>
@@ -37,6 +27,14 @@ const Email = ({
             <Text style={EmailStyles.emailNameText}>{name}</Text>
           )}
         </View>
+      </View>
+      <View style={EmailStyles.iconRow}>
+        <Icon
+          name="email"
+          underlayColor="transparent"
+          iconStyle={EmailStyles.emailIcon}
+          onPress={() => onPressEmail()}
+        />
       </View>
     </View>
   </TouchableOpacity>
