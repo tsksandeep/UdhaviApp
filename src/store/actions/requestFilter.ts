@@ -1,9 +1,22 @@
-import { RequestFilter } from '../reducers/requestFilter';
 import * as Types from '../types/requestFilter';
 
-const updateRequestFilterInfo = (payload: RequestFilter) => ({
-  type: Types.UPDATE_REQUEST_FILTER,
+const updateRequestStatusFilter = (payload: string) => ({
+  type: Types.UPDATE_STATUS_FILTER,
   payload,
 });
 
-export { updateRequestFilterInfo };
+const updateRequestCategoryFilter = (payload: string) => ({
+  type: Types.UPDATE_CATEGORY_FILTER,
+  payload,
+});
+
+const updateRequestNameFilter = (payload: string) => ({
+  type: Types.UPDATE_NAME_FILTER,
+  payload,
+});
+
+export {
+  updateRequestStatusFilter,
+  updateRequestCategoryFilter,
+  updateRequestNameFilter,
+};

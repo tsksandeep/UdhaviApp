@@ -52,38 +52,6 @@ export const clearPendingSelection = (actions: any) => {
   actions.updateAssignmentOrReleaseSummary(false);
 };
 
-export const setRequestFilter = (actions: any, choice: string) => {
-  if (!choice || choice == 'all') {
-    actions.updateRequestFilterInfo(null);
-    return;
-  }
-  actions.updateRequestFilterInfo(choice);
-};
-
-export const isRequestMatchingFilter = (
-  request: RequestData,
-  requestFilter: string,
-) => {
-  if (!requestFilter) {
-    return true;
-  }
-
-  if (request.status == requestFilter) {
-    return true;
-  }
-
-  if (
-    requestFilter == VolunteersAssignedFilterOption &&
-    request?.assignedVolunteerIds
-  ) {
-    if (!(Object.keys(request.assignedVolunteerIds).length === 0)) {
-      return true;
-    }
-  }
-
-  return false;
-};
-
 export const setVolunteerFilter = (actions: any, choice: string) => {
   if (!choice || choice == 'all') {
     actions.updateVolunteerFilterInfo(null);

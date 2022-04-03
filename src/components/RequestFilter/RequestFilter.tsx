@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
 import { Feather } from '@expo/vector-icons';
@@ -27,20 +27,20 @@ const RequestFilter = ({
       />
       <ItemFilter
         name="status"
-        filter={requestFilter.filter.value}
-        setFilterCallback={actions.updateRequestFilterInfo}
+        filter={requestFilter.status}
+        setFilterCallback={actions.updateRequestStatusFilter}
         states={RequestStates}
       />
       <ItemFilter
         name="category"
-        filter={requestFilter.filter.value}
-        setFilterCallback={actions.updateRequestFilterInfo}
+        filter={requestFilter.category}
+        setFilterCallback={actions.updateRequestCategoryFilter}
         states={RequestCategoryList}
       />
       <ItemFilter
         name="name"
-        filter={requestFilter.filter.value}
-        setFilterCallback={actions.updateRequestFilterInfo}
+        filter={requestFilter.name}
+        setFilterCallback={actions.updateRequestNameFilter}
         states={[]}
       />
     </View>

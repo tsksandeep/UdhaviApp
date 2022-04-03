@@ -28,22 +28,40 @@ const RequestList = ({
   flatlistRef: React.Ref<BottomSheetFlatListMethods>;
   mode: string;
 }) => {
+  var filters = [];
+  var filterMessage = 'No requests were found';
   var filteredRequests: RequestData[] = Array.from(app.requestsMap.values());
 
-  if (requestFilter.filter.value && requestFilter.filter.value !== 'all') {
-    switch (requestFilter.filter.category) {
-      case 'status':
-        filteredRequests = filteredRequests.filter(
-          (request) => request.status === requestFilter.filter.value,
-        );
-        break;
-      case 'category':
-        filteredRequests = filteredRequests.filter(
-          (request) => request.category === requestFilter.filter.value,
-        );
-        break;
-    }
+  if (
+    requestFilter.status !== 'all' ||
+    requestFilter.category !== 'all' ||
+    requestFilter.name !== 'all'
+  ) {
+    filterMessage += ' for matching filter(s): ';
   }
+
+  if (requestFilter.status !== 'all') {
+    filters.push(requestFilter.status);
+    filteredRequests = filteredRequests.filter(
+      (request) => request.status === requestFilter.status,
+    );
+  }
+
+  if (requestFilter.category !== 'all') {
+    filters.push(requestFilter.category);
+    filteredRequests = filteredRequests.filter(
+      (request) => request.category === requestFilter.category,
+    );
+  }
+
+  if (requestFilter.name !== 'all') {
+    filters.push(requestFilter.name);
+    filteredRequests = filteredRequests.filter(
+      (request) => request.name === requestFilter.name,
+    );
+  }
+
+  filterMessage += filters.join(', ');
 
   if (filteredRequests.length > 0) {
     return (
@@ -59,17 +77,10 @@ const RequestList = ({
     );
   }
 
-  let msg;
-  if (!requestFilter.filter.value || requestFilter.filter.value == 'All') {
-    msg = `No requests were found`;
-  } else {
-    msg = `No requests were found matching filter "${requestFilter.filter.value}"`;
-  }
-
   return (
     <VStack style={RequestListStyle.notFound} flex={1} alignItems="center">
       <View style={RequestListStyle.notFoundTextWrapper}>
-        <Text style={RequestListStyle.notFoundText}>{msg}</Text>
+        <Text style={RequestListStyle.notFoundText}>{filterMessage}</Text>
       </View>
     </VStack>
   );

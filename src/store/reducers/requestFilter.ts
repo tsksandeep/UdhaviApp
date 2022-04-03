@@ -5,27 +5,27 @@ export interface Action {
   type: string;
 }
 
-export interface RequestFilter {
-  value: string;
+export interface RequestFilterInitialState {
+  status: string;
+  name: string;
   category: string;
 }
 
-export interface RequestFilterInitialState {
-  filter: RequestFilter;
-}
-
 export const initialState: RequestFilterInitialState = {
-  filter: {
-    value: '',
-    category: '',
-  },
+  status: 'all',
+  name: 'all',
+  category: 'all',
 };
 
 const reducer = (state = initialState, action: Action) => {
   const { payload, type } = action;
   switch (type) {
-    case Types.UPDATE_REQUEST_FILTER:
-      return { ...state, filter: payload };
+    case Types.UPDATE_STATUS_FILTER:
+      return { ...state, status: payload };
+    case Types.UPDATE_CATEGORY_FILTER:
+      return { ...state, category: payload };
+    case Types.UPDATE_NAME_FILTER:
+      return { ...state, name: payload };
     default:
       return state;
   }

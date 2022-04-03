@@ -12,15 +12,11 @@ interface ItemFilterProps {
 
 const ItemFilter = (props: ItemFilterProps) => {
   const { name, filter, setFilterCallback, states } = props;
-
-  const [currentFilter, setCurrentFilter] = useState(filter ? filter : 'all');
+  const [currentFilter, setCurrentFilter] = useState(filter);
 
   const setFilterCallBack = (option: string) => {
     setCurrentFilter(option);
-    setFilterCallback({
-      value: option,
-      category: name,
-    });
+    setFilterCallback(option);
   };
 
   return (

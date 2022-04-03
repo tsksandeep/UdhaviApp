@@ -7,7 +7,7 @@ export const registerForPushNotificationsAsync = async (
   userId: string,
 ): Promise<string> => {
   if (!isDevice) {
-    alert('Must use physical device for Push Notifications');
+    console.log('Must use physical device for Push Notifications');
     return '';
   }
 
@@ -20,7 +20,7 @@ export const registerForPushNotificationsAsync = async (
   }
 
   if (finalStatus !== 'granted') {
-    alert('Failed to get push token for push notification!');
+    console.log('Failed to get push token for push notification!');
     return '';
   }
 
@@ -35,7 +35,7 @@ export const registerForPushNotificationsAsync = async (
     });
   }
 
-  updateUserData(userId, { expoToken: token });
+  await updateUserData(userId, { expoToken: token });
 
   return token;
 };

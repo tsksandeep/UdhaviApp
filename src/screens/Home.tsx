@@ -99,7 +99,7 @@ const Home = ({ actions, app }: { actions: any; app: AppInitialState }) => {
 
   return (
     <View style={HomeStyle.dashboardContainer}>
-      {user.userId ? <AuthComponent /> : <DashboardComponent />}
+      {user.userId ? <DashboardComponent /> : <AuthComponent />}
     </View>
   );
 };
