@@ -112,7 +112,13 @@ const App = () => {
                 <Stack.Screen name="Request" component={Request} />
                 <Stack.Screen name="Map" component={MapScreen} />
                 <Stack.Screen name="Chat" component={Chat} />
-                <Stack.Screen name="Profile" component={Profile} />
+                <Stack.Screen
+                  name="Profile"
+                  component={Profile}
+                  options={{
+                    gestureDirection: 'horizontal-inverted',
+                  }}
+                />
                 <Stack.Screen name="GetLocation" component={GetLocation} />
                 <Stack.Screen name="Notification" component={Notification} />
                 <Stack.Screen
