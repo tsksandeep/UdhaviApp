@@ -30,10 +30,19 @@ const RequestList = ({
 }) => {
   var filteredRequests: RequestData[] = Array.from(app.requestsMap.values());
 
-  if (requestFilter.requestFilter && requestFilter.requestFilter !== 'all') {
-    filteredRequests = filteredRequests.filter(
-      (request) => request.status == requestFilter.requestFilter,
-    );
+  if (requestFilter.filter.value && requestFilter.filter.value !== 'all') {
+    switch (requestFilter.filter.category) {
+      case 'status':
+        filteredRequests = filteredRequests.filter(
+          (request) => request.status === requestFilter.filter.value,
+        );
+        break;
+      case 'category':
+        filteredRequests = filteredRequests.filter(
+          (request) => request.category === requestFilter.filter.value,
+        );
+        break;
+    }
   }
 
   if (filteredRequests.length > 0) {
@@ -51,10 +60,10 @@ const RequestList = ({
   }
 
   let msg;
-  if (!requestFilter.requestFilter || requestFilter.requestFilter == 'All') {
+  if (!requestFilter.filter.value || requestFilter.filter.value == 'All') {
     msg = `No requests were found`;
   } else {
-    msg = `No requests were found matching filter "${requestFilter.requestFilter}"`;
+    msg = `No requests were found matching filter "${requestFilter.filter.value}"`;
   }
 
   return (

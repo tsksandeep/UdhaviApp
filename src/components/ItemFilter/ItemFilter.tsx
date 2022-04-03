@@ -17,7 +17,10 @@ const ItemFilter = (props: ItemFilterProps) => {
 
   const setFilterCallBack = (option: string) => {
     setCurrentFilter(option);
-    setFilterCallback(option);
+    setFilterCallback({
+      value: option,
+      category: name,
+    });
   };
 
   return (

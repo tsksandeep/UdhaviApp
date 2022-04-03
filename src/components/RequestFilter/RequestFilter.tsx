@@ -27,19 +27,19 @@ const RequestFilter = ({
       />
       <ItemFilter
         name="status"
-        filter={requestFilter.requestFilter}
+        filter={requestFilter.filter.value}
         setFilterCallback={actions.updateRequestFilterInfo}
         states={RequestStates}
       />
       <ItemFilter
         name="category"
-        filter={requestFilter.requestFilter}
+        filter={requestFilter.filter.value}
         setFilterCallback={actions.updateRequestFilterInfo}
         states={RequestCategoryList}
       />
       <ItemFilter
         name="name"
-        filter={requestFilter.requestFilter}
+        filter={requestFilter.filter.value}
         setFilterCallback={actions.updateRequestFilterInfo}
         states={[]}
       />
