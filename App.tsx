@@ -38,10 +38,8 @@ declare global {
   type RootStackParamList = {
     // undefined is used as we are not passing parameters
     Home: {
-      // message should be always in the format
-      // <Random message number>: <Your message>
-      // Random message number is used to render the state properly
-      message?: string;
+      expoToken?: string;
+      shouldLogout?: boolean;
     };
     Otp: {
       page: string;

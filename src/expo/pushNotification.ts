@@ -1,11 +1,8 @@
 import { Platform } from 'react-native';
 import { isDevice } from 'expo-device';
 import * as Notifications from 'expo-notifications';
-import { updateUserData } from '../firebase/user';
 
-export const registerForPushNotificationsAsync = async (
-  userId: string,
-): Promise<string> => {
+export const registerForPushNotificationsAsync = async (): Promise<string> => {
   if (!isDevice) {
     console.log('Must use physical device for Push Notifications');
     return '';
@@ -34,8 +31,6 @@ export const registerForPushNotificationsAsync = async (
       lightColor: '#FF231F7C',
     });
   }
-
-  await updateUserData(userId, { expoToken: token });
 
   return token;
 };

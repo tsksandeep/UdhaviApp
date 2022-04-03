@@ -10,11 +10,14 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import * as Linking from 'expo-linking';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 import Button from '../../components/Button/Button';
 import Email from '../Email/Email';
 import Tel from '../Tel/Tel';
 import ProfileMainStyles from './ProfileMain.style';
+import { FirebaseAuth } from '../../firebase/config';
 
 type profileMainProps = {
   avatar: string;
@@ -26,6 +29,8 @@ type profileMainProps = {
 };
 
 const ProfileMain = (props: profileMainProps) => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
   const onPressPlace = async (location: string) => {
     const url = Platform.select({
       ios: `http://maps.google.com/?q=${location}`,
@@ -162,7 +167,13 @@ const ProfileMain = (props: profileMainProps) => {
 
   const renderLogout = () => {
     return (
-      <Button style={ProfileMainStyles.logoutButton} onPress={() => {}}>
+      <Button
+        style={ProfileMainStyles.logoutButton}
+        onPress={async () => {
+          await FirebaseAuth.signOut();
+          navigation.navigate('Home', { shouldLogout: true });
+        }}
+      >
         Logout
       </Button>
     );

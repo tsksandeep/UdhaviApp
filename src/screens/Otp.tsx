@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, TouchableOpacity } from 'react-native';
+import { Text, View } from 'react-native';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -17,6 +17,7 @@ import {
 import MenuBar from '../components/MenuBar/MenuBar';
 import { UserData } from '../firebase/model';
 import Button from '../components/Button/Button';
+import { registerForPushNotificationsAsync } from '../expo/pushNotification';
 
 const Otp = (props: any) => {
   const page = props.route.params.page;
@@ -41,9 +42,11 @@ const Otp = (props: any) => {
       });
       return;
     }
+
+    const expoToken = await registerForPushNotificationsAsync();
     navigation.reset({
       index: 0,
-      routes: [{ name: 'Home' }],
+      routes: [{ name: 'Home', params: { expoToken: expoToken } }],
     });
   };
 
@@ -55,9 +58,11 @@ const Otp = (props: any) => {
       });
       return;
     }
+
+    const expoToken = await registerForPushNotificationsAsync();
     navigation.reset({
       index: 0,
-      routes: [{ name: 'Home' }],
+      routes: [{ name: 'Home', params: { expoToken: expoToken } }],
     });
   };
 

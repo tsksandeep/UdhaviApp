@@ -17,9 +17,11 @@ import DashboardComponent from '../components/Dashboard/Dashboard';
 import { UserNotExistsError } from '../errors/errors';
 import bindDispatch from '../utils/actions';
 import { AppInitialState } from '../store/reducers/app';
-import { registerForPushNotificationsAsync } from '../expo/pushNotification';
+import { updateUserData } from '../firebase/user';
 
-const Home = ({ actions, app }: { actions: any; app: AppInitialState }) => {
+const Home = (props: any) => {
+  const expoToken = props.route?.params?.expoToken;
+  const shouldLogout = props.route?.params?.shouldLogout;
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   let [fontsLoaded] = useFonts({
@@ -34,7 +36,7 @@ const Home = ({ actions, app }: { actions: any; app: AppInitialState }) => {
   });
 
   useEffect(() => {
-    actions.changeAppLoading(false);
+    props.actions.changeAppLoading(false);
   }, []);
 
   useEffect(() => {
@@ -42,18 +44,17 @@ const Home = ({ actions, app }: { actions: any; app: AppInitialState }) => {
       try {
         if (user) {
           const resp = await readUserData(user.uid);
-          actions.updateUserData(resp);
+          props.actions.updateUserData(resp);
           if (resp instanceof UserNotExistsError) {
             setLoading(false);
             return;
           }
 
-          const expoToken = await registerForPushNotificationsAsync(user.uid);
-          if (expoToken !== '') {
-            resp.expoToken = expoToken;
+          if (expoToken && resp.expoToken !== expoToken) {
+            await updateUserData(user.uid, { expoToken: expoToken });
           }
 
-          await actions.setInitialRequests(resp.phoneNumber);
+          await props.actions.setInitialRequests(resp.phoneNumber);
 
           setUser(resp);
           setLoading(false);
@@ -99,7 +100,11 @@ const Home = ({ actions, app }: { actions: any; app: AppInitialState }) => {
 
   return (
     <View style={HomeStyle.dashboardContainer}>
-      {user.userId ? <DashboardComponent /> : <AuthComponent />}
+      {user.userId && !shouldLogout ? (
+        <DashboardComponent />
+      ) : (
+        <AuthComponent />
+      )}
     </View>
   );
 };
