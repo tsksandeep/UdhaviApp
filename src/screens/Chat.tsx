@@ -83,7 +83,7 @@ const Chat = (props: any) => {
             setTransferred={setTransferred}
           />
         )}
-        renderComposer={() => (
+        renderComposer={(props: any) => (
           <RenderComposer
             {...props}
             transferring={transferring}

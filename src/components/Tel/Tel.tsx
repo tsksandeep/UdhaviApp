@@ -1,17 +1,16 @@
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
-import { Icon } from 'react-native-elements';
+import { Text, View, TouchableOpacity } from 'react-native';
+import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
+
 import TelStyles from './Tel.style';
 
 const Tel = ({
-  containerStyle,
   index,
   name,
   number,
   onPressSms,
   onPressTel,
 }: {
-  containerStyle: any;
   index: number;
   name: string;
   number: string;
@@ -19,34 +18,30 @@ const Tel = ({
   onPressTel: Function;
 }) => {
   return (
-    <TouchableOpacity onPress={() => onPressTel(number)}>
-      <View style={[TelStyles.container, containerStyle]}>
-        <View style={TelStyles.telRow}>
-          <View style={TelStyles.telNumberColumn}>
-            <Text style={TelStyles.telNumberText}>{number}</Text>
-          </View>
-          <View style={TelStyles.telNameColumn}>
-            {name.length !== 0 && (
-              <Text style={TelStyles.telNameText}>{name}</Text>
-            )}
-          </View>
+    <View style={TelStyles.container}>
+      <View style={TelStyles.telRow}>
+        <View style={TelStyles.telNumberColumn}>
+          <Text style={TelStyles.telNumberText}>{number}</Text>
         </View>
-        <View style={TelStyles.iconRow}>
-          <Icon
-            name="call"
-            underlayColor="transparent"
-            iconStyle={TelStyles.telIcon}
-            onPress={() => onPressTel(number)}
-          />
-          <Icon
-            name="textsms"
-            underlayColor="transparent"
-            iconStyle={TelStyles.smsIcon}
-            onPress={() => onPressSms(number)}
-          />
+        <View style={TelStyles.telNameColumn}>
+          {name.length !== 0 && (
+            <Text style={TelStyles.telNameText}>{name}</Text>
+          )}
         </View>
       </View>
-    </TouchableOpacity>
+      <View style={TelStyles.iconRow}>
+        <TouchableOpacity onPress={() => onPressTel(number)}>
+          <FontAwesome name="phone" size={24} style={TelStyles.telIcon} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => onPressSms(number)}>
+          <MaterialCommunityIcons
+            name="message"
+            size={24}
+            style={TelStyles.smsIcon}
+          />
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };
 

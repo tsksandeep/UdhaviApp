@@ -11,12 +11,12 @@ const TelStyles = StyleSheet.create({
     justifyContent: 'center',
   },
   smsIcon: {
-    color: 'darkgray',
+    color: 'black',
     fontSize: 30,
     marginRight: 15,
   },
   telIcon: {
-    color: 'gray',
+    color: 'black',
     fontSize: 30,
     marginRight: 15,
   },
@@ -25,9 +25,9 @@ const TelStyles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   telNameText: {
-    color: 'gray',
+    color: 'black',
     fontSize: 14,
-    fontWeight: '200',
+    fontWeight: '300',
   },
   telNumberColumn: {
     flexDirection: 'row',
@@ -36,6 +36,7 @@ const TelStyles = StyleSheet.create({
   },
   telNumberText: {
     fontSize: 16,
+    fontWeight: '600',
   },
   telRow: {
     flex: 6,

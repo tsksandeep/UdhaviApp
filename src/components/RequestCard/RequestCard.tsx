@@ -26,7 +26,7 @@ import {
   setPendingSelection,
 } from '../../store/shared/shared';
 import {
-  callNumber,
+  onPressTel,
   elapsedSecondsFromNow,
   secondsToHms,
 } from '../../common/common';

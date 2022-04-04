@@ -12,7 +12,7 @@ const EmailStyles = StyleSheet.create({
     marginBottom: 5,
   },
   emailIcon: {
-    color: 'gray',
+    color: 'black',
     fontSize: 30,
     marginRight: 15,
   },
@@ -21,9 +21,9 @@ const EmailStyles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   emailNameText: {
-    color: 'gray',
+    color: 'black',
     fontSize: 14,
-    fontWeight: '200',
+    fontWeight: '300',
   },
   emailRow: {
     flex: 6,
@@ -33,6 +33,7 @@ const EmailStyles = StyleSheet.create({
   },
   emailText: {
     fontSize: 16,
+    fontWeight: '600',
   },
   iconRow: {
     justifyContent: 'center',

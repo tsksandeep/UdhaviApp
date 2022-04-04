@@ -1,23 +1,28 @@
 import React from 'react';
-import { Card, Icon } from 'react-native-elements';
+import { Card } from 'react-native-elements';
 import {
   FlatList,
   Image,
   ScrollView,
   Text,
   View,
-  Platform,
   TouchableOpacity,
 } from 'react-native';
-import * as Linking from 'expo-linking';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { Entypo } from '@expo/vector-icons';
 
 import Button from '../../components/Button/Button';
 import Email from '../Email/Email';
 import Tel from '../Tel/Tel';
 import ProfileMainStyles from './ProfileMain.style';
 import { FirebaseAuth } from '../../firebase/config';
+import {
+  onPressEmail,
+  onPressPlace,
+  onPressSms,
+  onPressTel,
+} from '../../common/common';
 
 type profileMainProps = {
   avatar: string;
@@ -30,49 +35,6 @@ type profileMainProps = {
 
 const ProfileMain = (props: profileMainProps) => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-
-  const onPressPlace = async (location: string) => {
-    const url = Platform.select({
-      ios: `http://maps.google.com/?q=${location}`,
-      android: `http://maps.google.com/?q=${location}`,
-    });
-
-    const supported = await Linking.canOpenURL(url!);
-    if (supported) {
-      return null;
-    }
-
-    return Linking.openURL(url!);
-  };
-
-  const onPressTel = async (number: string) => {
-    const supported = await Linking.canOpenURL(`tel://${number}`);
-    if (supported) {
-      return null;
-    }
-
-    return Linking.openURL(`tel://${number}`);
-  };
-
-  const onPressSms = async (number: string) => {
-    const supported = await Linking.canOpenURL(`sms://${number}`);
-    if (supported) {
-      return null;
-    }
-
-    return Linking.openURL(`sms://${number}`);
-  };
-
-  const onPressEmail = async (email: string) => {
-    const supported = await Linking.canOpenURL(
-      `mailto://${email}?subject=subject&body=body`,
-    );
-    if (supported) {
-      return null;
-    }
-
-    return Linking.openURL(`mailto://${email}?subject=subject&body=body`);
-  };
 
   const renderHeader = () => {
     const {
@@ -95,10 +57,11 @@ const ProfileMain = (props: profileMainProps) => {
             >
               <View style={ProfileMainStyles.userAddressRow}>
                 <View>
-                  <Icon
-                    name="place"
-                    underlayColor="transparent"
-                    iconStyle={ProfileMainStyles.placeIcon}
+                  <Entypo
+                    name="location-pin"
+                    size={24}
+                    color="black"
+                    style={ProfileMainStyles.placeIcon}
                   />
                 </View>
                 <View style={ProfileMainStyles.userCityRow}>

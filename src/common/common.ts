@@ -1,19 +1,52 @@
-import { Alert, Linking, Platform } from 'react-native';
+import { Linking, Platform } from 'react-native';
 import { RequestData, VolunteerData } from '../firebase/model';
 import { PendingSelection } from '../store/reducers/pendingSelection';
 import { getPendingSelection } from '../store/shared/shared';
 
-export const callNumber = async (phone: string) => {
-  var phoneNumber =
-    Platform.OS !== 'android' ? `telprompt:${phone}` : `tel:${phone}`;
+export const onPressPlace = async (location: string) => {
+  const url = Platform.select({
+    ios: `http://maps.google.com/?q=${location}`,
+    android: `http://maps.google.com/?q=${location}`,
+  });
 
-  var supported = await Linking.canOpenURL(phoneNumber);
+  const supported = await Linking.canOpenURL(url!);
   if (!supported) {
-    Alert.alert('Phone number is not available');
-    return;
+    return null;
+  }
+
+  return Linking.openURL(url!);
+};
+
+export const onPressTel = async (number: string) => {
+  let phoneNumber =
+    Platform.OS !== 'android' ? `telprompt:${number}` : `tel:${number}`;
+
+  const supported = await Linking.canOpenURL(phoneNumber);
+  if (!supported) {
+    return null;
   }
 
   return Linking.openURL(phoneNumber);
+};
+
+export const onPressSms = async (number: string) => {
+  const supported = await Linking.canOpenURL(`sms://${number}`);
+  if (!supported) {
+    return null;
+  }
+
+  return Linking.openURL(`sms://${number}`);
+};
+
+export const onPressEmail = async (email: string) => {
+  const supported = await Linking.canOpenURL(
+    `mailto://${email}?subject=subject&body=body`,
+  );
+  if (!supported) {
+    return null;
+  }
+
+  return Linking.openURL(`mailto://${email}?subject=subject&body=body`);
 };
 
 export const getHeaderCountInfo = async (

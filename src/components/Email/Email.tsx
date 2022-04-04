@@ -1,43 +1,37 @@
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
-import { Icon } from 'react-native-elements';
+import { Text, View, TouchableOpacity } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
+
 import EmailStyles from './Email.style';
 
 const Email = ({
-  containerStyle,
   onPressEmail,
   name,
   email,
   index,
 }: {
-  containerStyle: any;
   onPressEmail: Function;
   name: string;
   email: string;
   index: number;
 }) => (
-  <TouchableOpacity onPress={() => onPressEmail(email)}>
-    <View style={[EmailStyles.container, containerStyle]}>
-      <View style={EmailStyles.emailRow}>
-        <View style={EmailStyles.emailColumn}>
-          <Text style={EmailStyles.emailText}>{email}</Text>
-        </View>
-        <View style={EmailStyles.emailNameColumn}>
-          {name.length !== 0 && (
-            <Text style={EmailStyles.emailNameText}>{name}</Text>
-          )}
-        </View>
+  <View style={EmailStyles.container}>
+    <View style={EmailStyles.emailRow}>
+      <View style={EmailStyles.emailColumn}>
+        <Text style={EmailStyles.emailText}>{email}</Text>
       </View>
-      <View style={EmailStyles.iconRow}>
-        <Icon
-          name="email"
-          underlayColor="transparent"
-          iconStyle={EmailStyles.emailIcon}
-          onPress={() => onPressEmail()}
-        />
+      <View style={EmailStyles.emailNameColumn}>
+        {name.length !== 0 && (
+          <Text style={EmailStyles.emailNameText}>{name}</Text>
+        )}
       </View>
     </View>
-  </TouchableOpacity>
+    <View style={EmailStyles.iconRow}>
+      <TouchableOpacity onPress={() => onPressEmail()}>
+        <MaterialIcons name="email" size={24} style={EmailStyles.emailIcon} />
+      </TouchableOpacity>
+    </View>
+  </View>
 );
 
 export default Email;
