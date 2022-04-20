@@ -14,6 +14,7 @@ import Login from './src/screens/Login';
 import Register from './src/screens/Register';
 import Request from './src/screens/Request';
 import Chat from './src/screens/Chat';
+import ChatGroup from './src/screens/ChatGroup';
 import Profile from './src/screens/Profile';
 import configureStore from './src/store';
 import { theme } from './src/core/theme';
@@ -66,6 +67,9 @@ declare global {
       groupId: string;
       userData: UserData;
     };
+    ChatGroup: {
+      userData: UserData;
+    };
     Profile: undefined;
   };
 }
@@ -85,6 +89,7 @@ const linking = {
       RequestCategory: '/requestCategory',
       Notification: '/notification',
       Chat: '/chat',
+      ChatGroup: '/chatGroup',
       Profile: '/profile',
     },
   },
@@ -110,6 +115,7 @@ const App = () => {
                 <Stack.Screen name="Request" component={Request} />
                 <Stack.Screen name="Map" component={MapScreen} />
                 <Stack.Screen name="Chat" component={Chat} />
+                <Stack.Screen name="ChatGroup" component={ChatGroup} />
                 <Stack.Screen
                   name="Profile"
                   component={Profile}

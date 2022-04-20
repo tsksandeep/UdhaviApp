@@ -4,6 +4,7 @@ export const usersRef = FirebaseDB.collection('users');
 export const chatsRef = FirebaseDB.collection('chats');
 export const requestsRef = FirebaseDB.collection('requests');
 export const volunteersRef = FirebaseDB.collection('volunteers');
+export const chatGroupsRef = FirebaseDB.collection(`chatGroups`);
 
 export const getNotificationsRef = (userId: string) => {
   return FirebaseDB.collection(`notifications/${userId}/list`);

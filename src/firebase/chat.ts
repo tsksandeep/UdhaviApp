@@ -1,5 +1,5 @@
 import { GiftedChat } from 'react-native-gifted-chat';
-import { getChatStorageRef } from './ref';
+import { chatGroupsRef, getChatStorageRef } from './ref';
 
 export const onSendChatCallback = (
   messagesRef: any,
@@ -82,4 +82,9 @@ export const uploadChatFile = async (
       setTransferring(false);
     },
   );
+};
+
+export const getChatGroups = async (userId: string): Promise<any> => {
+  return (await chatGroupsRef.where('userList', 'array-contains', userId).get())
+    .docs;
 };

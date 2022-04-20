@@ -59,8 +59,7 @@ const MenuBar = ({
             size={32}
             color="#232323"
             onPress={() =>
-              navigation.navigate('Chat', {
-                groupId: 'AU7xdWTe0CBEnPoTGy1c', // temporary
+              navigation.navigate('ChatGroup', {
                 userData: app.user,
               })
             }

@@ -35,7 +35,7 @@ const Chat = (props: any) => {
   const [transferred, setTransferred] = useState(0.0);
   const [transferring, setTransferring] = useState(false);
   const [messages, setMessages] = useState([]);
-  const messagesRef = getMessagesRef('AU7xdWTe0CBEnPoTGy1c');
+  const messagesRef = getMessagesRef(groupId);
 
   useEffect(() => {
     unsubscribeChatCallback(messagesRef, setMessages);
