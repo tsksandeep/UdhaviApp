@@ -7,9 +7,8 @@ import { css } from '@emotion/native';
 export default function TextInput(props: any) {
   var numberOfLines = 1;
   var isMultiline = false;
-  var height = '50px';
+
   if (props?.numberOfLines) {
-    height = '150px';
     isMultiline = true;
     numberOfLines = props?.numberOfLines;
   }
@@ -20,7 +19,7 @@ export default function TextInput(props: any) {
       margin-vertical: 12px;
     `,
     input: css`
-      height: ${height};
+      border: 2px solid #560cce;
       background-color: #fff;
       border-radius: 10px;
       shadow-offset: 2px;

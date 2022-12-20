@@ -192,7 +192,7 @@ const RequestFormComponent = ({
               value={value}
               onChangeText={(text: string) => onChange(text)}
               autoCapitalize="none"
-              numberOfLines={150}
+              numberOfLines={8}
               error={!!errors?.notes?.message}
               errorText={errors?.notes?.message}
             />
