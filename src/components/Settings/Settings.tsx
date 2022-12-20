@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pressable } from 'react-native';
-import { Divider, Icon, Menu } from 'native-base';
+import { Icon, Menu } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
 import { createSelector } from 'reselect';
 import { connect } from 'react-redux';

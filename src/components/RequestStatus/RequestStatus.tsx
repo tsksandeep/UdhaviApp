@@ -1,9 +1,12 @@
-import React from 'react';
-import { Menu, Pressable, Badge } from 'native-base';
+import React, { useState } from 'react';
 
+import { Badge } from 'native-base';
 import { releaseAllVolunteersFromRequest } from '../../store/shared/shared';
 import { RequestData, VolunteerData } from '../../firebase/model';
 import { RequestStates } from '../../constants/constants';
+import { Text } from 'react-native';
+import { Menu, MenuItem } from 'react-native-material-menu';
+import { css } from '@emotion/native';
 
 const getRequestStatusColor = (status: string) => {
   var colorScheme = 'warning';
@@ -24,13 +27,21 @@ const getRequestStatusBadge = (request: RequestData) => {
   var colorScheme = getRequestStatusColor(request.status);
   if (!request.status)
     return (
-      <Badge colorScheme={colorScheme} variant={'subtle'}>
+      <Badge
+        style={RequestStatusStyle.badge}
+        colorScheme={colorScheme}
+        variant={'subtle'}
+      >
         Loading
       </Badge>
     );
   var words = request.status.split(' ');
   return (
-    <Badge colorScheme={colorScheme} variant={'subtle'}>
+    <Badge
+      style={RequestStatusStyle.badge}
+      colorScheme={colorScheme}
+      variant={'subtle'}
+    >
       {words[0]}
       {words[1]}
     </Badge>
@@ -45,12 +56,13 @@ const MenuItemWithAction = (props: {
     <>
       {props.menuItems.map((menuItem, index) => {
         return (
-          <Menu.Item
+          <MenuItem
+            style={RequestStatusStyle.menuItem}
             key={index}
             onPress={() => props.onSelectedCallback(menuItem)}
           >
             {menuItem}
-          </Menu.Item>
+          </MenuItem>
         );
       })}
     </>
@@ -64,6 +76,7 @@ const RequestStatus = (props: {
   volunteers: Map<string, VolunteerData>;
 }) => {
   const { actions, request, requests, volunteers } = props;
+  const [visible, setVisible] = useState(false);
 
   const onSelectedCallback = async (newState: string) => {
     if (newState == 'Completed') {
@@ -75,20 +88,19 @@ const RequestStatus = (props: {
       );
     }
     request.status = newState;
-    requests[request.id] = request;
+    requests.set('id', request);
     actions.updateRequestsMap(requests);
   };
 
   return (
     <Menu
-      w="190"
-      trigger={(triggerProps) => {
-        return (
-          <Pressable accessibilityLabel="More options menu" {...triggerProps}>
-            {getRequestStatusBadge(request)}
-          </Pressable>
-        );
-      }}
+      visible={visible}
+      anchor={
+        <Text onPress={() => setVisible(true)}>
+          {getRequestStatusBadge(request)}
+        </Text>
+      }
+      onRequestClose={() => setVisible(false)}
     >
       <MenuItemWithAction
         menuItems={RequestStates}
@@ -96,6 +108,15 @@ const RequestStatus = (props: {
       />
     </Menu>
   );
+};
+
+const RequestStatusStyle = {
+  badge: css`
+    border-radius: 8px;
+  `,
+  menuItem: css`
+    height: 30px;
+  `,
 };
 
 export default RequestStatus;
