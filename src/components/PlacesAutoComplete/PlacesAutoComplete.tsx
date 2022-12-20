@@ -86,23 +86,22 @@ const PlacesAutoComplete = (props: PlacesAutoCompleteProps) => {
 
   return (
     <>
-      <HStack space={1}>
-        <View style={PlacesAutoCompleteStyle.input}>
-          <GooglePlacesAutocomplete
-            placeholder="Search address"
-            onPress={(data) => {
-              setLocationByAutoCompleteResult(data);
-            }}
-            ref={inputRef}
-            query={{
-              key: GOOGLE_PLACES_API_KEY,
-              language: 'en',
-              components: 'country:in',
-            }}
-            enablePoweredByContainer={false}
-          />
-        </View>
-      </HStack>
+      <View style={PlacesAutoCompleteStyle.input}>
+        <GooglePlacesAutocomplete
+          suppressDefaultStyles
+          placeholder="Search address"
+          onPress={(data) => {
+            setLocationByAutoCompleteResult(data);
+          }}
+          ref={inputRef}
+          query={{
+            key: GOOGLE_PLACES_API_KEY,
+            language: 'en',
+            components: 'country:in',
+          }}
+          enablePoweredByContainer={false}
+        />
+      </View>
       <TouchableOpacity onPress={() => setLocationCallback()}>
         <HStack style={PlacesAutoCompleteStyle.currentAddressContainer}>
           <MaterialIcons
@@ -116,7 +115,7 @@ const PlacesAutoComplete = (props: PlacesAutoCompleteProps) => {
       </TouchableOpacity>
       <Button
         mode="outlined"
-        onPress={() => handleClose()}
+        onPress={handleClose}
         style={PlacesAutoCompleteStyle.closeButton}
       >
         Close
@@ -128,10 +127,13 @@ const PlacesAutoComplete = (props: PlacesAutoCompleteProps) => {
 const PlacesAutoCompleteStyle = {
   input: css`
     width: 100%;
+    border: 2px solid #560cce;
+    border-radius: 10px;
     shadow-offset: 2px;
     shadow-color: #171717;
     shadow-opacity: 0.1;
     shadow-radius: 8px;
+    padding: 10px;
   `,
   image: css`
     margin-right: 5px;
