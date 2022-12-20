@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Menu } from 'native-base';
-import { Pressable, Text, View } from 'react-native';
+import { Text } from 'react-native';
 import { css } from '@emotion/native';
+import { Menu, MenuItem } from 'react-native-material-menu';
 
 interface ItemFilterProps {
   name: string;
@@ -11,64 +11,48 @@ interface ItemFilterProps {
 }
 
 const ItemFilter = (props: ItemFilterProps) => {
-  const { name, filter, setFilterCallback, states } = props;
-  const [currentFilter, setCurrentFilter] = useState(filter);
+  const { name, setFilterCallback, states } = props;
+  const [visible, setVisible] = useState(false);
 
   const setFilterCallBack = (option: string) => {
-    setCurrentFilter(option);
     setFilterCallback(option);
   };
 
   return (
     <Menu
-      trigger={(triggerProps) => {
-        return (
-          <Pressable {...triggerProps}>
-            <View style={ItemFilterStyle.menuHeadingTextWrapper}>
-              <Text style={ItemFilterStyle.menuHeadingText}>{name}</Text>
-            </View>
-          </Pressable>
-        );
-      }}
-    >
-      <Menu.OptionGroup
-        defaultValue={currentFilter}
-        title={`${name} Filter`}
-        type="radio"
-      >
-        <Menu.ItemOption
-          key="all"
-          value="all"
-          onPress={() => setFilterCallBack('all')}
+      visible={visible}
+      anchor={
+        <Text
+          onPress={() => setVisible(true)}
+          style={ItemFilterStyle.menuHeadingText}
         >
-          All
-        </Menu.ItemOption>
-        <>
-          {states.map((item, index) => {
-            return (
-              <Menu.ItemOption
-                key={index}
-                value={item}
-                onPress={() => setFilterCallBack(item)}
-              >
-                {item}
-              </Menu.ItemOption>
-            );
-          })}
-        </>
-      </Menu.OptionGroup>
+          {name}
+        </Text>
+      }
+      onRequestClose={() => setVisible(false)}
+    >
+      <MenuItem key="all" onPress={() => setFilterCallBack('all')}>
+        All
+      </MenuItem>
+      <>
+        {states.map((item, index) => {
+          return (
+            <MenuItem key={index} onPress={() => setFilterCallBack(item)}>
+              {item}
+            </MenuItem>
+          );
+        })}
+      </>
     </Menu>
   );
 };
 
 const ItemFilterStyle = {
-  menuHeadingTextWrapper: css`
+  menuHeadingText: css`
     padding: 5px 10px;
     border-radius: 10px;
     background: #560cce;
     margin: 0 5px;
-  `,
-  menuHeadingText: css`
     font-size: 14px;
     font-weight: 500;
     text-transform: uppercase;
